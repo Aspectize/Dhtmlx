@@ -37,6 +37,9 @@ Insert the following html into your control:
 ```
     
 b/ Binding
+Binding is the same logic as a Grid:
+- Use BindGrid to define data
+- Use AddGridColumn of type Dhtmlx.DhtmlxAxis to add Axis. First column is the x Axis. Other columns are y Axis.
 
 ```javascript
 myView.MyChart.BindGrid(myView.ParentData.MyData);
