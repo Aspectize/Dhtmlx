@@ -83,7 +83,7 @@ Global.NewChartBuilder = {
                     step: getGraphStep(min, max, step)
                 };
 
-                if (otherYAxis.length > 0) {
+                if (cp.AllAxis[yAxis].Title) {
 
                     var legend = {
                         layout: controlInfo.PropertyBag.Legendlayout,
@@ -98,7 +98,7 @@ Global.NewChartBuilder = {
                     for (var k = 0; k < otherYAxis.length; k++) {
                         legend.values.push(buildLegendEntry(cp.AllAxis[otherYAxis[k]]));
                     }
-                }
+                } 
 
                 var chart = new dhtmlXChart(info);
 
@@ -285,8 +285,8 @@ Global.NewChartBuilder = {
             control.aasChartProperties.MustRebuildChart = true;
             control.aasChartProperties.data = [];
 
-            controlInfo.PropertyBag.yStart = 0;
-            controlInfo.PropertyBag.yEnd = 10;
+            controlInfo.PropertyBag.yStart = +1E308;
+            controlInfo.PropertyBag.yEnd = -1E308;
             controlInfo.PropertyBag.yStep = 0;
 
         }
