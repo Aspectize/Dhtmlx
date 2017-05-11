@@ -284,6 +284,11 @@ Global.NewChartBuilder = {
 
             control.aasChartProperties.MustRebuildChart = true;
             control.aasChartProperties.data = [];
+
+            controlInfo.PropertyBag.yStart = 0;
+            controlInfo.PropertyBag.yEnd = 10;
+            controlInfo.PropertyBag.yStep = 0;
+
         }
 
         controlInfo.RowCreated = function (control, rowId, cellControls) {
