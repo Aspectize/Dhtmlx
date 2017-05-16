@@ -85,8 +85,8 @@ Global.DhtmlxChartService = {
 
         if (graphControl.aasChartProperties) {
 
-            gc.aasChartProperties.MustRebuildChart = true;
-            gc.aasChartProperties.RefreshData();
+            graphControl.aasChartProperties.MustRebuildChart = true;
+            graphControl.aasChartProperties.RefreshData();
 
         } else {
 
