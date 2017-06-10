@@ -325,7 +325,11 @@ Global.NewChartBuilder = {
                 control.style.width = rowCount * pointWidth + 'px';
             }
             else {
-                control.style.width = control.parentNode.clientWidth + 'px';
+                var clientWidth = control.parentNode.clientWidth;
+
+                if (clientWidth > 1) clientWidth--;
+
+                control.style.width = clientWidth + 'px';
             }
 
             control.aasChartProperties.RefreshData();
