@@ -83,7 +83,7 @@ Global.NewChartBuilder = {
                     step: getGraphStep(min, max, step)
                 };
 
-                if (cp.AllAxis[yAxis].Title) {
+                if (controlInfo.PropertyBag.WithLegend) {
 
                     var legend = {
                         layout: controlInfo.PropertyBag.Legendlayout,
@@ -160,7 +160,7 @@ Global.NewChartBuilder = {
         controlInfo.ChangePropertyValue = function (property, newValue) {
 
             this.PropertyBag[property] = newValue;
-        },
+        };
 
         controlInfo.InitGrid = function (control) {
 
