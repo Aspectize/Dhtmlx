@@ -83,7 +83,7 @@ Global.NewChartBuilder = {
                     step: getGraphStep(min, max, step)
                 };
 
-                if (controlInfo.PropertyBag.WithLegend) {
+                if (controlInfo.PropertyBag.DisplayLegend) {
 
                     var legend = {
                         layout: controlInfo.PropertyBag.Legendlayout,
