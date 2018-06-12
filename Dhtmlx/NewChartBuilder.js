@@ -15,17 +15,42 @@ Global.NewChartBuilder = {
             document.body.appendChild(style);
         }
 
-        function buildChartAxisInfo(axis, name) {
+        function buildChartAxisInfo(axis, name, type) {
+
+            if (type === 'pie') {
+
+                return {
+                    alpha: axis.AlphaTransparency,
+                    //fill: axis.LineColor,
+                    value: '#' + name + '#',
+                    label: '#' + name + 'Label#',
+                    color: '#' + name + 'Color#',
+                    pieInnerText: '#' + name + 'Title#'
+                    //item: { radius: axis.ItemRadius, borderColor: axis.ItemBorderColor, color: axis.ItemColor, borderWidth: axis.ItemBorderWidth },
+                    //line: { color: axis.LineColor, width: axis.LineWidth }
+                };
+
+            } else {
+
+                return {
+                    alpha: axis.AlphaTransparency,
+                    fill: axis.LineColor,
+                    value: '#' + name + '#',
+                    label: '#' + name + 'Label#',
+                    color: axis.LineColor,
+                    item: { radius: axis.ItemRadius, borderColor: axis.ItemBorderColor, color: axis.ItemColor, borderWidth: axis.ItemBorderWidth },
+                    line: { color: axis.LineColor, width: axis.LineWidth }
+                };
+            }
+        }
+
+        function buildLegendEntryForPie(title, color) {
 
             return {
-                alpha: axis.AlphaTransparency,
-                fill: axis.LineColor,
-                value: '#' + name + '#',
-                label: '#' + name + 'Label#',
-                color: axis.LineColor,
-                item: { radius: axis.ItemRadius, borderColor: axis.ItemBorderColor, color: axis.ItemColor, borderWidth: axis.ItemBorderWidth },
-                line: { color: axis.LineColor, width: axis.LineWidth }
-            }
+                text: title,
+                color: color,
+                toggle: false
+            };
         }
 
         function buildLegendEntry(axis) {
@@ -54,13 +79,31 @@ Global.NewChartBuilder = {
                 if (!window.dhtmlXChart) throw new Error('Missing DHTMLX integration scripts in the app.ashx file ?');
 
                 var chartType = controlInfo.PropertyBag.Type;
+                var isPie = (chartType === 'pie');
+
                 var xAxis = cp.xAxis;
                 var yAxis = cp.yAxis;
                 var otherYAxis = cp.otherYAxis;
 
-                var info = { view: chartType, container: control.id };
+                var info = { view: chartType, container: control.id};
 
-                var cai = buildChartAxisInfo(cp.AllAxis[yAxis], yAxis);
+                var isPie = (chartType === 'pie');
+
+                if (isPie) {
+
+                    info.gradient = controlInfo.PropertyBag.PieGradient;
+                    info.shadow = controlInfo.PropertyBag.PieShadow;
+
+                    var cx = controlInfo.PropertyBag.PieCx;
+                    var cy = controlInfo.PropertyBag.PieCy;
+                    var r = controlInfo.PropertyBag.PieRadius;
+
+                    if(cx) info.x = cx;
+                    if(cy) info.y = cy;
+                    if(r) info.radius = r;
+                }
+
+                var cai = buildChartAxisInfo(cp.AllAxis[yAxis], yAxis, chartType);
                 for (var k in cai) info[k] = cai[k];
 
                 var min = controlInfo.PropertyBag.yStart;
@@ -94,9 +137,23 @@ Global.NewChartBuilder = {
                     };
 
                     info.legend = legend;
-                    legend.values.push(buildLegendEntry(cp.AllAxis[yAxis]));
-                    for (var k = 0; k < otherYAxis.length; k++) {
-                        legend.values.push(buildLegendEntry(cp.AllAxis[otherYAxis[k]]));
+                    if (isPie) {
+                        
+                        var fTitle = yAxis + 'Title';
+                        var fColor = yAxis + 'Color';
+                        for (var k = 0; k < cp.data.length; k++) {
+
+                            var d = cp.data[k];
+
+                            legend.values.push(buildLegendEntryForPie(d[fTitle], d[fColor]));
+                        }
+
+                    } else {
+
+                        legend.values.push(buildLegendEntry(cp.AllAxis[yAxis]));
+                        for (var k = 0; k < otherYAxis.length; k++) {
+                            legend.values.push(buildLegendEntry(cp.AllAxis[otherYAxis[k]]));
+                        }
                     }
                 } 
 
@@ -106,7 +163,7 @@ Global.NewChartBuilder = {
 
                     var axisName = otherYAxis[i];
 
-                    chart.addSeries(buildChartAxisInfo(cp.AllAxis[axisName], axisName));
+                    chart.addSeries(buildChartAxisInfo(cp.AllAxis[axisName], axisName, chartType));
                 }
 
                 if (cp.data.length > 0) {
@@ -295,6 +352,8 @@ Global.NewChartBuilder = {
 
             var chartItem = { id: rowId };
 
+            var isPie = control.aasControlInfo.PropertyBag.Type === 'pie';
+
             for (var n = 0; n < cellControls.length; n++) {
 
                 var cellControl = cellControls[n];
@@ -304,6 +363,12 @@ Global.NewChartBuilder = {
 
                 chartItem[cellControl.aasAxisName] = v;
                 chartItem[cellControl.aasAxisName + 'Label'] = l;
+
+                if (isPie) {
+
+                    chartItem[cellControl.aasAxisName + 'Color'] = cellControl.aasControlInfo.PropertyBag.ItemColor;
+                    chartItem[cellControl.aasAxisName + 'Title'] = cellControl.aasControlInfo.PropertyBag.Title;
+                }
             }
 
             control.aasChartProperties.AddData(chartItem);
