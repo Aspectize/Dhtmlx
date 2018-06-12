@@ -22,7 +22,7 @@ app.Directories = "Dhtmlx";
 
 In your application.htm.ashx file, add the following lines:
 ```javascript
-<!-- Dhtmlx datepicker -->
+<!-- Dhtmlx -->
 <script  type="text/javascript" src="~Dhtmlx/codebase/dhtmlxchart.js"></script>
 <link rel="STYLESHEET" type="text/css" href="~Dhtmlx/codebase/dhtmlxchart.css">
 ```
