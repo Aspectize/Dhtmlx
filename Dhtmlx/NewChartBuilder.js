@@ -131,7 +131,7 @@ Global.NewChartBuilder = {
                     var legend = {
                         layout: controlInfo.PropertyBag.Legendlayout,
                         align: controlInfo.PropertyBag.LegendAlign,
-                        valign: "middle",
+                        valign: controlInfo.PropertyBag.LegendvAlign,
                         //marker: { width: 15, radius: 3 },
                         values: []
                     };
