@@ -72,6 +72,26 @@ Global.NewChartBuilder = {
                 control.innerHTML = '';
                 cp.dxChart = null;
                 savedData = cp.data;
+
+                //#region Adjust for Displayed Data
+                var otherYAxis = [];
+                var axisY = null;
+                for (var k = 0; k < cp.allYs.length; k++) {
+
+                    var yColumn = cp.allYs[k];
+
+                    var a = cp.AllAxis[yColumn];
+
+                    if (a.Display) {
+
+                        if (!axisY) {
+                            axisY = yColumn;
+                        } else otherYAxis.push(yColumn);
+                    }
+                }
+                cp.yAxis = axisY;
+                cp.otherYAxis = otherYAxis;
+                //#endregion
             }
 
             if (cp.dxChart === null) {
@@ -85,7 +105,7 @@ Global.NewChartBuilder = {
                 var yAxis = cp.yAxis;
                 var otherYAxis = cp.otherYAxis;
 
-                var info = { view: chartType, container: control.id};
+                var info = { view: chartType, container: control.id };
 
                 var isPie = (chartType === 'pie');
 
@@ -98,9 +118,9 @@ Global.NewChartBuilder = {
                     var cy = controlInfo.PropertyBag.PieCy;
                     var r = controlInfo.PropertyBag.PieRadius;
 
-                    if(cx) info.x = cx;
-                    if(cy) info.y = cy;
-                    if(r) info.radius = r;
+                    if (cx) info.x = cx;
+                    if (cy) info.y = cy;
+                    if (r) info.radius = r;
                 }
 
                 var cai = buildChartAxisInfo(cp.AllAxis[yAxis], yAxis, chartType);
@@ -138,7 +158,7 @@ Global.NewChartBuilder = {
 
                     info.legend = legend;
                     if (isPie) {
-                        
+
                         var fTitle = yAxis + 'Title';
                         var fColor = yAxis + 'Color';
                         for (var k = 0; k < cp.data.length; k++) {
@@ -155,7 +175,7 @@ Global.NewChartBuilder = {
                             legend.values.push(buildLegendEntry(cp.AllAxis[otherYAxis[k]]));
                         }
                     }
-                } 
+                }
 
                 var chart = new dhtmlXChart(info);
 
@@ -198,9 +218,10 @@ Global.NewChartBuilder = {
             return {
                 Title: title, ShowLine: false,
                 Start: null, End: null, Step: null,
-                AlphaTransparency: 0.2, LineColor: color, LineWidth: 1,
+                AlphaTransparency: 0.3, LineColor: color, LineWidth: 1,
                 ItemColor: color, ItemBorderColor: '#000000', ItemRadius: 4, ItemBorderWidth: 1,
-                PointWidth: 50
+                PointWidth: 50,
+                Display: true
             };
         }
 
@@ -242,17 +263,21 @@ Global.NewChartBuilder = {
             var xAxis = (axisCount > 1) ? columnInfos[0].name : null;
             var yAxis = (axisCount > 1) ? columnInfos[1].name : null;
 
-            var otherYAxis = [];
+            var allYs = [];
+            if (yAxis) allYs.push(yAxis);
 
             if (chartType !== 'pie') {
-                for (var n = 2; n < axisCount; n++) otherYAxis.push(columnInfos[n].name);
+                for (var n = 2; n < axisCount; n++) allYs.push(columnInfos[n].name);
             }
+
+            var otherYAxis = [];
+            for (var n = 1; n < allYs.length; n++) otherYAxis.push(allYs[n]);
 
             control.aasChartProperties = {
 
                 dxChart: null,
                 MustRebuildChart: false,
-                xAxis: xAxis, yAxis: yAxis, otherYAxis: otherYAxis, AllAxis: {},
+                xAxis: xAxis, yAxis: yAxis, allYs: allYs, otherYAxis: otherYAxis, AllAxis: {},
                 data: [],
 
                 SetAxisProperty: function (axis, property, value) {
@@ -282,7 +307,7 @@ Global.NewChartBuilder = {
 
                         var a = this.AllAxis[axis];
 
-                        if (a && (property in a) && (a[property] !== value)) {
+                        if (a && (a.Display || property === 'Display') && (property in a) && (a[property] !== value)) {
 
                             a[property] = value;
                             this.MustRebuildChart = true;
