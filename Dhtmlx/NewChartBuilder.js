@@ -130,6 +130,46 @@ Global.NewChartBuilder = {
                 var max = controlInfo.PropertyBag.yEnd;
                 var step = controlInfo.PropertyBag.yStep;
 
+                var scale = 1;
+                var unit = '';
+                var prefixType = controlInfo.PropertyBag.AutoUnitType;
+                switch (prefixType) {
+                    case 'U': scale = 1; break;
+                    case 'M': // Money in Cents K (100 000), M (100 000 000)
+                        if (max > 100000000) {
+
+                            scale = 100000000;
+                            unit = 'M';
+
+                        } else if (max > 100000) {
+
+                            scale = 100000;
+                            unit = 'K';
+                        }
+                    case 'S': // Standard Metric K (1000), M (1000 000), G (1000 000 000)
+                    break;
+                }
+
+                controlInfo.PropertyBag.UnitPrefix = unit;
+                Aspectize.UiExtensions.Notify(control, 'OnUnitPrefixChanged', unit);
+                if (scale !== 1) {
+
+                    min /= scale;
+                    max /= scale;
+                    step /= scale;
+
+                    for (var k = 0; k < cp.data.length; k++) {
+
+                        var d = cp.data[k];
+
+                        d[yAxis] /= scale;
+                        for (var i = 0; i < otherYAxis.length; i++) {
+
+                            d[otherYAxis[i]] /= scale;
+                        }
+                    }
+                }
+
                 info.lines = controlInfo.PropertyBag.hLines;
                 info.disableItems = !controlInfo.PropertyBag.ShowPoints;
 
@@ -423,15 +463,6 @@ Global.NewChartBuilder = {
             }
 
             control.aasChartProperties.RefreshData();
-            //Aspectize.ProtectedCall(control.aasDxChart, control.aasDxChart.clearAll);
-            //Aspectize.ProtectedCall(control.aasDxChart, control.aasDxChart.refresh);
-
-            //if (rowControls.length > 0) {
-
-            //    Aspectize.ProtectedCall(control.aasDxChart, control.aasDxChart.parse, data, 'json');
-            //    Aspectize.ProtectedCall(control.aasDxChart, control.aasDxChart.refresh);
-            //    Aspectize.ProtectedCall(control.aasDxChart, control.aasDxChart.resize);
-            //}
         };
 
         controlInfo.OnCurrentIndexChanged = function (control, currentIndex) {
