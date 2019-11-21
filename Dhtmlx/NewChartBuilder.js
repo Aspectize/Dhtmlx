@@ -62,11 +62,34 @@ Global.NewChartBuilder = {
             };
         }
 
+        function scaleData(scale, cp) {
+
+            if (scale === 1) return cp.data;
+
+            var allYs = cp.allYs;
+            var yCount = allYs.length;
+
+            var data = [];
+            for (var n = 0; n < cp.data.length; n++) {
+
+                var d = cp.data[n];
+
+                var dNew = {};
+                for (var k in d) dNew[k] = d[k];
+
+                for (var i = 0; i < yCount; i++) dNew[allYs[i]] /= scale;
+
+                data.push(dNew);
+            }
+
+            return data;
+        }
         function buildDhtmlxChart(control) {
 
             var cp = control.aasChartProperties;
 
             var savedData = [];
+            var dat
 
             if (cp.dxChart && cp.MustRebuildChart) {
                 control.innerHTML = '';
@@ -135,41 +158,56 @@ Global.NewChartBuilder = {
                 var scale = 1;
                 var unit = '';
                 var prefixType = controlInfo.PropertyBag.AutoUnitType;
-                switch (prefixType) {
-                    case 'U': scale = 1; break;
-                    case 'M': // Money in Cents K (100 000), M (100 000 000)
-                        if (max > 100000000) {
 
-                            scale = 100000000;
+                var kilo = 1000;
+                var kCents = 100 * kilo;
+                var mega = 1000 * kilo;
+                var mCents = 100 * mega;
+                var giga = 1000 * mega;
+
+                switch (prefixType) {
+                    case 'U': break;
+
+                    case 'M': // Money in Cents K (100 000), M (100 000 000)
+                        if (max > mCents) {
+
+                            scale = mCents;
                             unit = 'M';
 
-                        } else if (max > 100000) {
+                        } else if (max > kCents) {
 
-                            scale = 100000;
+                            scale = kCents;
                             unit = 'K';
                         }
+                        break;
+
                     case 'S': // Standard Metric K (1000), M (1000 000), G (1000 000 000)
-                    break;
+                        if (max > giga) {
+
+                            scale = giga;
+                            unit = 'G';
+
+                        } else if (max > mega) {
+
+                            scale = mega;
+                            unit = 'M';
+
+                        } else if (max > kilo) {
+
+                            scale = kilo;
+                            unit = 'K';
+                        }
+                        break;
                 }
 
-                controlInfo.PropertyBag.UnitPrefix = unit;
-                Aspectize.UiExtensions.Notify(control, 'OnUnitPrefixChanged', unit);
                 if (scale !== 1) {
+
+                    controlInfo.PropertyBag.UnitPrefix = unit;
+                    Aspectize.UiExtensions.Notify(control, 'OnUnitPrefixChanged', unit);
 
                     min /= scale;
                     max /= scale;
                     step /= scale;
-
-                    for (var k = 0; k < cp.data.length; k++) {
-
-                        var d = cp.data[k];
-
-                        d[yAxis] /= scale;
-                        for (var i = 0; i < otherYAxis.length; i++) {
-
-                            d[otherYAxis[i]] /= scale;
-                        }
-                    }
                 }
 
                 info.lines = controlInfo.PropertyBag.hLines;
@@ -232,7 +270,7 @@ Global.NewChartBuilder = {
 
                 if (cp.data.length > 0) {
 
-                    Aspectize.ProtectedCall(chart, chart.parse, cp.data, 'json');
+                    Aspectize.ProtectedCall(chart, chart.parse, scaleData(scale, cp), 'json');
 
                 } else Aspectize.ProtectedCall(chart, chart.refresh);
 
@@ -245,7 +283,7 @@ Global.NewChartBuilder = {
 
                 if (cp.data.length > 0) {
 
-                    Aspectize.ProtectedCall(dxc, dxc.parse, cp.data, 'json');
+                    Aspectize.ProtectedCall(dxc, dxc.parse, scaleData(scale, cp), 'json');
 
                 } else Aspectize.ProtectedCall(dxc, dxc.refresh);
             }
