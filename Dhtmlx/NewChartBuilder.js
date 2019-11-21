@@ -123,8 +123,10 @@ Global.NewChartBuilder = {
                     if (r) info.radius = r;
                 }
 
-                var cai = buildChartAxisInfo(cp.AllAxis[yAxis], yAxis, chartType);
-                for (var k in cai) info[k] = cai[k];
+                if (yAxis) {
+                    var cai = buildChartAxisInfo(cp.AllAxis[yAxis], yAxis, chartType);
+                    for (var k in cai) info[k] = cai[k];
+                }
 
                 var min = controlInfo.PropertyBag.yStart;
                 var max = controlInfo.PropertyBag.yEnd;
@@ -210,9 +212,11 @@ Global.NewChartBuilder = {
 
                     } else {
 
-                        legend.values.push(buildLegendEntry(cp.AllAxis[yAxis]));
-                        for (var k = 0; k < otherYAxis.length; k++) {
-                            legend.values.push(buildLegendEntry(cp.AllAxis[otherYAxis[k]]));
+                        if (yAxis) {
+                            legend.values.push(buildLegendEntry(cp.AllAxis[yAxis]));
+                            for (var k = 0; k < otherYAxis.length; k++) {
+                                legend.values.push(buildLegendEntry(cp.AllAxis[otherYAxis[k]]));
+                            }
                         }
                     }
                 }
