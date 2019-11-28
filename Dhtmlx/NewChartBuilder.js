@@ -122,7 +122,7 @@ Global.NewChartBuilder = {
             if (cp.dxChart === null) {
 
                 if (!window.dhtmlXChart && !window.dhx) throw new Error('Missing DHTMLX integration scripts in the app.ashx file ?');
-                
+
                 var chartType = controlInfo.PropertyBag.Type;
                 var isPie = (chartType === 'pie');
 
@@ -220,18 +220,30 @@ Global.NewChartBuilder = {
                 info.lines = controlInfo.PropertyBag.hLines;
                 info.disableItems = !controlInfo.PropertyBag.ShowPoints;
 
-                info.xAxis = {
+                var xAxisObj = {
+
                     title: cp.AllAxis[xAxis].Title,
                     template: '#' + xAxis + 'Label#',
                     lines: controlInfo.PropertyBag.vLines
                 };
 
-                info.yAxis = {
+                var yAxisObj = {
 
                     start: getGraphBegin(min, max, step),
                     end: getGraphEnd(min, max, step),
                     step: getGraphStep(min, max, step)
                 };
+
+                if (chartType !== 'barH') {
+
+                    info.xAxis = xAxisObj;
+                    info.yAxis = yAxisObj;
+
+                } else {
+
+                    info.xAxis = yAxisObj;
+                    info.yAxis = xAxisObj;
+                }
 
                 if (controlInfo.PropertyBag.DisplayLegend) {
 
