@@ -121,8 +121,8 @@ Global.NewChartBuilder = {
 
             if (cp.dxChart === null) {
 
-                if (!window.dhtmlXChart) throw new Error('Missing DHTMLX integration scripts in the app.ashx file ?');
-
+                if (!window.dhtmlXChart && !window.dhx) throw new Error('Missing DHTMLX integration scripts in the app.ashx file ?');
+                
                 var chartType = controlInfo.PropertyBag.Type;
                 var isPie = (chartType === 'pie');
 
@@ -265,6 +265,13 @@ Global.NewChartBuilder = {
                         }
                     }
                 }
+
+                //Bug DHTMLX
+                var tips = document.querySelectorAll('.dhx_tooltip');
+                for (var n = 0; n < tips.length; n++) {
+                    tips[n].remove();
+                }
+                //Bug DHTMLX
 
                 var chart = new dhtmlXChart(info);
 
@@ -475,10 +482,11 @@ Global.NewChartBuilder = {
                 var axn = cellControl.aasAxisName;
                 var v = cellControl.aasControlInfo.PropertyBag.Value;
                 var l = cellControl.aasControlInfo.PropertyBag.Label;
+                var t = cellControl.aasControlInfo.PropertyBag.ToolTip;
 
                 chartItem[axn] = v;
                 chartItem[axn + 'Label'] = l;
-                chartItem[axn + 'ToolTip'] = cellControl.aasControlInfo.PropertyBag.ToolTip || '';
+                chartItem[axn + 'ToolTip'] = t;
 
                 if (isPie) {
 
