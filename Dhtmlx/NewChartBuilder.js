@@ -25,6 +25,7 @@ Global.NewChartBuilder = {
                     value: '#' + name + '#',
                     label: '#' + name + 'Label#',
                     color: '#' + name + 'Color#',
+                    tooltip: '#' + name + 'ToolTip#',
                     pieInnerText: '#' + name + 'Title#'
                     //item: { radius: axis.ItemRadius, borderColor: axis.ItemBorderColor, color: axis.ItemColor, borderWidth: axis.ItemBorderWidth },
                     //line: { color: axis.LineColor, width: axis.LineWidth }
@@ -37,6 +38,7 @@ Global.NewChartBuilder = {
                     fill: axis.LineColor,
                     value: '#' + name + '#',
                     label: '#' + name + 'Label#',
+                    tooltip: '#' + name + 'ToolTip#',
                     color: axis.LineColor,
                     item: { radius: axis.ItemRadius, borderColor: axis.ItemBorderColor, color: axis.ItemColor, borderWidth: axis.ItemBorderWidth },
                     line: { color: axis.LineColor, width: axis.LineWidth }
@@ -124,11 +126,16 @@ Global.NewChartBuilder = {
                 var chartType = controlInfo.PropertyBag.Type;
                 var isPie = (chartType === 'pie');
 
+                var hasOrigin = (controlInfo.PropertyBag.Origin !== 1234567890);
+
+
                 var xAxis = cp.xAxis;
                 var yAxis = cp.yAxis;
                 var otherYAxis = cp.otherYAxis;
 
                 var info = { view: chartType, container: control.id };
+
+                if (hasOrigin) info.origin = controlInfo.PropertyBag.Origin;
 
                 var isPie = (chartType === 'pie');
 
@@ -465,16 +472,18 @@ Global.NewChartBuilder = {
 
                 var cellControl = cellControls[n];
 
+                var axn = cellControl.aasAxisName;
                 var v = cellControl.aasControlInfo.PropertyBag.Value;
                 var l = cellControl.aasControlInfo.PropertyBag.Label;
 
-                chartItem[cellControl.aasAxisName] = v;
-                chartItem[cellControl.aasAxisName + 'Label'] = l;
+                chartItem[axn] = v;
+                chartItem[axn + 'Label'] = l;
+                chartItem[axn + 'ToolTip'] = cellControl.aasControlInfo.PropertyBag.ToolTip || '';
 
                 if (isPie) {
 
-                    chartItem[cellControl.aasAxisName + 'Color'] = cellControl.aasControlInfo.PropertyBag.ItemColor;
-                    chartItem[cellControl.aasAxisName + 'Title'] = cellControl.aasControlInfo.PropertyBag.Title;
+                    chartItem[axn + 'Color'] = cellControl.aasControlInfo.PropertyBag.ItemColor;
+                    chartItem[axn + 'Title'] = cellControl.aasControlInfo.PropertyBag.Title;
                 }
             }
 
@@ -559,10 +568,14 @@ Global.NewAxisBuilder = {
                 control.aasChartProperties.SetAxisProperty(control.aasAxisName, property, newValue);
 
                 this.PropertyBag[property] = newValue;
-                if ((property === 'Value') || (property === 'Label')) {
+                var axn = control.aasAxisName;
 
-                    var field = (property === 'Value') ? control.aasAxisName : control.aasAxisName + 'Label';
-                    control.aasChartProperties.RefreshData(control.aasRowId, field, newValue);
+                switch (property) {
+
+                    case 'Value': control.aasChartProperties.RefreshData(control.aasRowId, axn, newValue); break;
+
+                    case 'Label':
+                    case 'ToolTip': control.aasChartProperties.RefreshData(control.aasRowId, axn + property, newValue); break;
                 }
             };
 
