@@ -207,10 +207,13 @@ Global.NewChartBuilder = {
                         break;
                 }
 
-                if (scale !== 1) {
+                if (controlInfo.PropertyBag.UnitPrefix !== unit) {
 
                     controlInfo.PropertyBag.UnitPrefix = unit;
                     Aspectize.UiExtensions.Notify(control, 'OnUnitPrefixChanged', unit);
+                }
+
+                if (scale !== 1) {
 
                     min /= scale;
                     max /= scale;
