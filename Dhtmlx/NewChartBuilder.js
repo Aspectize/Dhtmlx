@@ -162,6 +162,8 @@ Global.NewChartBuilder = {
                 var max = controlInfo.PropertyBag.yEnd;
                 var step = controlInfo.PropertyBag.yStep;
 
+                if (console && console.log) console.log('min ' + min + ' max = ' + max);
+
                 var scale = 1;
                 var unit = '';
                 var prefixType = controlInfo.PropertyBag.AutoUnitType;
@@ -393,29 +395,8 @@ Global.NewChartBuilder = {
 
                 SetAxisProperty: function (axis, property, value) {
 
-                    if (property === 'Value') {
-
-                        var xy = (axis === this.xAxis) ? 'x' : 'y';
-
-                        var minField = xy + 'Start';
-                        var maxField = xy + 'End';
-
-                        if (value < controlInfo.PropertyBag[minField]) {
-
-                            controlInfo.PropertyBag[minField] = value;
-
-                            this.MustRebuildChart = true;
-                        }
-
-                        if (value > controlInfo.PropertyBag[maxField]) {
-
-                            controlInfo.PropertyBag[maxField] = value;
-
-                            this.MustRebuildChart = true;
-                        }
-
-                    } else {
-
+                    if (property !== 'Value') {
+                        
                         var a = this.AllAxis[axis];
 
                         if (a && (a.Display || property === 'Display') && (property in a) && (a[property] !== value)) {
@@ -482,6 +463,9 @@ Global.NewChartBuilder = {
             controlInfo.PropertyBag.yEnd = -1E308;
             controlInfo.PropertyBag.yStep = 0;
 
+            controlInfo.PropertyBag.xStart = +1E308;
+            controlInfo.PropertyBag.xEnd = -1E308;
+            controlInfo.PropertyBag.xStep = 0;
         }
 
         controlInfo.RowCreated = function (control, rowId, cellControls) {
@@ -498,6 +482,39 @@ Global.NewChartBuilder = {
                 var v = cellControl.aasControlInfo.PropertyBag.Value;
                 var l = cellControl.aasControlInfo.PropertyBag.Label;
                 var t = cellControl.aasControlInfo.PropertyBag.ToolTip;
+
+                //#region Calcul du min et du max
+                var cp = control.aasChartProperties;
+                var pb = control.aasControlInfo.PropertyBag;
+                if (axn === cp.xAxis) {
+
+                    if (v < pb.xStart) {
+
+                        pb.xStart = v;
+                        cp.MustRebuildChart = true;
+                    }
+
+                    if (v > pb.xEnd) {
+
+                        pb.xEnd = v;
+                        cp.MustRebuildChart = true;
+                    }
+
+                } else {
+
+                    if (v < pb.yStart) {
+
+                        pb.yStart = v;
+                        cp.MustRebuildChart = true;
+                    }
+
+                    if (v > pb.yEnd) {
+
+                        pb.yEnd = v;
+                        cp.MustRebuildChart = true;
+                    }
+                }
+                //#endregion
 
                 chartItem[axn] = v;
                 chartItem[axn + 'Label'] = l;
