@@ -286,12 +286,23 @@ Global.NewChartBuilder = {
                 //Bug DHTMLX
                 var tips = document.querySelectorAll('.dhx_tooltip');
                 for (var n = 0; n < tips.length; n++) {
-                    tips[n].remove();
+                    var tip = tips[n];                    
+                    if (!tip.dataset.id || tip.dataset.id === control.id) tip.remove();
                 }
                 //Bug DHTMLX
 
                 var chart = new dhtmlXChart(info);
 
+                //Bug DHTMLX
+                var tips = document.querySelectorAll('.dhx_tooltip');
+                for (var n = 0; n < tips.length; n++) {
+                    var tip = tips[n];
+                    if (tip.dataset && !tip.dataset.id) {
+
+                        tip.dataset.id = control.id;
+                    }
+                }
+                //Bug DHTMLX
                 for (var i = 0; i < otherYAxis.length; i++) {
 
                     var axisName = otherYAxis[i];
