@@ -7,8 +7,11 @@ Global.NewChartBuilder = {
 
     initCSS: false,
 
+    tips:{},
+
     Build: function (controlInfo) {
 
+        var This = this;
         if (!this.initCSS) {
             var style = document.createElement('style');
             style.innerHTML = ".hidden.dhx_chart_legend_item { display: block !important; visibility: visible !important; }";
@@ -284,22 +287,26 @@ Global.NewChartBuilder = {
                 }
 
                 //Bug DHTMLX
-                var tips = document.querySelectorAll('.dhx_tooltip');
-                for (var n = 0; n < tips.length; n++) {
-                    var tip = tips[n];                    
-                    if (!tip.dataset.id || tip.dataset.id === control.id) tip.remove();
+                var myTips = This.tips[control.id];
+                if (myTips) {
+                    for (var n = 0; n < myTips.length; n++) {
+                        var tip = myTips[n];
+                        tip.remove();
+                    }
                 }
                 //Bug DHTMLX
 
                 var chart = new dhtmlXChart(info);
 
                 //Bug DHTMLX
-                var tips = document.querySelectorAll('.dhx_tooltip');
-                for (var n = 0; n < tips.length; n++) {
-                    var tip = tips[n];
-                    if (tip.dataset && !tip.dataset.id) {
+                This.tips[control.id] = [];
+                var allTips = document.querySelectorAll('.dhx_tooltip');
+                for (var n = 0; n < allTips.length; n++) {
+                    var tip = allTips[n];
+                    if (tip.dataset && !tip.dataset.isTip) {
 
-                        tip.dataset.id = control.id;
+                        tip.dataset.isTip = true;
+                        This.tips[control.id].push(tip);
                     }
                 }
                 //Bug DHTMLX
