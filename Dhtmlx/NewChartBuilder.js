@@ -291,7 +291,15 @@ Global.NewChartBuilder = {
                 if (myTips) {
                     for (var n = 0; n < myTips.length; n++) {
                         var tip = myTips[n];
-                        tip.remove();
+
+                        if (tip.remove) {
+                            tip.remove();
+                        } else {
+                            if (tip.parentNode) {
+                                tip.parentNode.removeChild(tip);
+                            }
+                        }
+                        
                     }
                 }
                 //Bug DHTMLX
