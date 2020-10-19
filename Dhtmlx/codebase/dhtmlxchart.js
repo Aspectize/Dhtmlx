@@ -1,9 +1,6970 @@
 /*
-Product Name: dhtmlxChart 
-Version: 5.1.0 
+Product Name: dhtmlxSuite 
+Version: 5.2.0 
 Edition: Standard 
-License: content of this file is covered by DHTMLX Commercial or Enterprise license. Usage without proper license is prohibited. To obtain it contact sales@dhtmlx.com
+License: content of this file is covered by GPL. Usage outside GPL terms is prohibited. To obtain Commercial or Enterprise license contact sales@dhtmlx.com
 Copyright UAB Dinamenta http://www.dhtmlx.com
 */
 
-if(!window.dhtmlx){dhtmlx={}}dhtmlx.assert=function(b,a){if(!b){dhtmlx.error(a)}};dhtmlx.assert_enabled=function(){return false};dhtmlx.assert_event=function(f,c){if(!f._event_check){f._event_check={};f._event_check_size={}}for(var b in c){f._event_check[b.toLowerCase()]=c[b];var e=-1;for(var d in c[b]){e++}f._event_check_size[b.toLowerCase()]=e}};dhtmlx.assert_method_info=function(e,b,d,f){var a=[];for(var c=0;c<f.length;c++){a.push(f[c][0]+" : "+f[c][1]+"\n   "+f[c][2].describe()+(f[c][3]?"; optional":""))}return e.name+"."+b+"\n"+d+"\n Arguments:\n - "+a.join("\n - ")};dhtmlx.assert_method=function(c,a){for(var b in a){dhtmlx.assert_method_process(c,b,a[b].descr,a[b].args,(a[b].min||99),a[b].skip)}};dhtmlx.assert_method_process=function(f,b,e,g,c,d){var a=f[b];if(!d){f[b]=function(){if(arguments.length!=g.length&&arguments.length<c){dhtmlx.log("warn","Incorrect count of parameters\n"+f[b].describe()+"\n\nExpecting "+g.length+" but have only "+arguments.length)}else{for(var h=0;h<g.length;h++){if(!g[h][3]&&!g[h][2](arguments[h])){dhtmlx.log("warn","Incorrect method call\n"+f[b].describe()+"\n\nActual value of "+(h+1)+" parameter: {"+(typeof arguments[h])+"} "+arguments[h])}}}return a.apply(this,arguments)}}f[b].describe=function(){return dhtmlx.assert_method_info(f,b,e,g)}};dhtmlx.assert_event_call=function(c,b,a){if(c._event_check){if(!c._event_check[b]){dhtmlx.log("warn","Not expected event call :"+b)}else{if(dhtmlx.isNotDefined(a)){dhtmlx.log("warn","Event without parameters :"+b)}else{if(c._event_check_size[b]!=a.length){dhtmlx.log("warn","Incorrect event call, expected "+c._event_check_size[b]+" parameter(s), but have "+a.length+" parameter(s), for "+b+" event")}}}}};dhtmlx.assert_event_attach=function(b,a){if(b._event_check&&!b._event_check[a]){dhtmlx.log("warn","Unknown event name: "+a)}};dhtmlx.assert_property=function(b,a){if(!b._settings_check){b._settings_check={}}dhtmlx.extend(b._settings_check,a)};dhtmlx.assert_check=function(c,b){if(typeof c=="object"){for(var a in c){dhtmlx.assert_settings(a,c[a],b)}}};dhtmlx.assert_settings=function(h,e,d){d=d||this._settings_check;if(d){if(!d[h]){return dhtmlx.log("warn","Unknown propery: "+h)}var g="";var b="";var a=false;for(var c=0;c<d[h].length;c++){var f=d[h][c];if(typeof f=="string"){continue}if(typeof f=="function"){a=a||f(e)}else{if(typeof f=="object"&&typeof f[1]=="function"){a=a||f[1](e);if(a&&f[2]){dhtmlx.assert_check(e,f[2])}}}if(a){break}}if(!a){dhtmlx.log("warn","Invalid configuration\n"+dhtmlx.assert_info(h,d)+"\nActual value: {"+(typeof e)+"} "+e)}}};dhtmlx.assert_info=function(b,f){var a=f[b];var e="";var d=[];for(var c=0;c<a.length;c++){if(typeof rule=="string"){e=a[c]}else{if(a[c].describe){d.push(a[c].describe())}else{if(a[c][1]&&a[c][1].describe){d.push(a[c][1].describe())}}}}return"Property: "+b+", "+e+" \nExpected value: \n - "+d.join("\n - ")};if(dhtmlx.assert_enabled()){dhtmlx.assert_rule_color=function(a){if(typeof a!="string"){return false}if(a.indexOf("#")!==0){return false}if(a.substr(1).replace(/[0-9A-F]/gi,"")!==""){return false}return true};dhtmlx.assert_rule_color.describe=function(){return"{String} Value must start from # and contain hexadecimal code of color"};dhtmlx.assert_rule_template=function(a){if(typeof a=="function"){return true}if(typeof a=="string"){return true}return false};dhtmlx.assert_rule_template.describe=function(){return"{Function},{String} Value must be a function which accepts data object and return text string, or a sting with optional template markers"};dhtmlx.assert_rule_boolean=function(a){if(typeof a=="boolean"){return true}return false};dhtmlx.assert_rule_boolean.describe=function(){return"{Boolean} true or false"};dhtmlx.assert_rule_object=function(a,b){if(typeof a=="object"){return true}return false};dhtmlx.assert_rule_object.describe=function(){return"{Object} Configuration object"};dhtmlx.assert_rule_string=function(a){if(typeof a=="string"){return true}return false};dhtmlx.assert_rule_string.describe=function(){return"{String} Plain string"};dhtmlx.assert_rule_htmlpt=function(a){return !!dhtmlx.toNode(a)};dhtmlx.assert_rule_htmlpt.describe=function(){return"{Object},{String} HTML node or ID of HTML Node"};dhtmlx.assert_rule_notdocumented=function(a){return false};dhtmlx.assert_rule_notdocumented.describe=function(){return"This options wasn't documented"};dhtmlx.assert_rule_key=function(b){var a=function(c){return b[c]};a.describe=function(){var d=[];for(var c in b){d.push(c)}return"{String} can take one of next values: "+d.join(", ")};return a};dhtmlx.assert_rule_dimension=function(a){if(a*1==a&&!isNaN(a)&&a>=0){return true}return false};dhtmlx.assert_rule_dimension.describe=function(){return"{Integer} value must be a positive number"};dhtmlx.assert_rule_number=function(a){if(typeof a=="number"){return true}return false};dhtmlx.assert_rule_number.describe=function(){return"{Integer} value must be a number"};dhtmlx.assert_rule_function=function(a){if(typeof a=="function"){return true}return false};dhtmlx.assert_rule_function.describe=function(){return"{Function} value must be a custom function"};dhtmlx.assert_rule_any=function(a){return true};dhtmlx.assert_rule_any.describe=function(){return"Any value"};dhtmlx.assert_rule_mix=function(d,c){var e=function(a){if(d(a)||c(a)){return true}return false};e.describe=function(){return d.describe()};return e}}dhtmlx.codebase="./";dhtmlx.copy=function(b){var a=dhtmlx.copy._function;a.prototype=b;return new a()};dhtmlx.copy._function=function(){};dhtmlx.extend=function(b,a){for(var c in a){b[c]=a[c]}if(dhtmlx.assert_enabled()&&a._assert){b._assert();b._assert=null}dhtmlx.assert(b,"Invalid nesting target");dhtmlx.assert(a,"Invalid nesting source");if(a._init){b._init()}return b};dhtmlx.proto_extend=function(){var f=arguments;var c=f[0];var b=[];for(var e=f.length-1;e>0;e--){if(typeof f[e]=="function"){f[e]=f[e].prototype}for(var d in f[e]){if(d=="_init"){b.push(f[e][d])}else{if(!c[d]){c[d]=f[e][d]}}}}if(f[0]._init){b.push(f[0]._init)}c._init=function(){for(var g=0;g<b.length;g++){b[g].apply(this,arguments)}};c.base=f[1];var a=function(g){this._init(g);if(this._parseSettings){this._parseSettings(g,this.defaults)}};a.prototype=c;c=f=null;return a};dhtmlx.bind=function(b,a){return function(){return b.apply(a,arguments)}};dhtmlx.require=function(a){if(!dhtmlx._modules[a]){dhtmlx.assert(dhtmlx.ajax,"load module is required");dhtmlx.exec(dhtmlx.ajax().sync().get(dhtmlx.codebase+a).responseText);dhtmlx._modules[a]=true}};dhtmlx._modules={};dhtmlx.exec=function(code){if(window.execScript){window.execScript(code)}else{window.eval(code)}};dhtmlx.methodPush=function(a,c,b){return function(){var d=false;d=a[c].apply(a,arguments);return d}};dhtmlx.isNotDefined=function(b){return typeof b=="undefined"};dhtmlx.delay=function(d,b,c,a){setTimeout(function(){var e=d.apply(b,c);d=b=c=null;return e},a||1)};dhtmlx.uid=function(){if(!this._seed){this._seed=(new Date).valueOf()}this._seed++;return this._seed};dhtmlx.toNode=function(a){if(typeof a=="string"){return document.getElementById(a)}return a};dhtmlx.toArray=function(a){return dhtmlx.extend((a||[]),dhtmlx.PowerArray)};dhtmlx.toFunctor=function(str){return(typeof(str)=="string")?eval(str):str};dhtmlx._events={};dhtmlx.event=function(d,c,a,b){d=dhtmlx.toNode(d);var e=dhtmlx.uid();dhtmlx._events[e]=[d,c,a];if(b){a=dhtmlx.bind(a,b)}if(d.addEventListener){d.addEventListener(c,a,false)}else{if(d.attachEvent){d.attachEvent("on"+c,a)}}return e};dhtmlx.eventRemove=function(b){if(!b){return}dhtmlx.assert(this._events[b],"Removing non-existing event");var a=dhtmlx._events[b];if(a[0].removeEventListener){a[0].removeEventListener(a[1],a[2],false)}else{if(a[0].detachEvent){a[0].detachEvent("on"+a[1],a[2])}}delete this._events[b]};dhtmlx.log=function(b,c,a){if(window.console&&console.log){b=b.toLowerCase();if(window.console[b]){window.console[b](c||"unknown error")}else{window.console.log(b+": "+c)}if(a){window.console.log(a)}}};dhtmlx.log_full_time=function(a){dhtmlx._start_time_log=new Date();dhtmlx.log("Info","Timing start ["+a+"]");window.setTimeout(function(){var b=new Date();dhtmlx.log("Info","Timing end ["+a+"]:"+(b.valueOf()-dhtmlx._start_time_log.valueOf())/1000+"s")},1)};dhtmlx.log_time=function(a){var c="_start_time_log"+a;if(!dhtmlx[c]){dhtmlx[c]=new Date();dhtmlx.log("Info","Timing start ["+a+"]")}else{var b=new Date();dhtmlx.log("Info","Timing end ["+a+"]:"+(b.valueOf()-dhtmlx[c].valueOf())/1000+"s");dhtmlx[c]=null}};dhtmlx.error=function(b,a){dhtmlx.log("error",b,a)};dhtmlx.EventSystem={_init:function(){this._events={};this._handlers={};this._map={}},block:function(){this._events._block=true},unblock:function(){this._events._block=false},mapEvent:function(a){dhtmlx.extend(this._map,a)},callEvent:function(c,e){if(this._events._block){return true}c=c.toLowerCase();dhtmlx.assert_event_call(this,c,e);var d=this._events[c.toLowerCase()];var a=true;if(dhtmlx.debug){dhtmlx.log("info","["+this.name+"] event:"+c,e)}if(d){for(var b=0;b<d.length;b++){if(d[b].apply(this,(e||[]))===false){a=false}}}if(this._map[c]&&!this._map[c].callEvent(c,e)){a=false}return a},attachEvent:function(b,a,d){b=b.toLowerCase();dhtmlx.assert_event_attach(this,b);d=d||dhtmlx.uid();a=dhtmlx.toFunctor(a);var c=this._events[b]||dhtmlx.toArray();c.push(a);this._events[b]=c;this._handlers[d]={f:a,t:b};return d},detachEvent:function(d){if(this._handlers[d]){var b=this._handlers[d].t;var a=this._handlers[d].f;var c=this._events[b];c.remove(a);delete this._handlers[d]}}};dhtmlx.PowerArray={removeAt:function(b,a){if(b>=0){this.splice(b,(a||1))}},remove:function(a){this.removeAt(this.find(a))},insertAt:function(c,d){if(!d&&d!==0){this.push(c)}else{var a=this.splice(d,(this.length-d));this[d]=c;this.push.apply(this,a)}},find:function(a){for(i=0;i<this.length;i++){if(a==this[i]){return i}}return -1},each:function(a,c){for(var b=0;b<this.length;b++){a.call((c||this),this[b])}},map:function(a,c){for(var b=0;b<this.length;b++){this[b]=a.call((c||this),this[b])}return this}};dhtmlx.env={};if(navigator.userAgent.indexOf("Opera")!=-1){dhtmlx._isOpera=true}else{dhtmlx._isIE=!!document.all;dhtmlx._isFF=!document.all;dhtmlx._isWebKit=(navigator.userAgent.indexOf("KHTML")!=-1);if(navigator.appVersion.indexOf("MSIE 8.0")!=-1&&document.compatMode!="BackCompat"){dhtmlx._isIE=8}if(navigator.appVersion.indexOf("MSIE 9.0")!=-1&&document.compatMode!="BackCompat"){dhtmlx._isIE=9}}dhtmlx.env={};(function(){dhtmlx.env.transform=false;dhtmlx.env.transition=false;var a={};a.names=["transform","transition"];a.transform=["transform","WebkitTransform","MozTransform","oTransform","msTransform"];a.transition=["transition","WebkitTransition","MozTransition","oTransition"];var e=document.createElement("DIV");var c;for(var b=0;b<a.names.length;b++){while(p=a[a.names[b]].pop()){if(typeof e.style[p]!="undefined"){dhtmlx.env[a.names[b]]=true}}}})();dhtmlx.env.transform_prefix=(function(){var a;if(dhtmlx._isOpera){a="-o-"}else{a="";if(dhtmlx._isFF){a="-moz-"}if(dhtmlx._isWebKit){a="-webkit-"}}return a})();dhtmlx.env.svg=(function(){return document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure","1.1")})();dhtmlx.zIndex={drag:10000};dhtmlx.html={create:function(b,a,c){a=a||{};var d=document.createElement(b);for(var e in a){d.setAttribute(e,a[e])}if(a.style){d.style.cssText=a.style}if(a["class"]){d.className=a["class"]}if(c){d.innerHTML=c}return d},getValue:function(a){a=dhtmlx.toNode(a);if(!a){return""}return dhtmlx.isNotDefined(a.value)?a.innerHTML:a.value},remove:function(b){if(b instanceof Array){for(var a=0;a<b.length;a++){this.remove(b[a])}}else{if(b&&b.parentNode){b.parentNode.removeChild(b)}}},insertBefore:function(b,c,a){if(!b){return}if(c){c.parentNode.insertBefore(b,c)}else{a.appendChild(b)}},locate:function(b,d){b=b||event;var a=b.target||b.srcElement;while(a){if(a.getAttribute){var c=a.getAttribute(d);if(c){return c}}a=a.parentNode}return null},offset:function(d){if(d.getBoundingClientRect){var g=d.getBoundingClientRect();var h=document.body;var b=document.documentElement;var a=window.pageYOffset||b.scrollTop||h.scrollTop;var e=window.pageXOffset||b.scrollLeft||h.scrollLeft;var f=b.clientTop||h.clientTop||0;var j=b.clientLeft||h.clientLeft||0;var k=g.top+a-f;var c=g.left+e-j;return{y:Math.round(k),x:Math.round(c)}}else{var k=0,c=0;while(d){k=k+parseInt(d.offsetTop,10);c=c+parseInt(d.offsetLeft,10);d=d.offsetParent}return{y:k,x:c}}},pos:function(a){a=a||event;if(a.pageX||a.pageY){return{x:a.pageX,y:a.pageY}}var b=((dhtmlx._isIE)&&(document.compatMode!="BackCompat"))?document.documentElement:document.body;return{x:a.clientX+b.scrollLeft-b.clientLeft,y:a.clientY+b.scrollTop-b.clientTop}},preventEvent:function(a){if(a&&a.preventDefault){a.preventDefault()}dhtmlx.html.stopEvent(a)},stopEvent:function(a){(a||event).cancelBubble=true;return false},addCss:function(b,a){b.className+=" "+a},removeCss:function(b,a){b.className=b.className.replace(RegExp(a,"g"),"")}};(function(){var a=document.getElementsByTagName("SCRIPT");dhtmlx.assert(a.length,"Can't locate codebase");if(a.length){a=(a[a.length-1].getAttribute("src")||"").split("/");a.splice(a.length-1,1);dhtmlx.codebase=a.slice(0,a.length).join("/")+"/"}})();if(!dhtmlx.ui){dhtmlx.ui={}}dhtmlx.Destruction={_init:function(){dhtmlx.destructors.push(this)},destructor:function(a){this.destructor=function(){};this._htmlmap=null;this._htmlrows=null;if(this._html){document.body.appendChild(this._html)}this._html=null;if(this._obj){this._obj.innerHTML="";this._obj._htmlmap=null}this._obj=this._dataobj=null;this.data=null;this._events=this._handlers={};this.canvases=[];if(this.render){this.render=function(){}}}};dhtmlx.destructors=[];dhtmlx.event(window,"unload",function(){if(dhtmlx.destructors){for(var c=0;c<dhtmlx.destructors.length;c++){dhtmlx.destructors[c].destructor(-1)}dhtmlx.destructors=[]}for(var b in dhtmlx._events){var d=dhtmlx._events[b];if(d[0].removeEventListener){d[0].removeEventListener(d[1],d[2],false)}else{if(d[0].detachEvent){d[0].detachEvent("on"+d[1],d[2])}}delete dhtmlx._events[b]}});dhtmlx.ajax=function(a,b,c){if(arguments.length!==0){var d=new dhtmlx.ajax();if(c){d.master=c}d.get(a,null,b)}if(!this.getXHR){return new dhtmlx.ajax()}return this};dhtmlx.ajax.prototype={getXHR:function(){if(dhtmlx._isIE){return new ActiveXObject("Microsoft.xmlHTTP")}else{return new XMLHttpRequest()}},send:function(e,j,g){var b=this.getXHR();if(typeof g=="function"){g=[g]}if(typeof j=="object"){var f=[];for(var c in j){var h=j[c];if(h===null||h===dhtmlx.undefined){h=""}f.push(c+"="+encodeURIComponent(h))}j=f.join("&")}if(j&&!this.post){e=e+(e.indexOf("?")!=-1?"&":"?")+j;j=null}b.open(this.post?"POST":"GET",e,!this._sync);if(this.post){b.setRequestHeader("Content-type","application/x-www-form-urlencoded")}var d=this;b.onreadystatechange=function(){if(!b.readyState||b.readyState==4){if(g&&d){for(var a=0;a<g.length;a++){if(g[a]){g[a].call((d.master||d),b.responseText,b.responseXML,b)}}}d.master=null;g=d=null}};b.send(j||null);return b},get:function(a,c,b){this.post=false;return this.send(a,c,b)},post:function(a,c,b){this.post=true;return this.send(a,c,b)},sync:function(){this._sync=true;return this}};dhtmlx.AtomDataLoader={_init:function(a){this.data={};if(a){this._settings.datatype=a.datatype||"json";this._after_init.push(this._load_when_ready)}},_load_when_ready:function(){this._ready_for_data=true;if(this._settings.url){this.url_setter(this._settings.url)}if(this._settings.data){this.data_setter(this._settings.data)}},url_setter:function(a){if(!this._ready_for_data){return a}this.load(a,this._settings.datatype);return a},data_setter:function(a){if(!this._ready_for_data){return a}this.parse(a,this._settings.datatype);return true},load:function(a,b){this.callEvent("onXLS",[]);if(typeof b=="string"){this.data.driver=dhtmlx.DataDriver[b];b=arguments[2]}else{this.data.driver=dhtmlx.DataDriver[this._settings.datatype||"xml"]}if(window.dhx4){return dhx4.ajax.get(a,dhtmlx.bind(function(d){var c=d.xmlDoc;var f=c.responseText;var e=c.responseXML;if(this._onLoad){this._onLoad.call(this,f,e,c)}if(b){b.call(this,f,e,c)}},this))}else{dhtmlx.ajax(a,[this._onLoad,b],this)}},parse:function(b,a){this.callEvent("onXLS",[]);this.data.driver=dhtmlx.DataDriver[a||"xml"];this._onLoad(b,null)},_onLoad:function(e,b,a){var c=this.data.driver;var d=c.getRecords(c.toObject(e,b))[0];this.data=(c?c.getDetails(d):e);this.callEvent("onXLE",[])},_check_data_feed:function(b){if(!this._settings.dataFeed||this._ignore_feed||!b){return true}var a=this._settings.dataFeed;if(typeof a=="function"){return a.call(this,(b.id||b),b)}a=a+(a.indexOf("?")==-1?"?":"&")+"action=get&id="+encodeURIComponent(b.id||b);this.callEvent("onXLS",[]);dhtmlx.ajax(a,function(d,c){this._ignore_feed=true;this.setValues(dhtmlx.DataDriver.json.toObject(d)[0]);this._ignore_feed=false;this.callEvent("onXLE",[])},this);return false}};dhtmlx.DataDriver={};dhtmlx.DataDriver.json={toObject:function(data){if(!data){data="[]"}if(typeof data=="string"){eval("dhtmlx.temp="+data);return dhtmlx.temp}return data},getRecords:function(a){if(a&&a.data){a=a.data}if(a&&!(a instanceof Array)){return[a]}return a},getDetails:function(a){return a},getInfo:function(a){return{_size:(a.total_count||0),_from:(a.pos||0),_key:(a.dhx_security)}}};dhtmlx.DataDriver.json_ext={toObject:function(data){if(!data){data="[]"}if(typeof data=="string"){var temp;eval("temp="+data);dhtmlx.temp=[];var header=temp.header;for(var i=0;i<temp.data.length;i++){var item={};for(var j=0;j<header.length;j++){if(typeof(temp.data[i][j])!="undefined"){item[header[j]]=temp.data[i][j]}}dhtmlx.temp.push(item)}return dhtmlx.temp}return data},getRecords:function(a){if(a&&!(a instanceof Array)){return[a]}return a},getDetails:function(a){return a},getInfo:function(a){return{_size:(a.total_count||0),_from:(a.pos||0)}}};dhtmlx.DataDriver.html={toObject:function(b){if(typeof b=="string"){var a=null;if(b.indexOf("<")==-1){a=dhtmlx.toNode(b)}if(!a){a=document.createElement("DIV");a.innerHTML=b}return a.getElementsByTagName(this.tag)}return b},getRecords:function(a){if(a.tagName){return a.childNodes}return a},getDetails:function(a){return dhtmlx.DataDriver.xml.tagToObject(a)},getInfo:function(a){return{_size:0,_from:0}},tag:"LI"};dhtmlx.DataDriver.jsarray={toObject:function(data){if(typeof data=="string"){eval("dhtmlx.temp="+data);return dhtmlx.temp}return data},getRecords:function(a){return a},getDetails:function(c){var a={};for(var b=0;b<c.length;b++){a["data"+b]=c[b]}return a},getInfo:function(a){return{_size:0,_from:0}}};dhtmlx.DataDriver.csv={toObject:function(a){return a},getRecords:function(a){return a.split(this.row)},getDetails:function(c){c=this.stringToArray(c);var a={};for(var b=0;b<c.length;b++){a["data"+b]=c[b]}return a},getInfo:function(a){return{_size:0,_from:0}},stringToArray:function(b){b=b.split(this.cell);for(var a=0;a<b.length;a++){b[a]=b[a].replace(/^[ \t\n\r]*(\"|)/g,"").replace(/(\"|)[ \t\n\r]*$/g,"")}return b},row:"\n",cell:","};dhtmlx.DataDriver.xml={toObject:function(b,a){if(a&&(a=this.checkResponse(b,a))){return a}if(typeof b=="string"){return this.fromString(b)}return b},getRecords:function(a){return this.xpath(a,this.records)},records:"/*/item",getDetails:function(a){return this.tagToObject(a,{})},getInfo:function(a){return{_size:(a.documentElement.getAttribute("total_count")||0),_from:(a.documentElement.getAttribute("pos")||0),_key:(a.documentElement.getAttribute("dhx_security"))}},xpath:function(d,k){if(window.XPathResult){var c=d;if(d.nodeName.indexOf("document")==-1){d=d.ownerDocument}var h=[];var b=d.evaluate(k,c,null,XPathResult.ANY_TYPE,null);var j=b.iterateNext();while(j){h.push(j);j=b.iterateNext()}return h}else{var g=true;try{if(typeof(d.selectNodes)=="undefined"){g=false}}catch(f){}if(g){return d.selectNodes(k)}else{var a=k.split("/").pop();return d.getElementsByTagName(a)}}},tagToObject:function(d,k){k=k||{};var f=false;var c=d.childNodes;var j={};for(var h=0;h<c.length;h++){if(c[h].nodeType==1){var g=c[h].tagName;if(typeof k[g]!="undefined"){if(!(k[g] instanceof Array)){k[g]=[k[g]]}k[g].push(this.tagToObject(c[h],{}))}else{k[c[h].tagName]=this.tagToObject(c[h],{})}f=true}}var e=d.attributes;if(e&&e.length){for(var h=0;h<e.length;h++){k[e[h].name]=e[h].value}f=true}if(!f){return this.nodeValue(d)}k.value=this.nodeValue(d);return k},nodeValue:function(a){if(a.firstChild){return a.firstChild.wholeText||a.firstChild.data}return""},fromString:function(b){if(window.DOMParser&&!dhtmlx._isIE){return(new DOMParser()).parseFromString(b,"text/xml")}if(window.ActiveXObject){var a=new ActiveXObject("Microsoft.xmlDOM");a.loadXML(b);return a}dhtmlx.error("Load from xml string is not supported")},checkResponse:function(d,c){if(c&&(c.firstChild&&c.firstChild.tagName!="parsererror")){return c}var b=this.fromString(d.replace(/^[\s]+/,""));if(b){return b}dhtmlx.error("xml can't be parsed",d)}};dhtmlx.DataLoader={_init:function(a){a=a||"";this.name="DataStore";this.data=(a.datastore)||(new dhtmlx.DataStore());this._readyHandler=this.data.attachEvent("onStoreLoad",dhtmlx.bind(this._call_onready,this))},load:function(a,b){dhtmlx.AtomDataLoader.load.apply(this,arguments);if(!this.data.feed){this.data.feed=function(d,c){if(this._load_count){return this._load_count=[d,c]}else{this._load_count=true}this.load(a+((a.indexOf("?")==-1)?"?":"&")+"posStart="+d+"&count="+c,function(){var e=this._load_count;this._load_count=false;if(typeof e=="object"){this.data.feed.apply(this,e)}})}}},_onLoad:function(c,b,a){this.data._parse(this.data.driver.toObject(c,b));this.callEvent("onXLE",[]);if(this._readyHandler){this.data.detachEvent(this._readyHandler);this._readyHandler=null}},dataFeed_setter:function(a){this.data.attachEvent("onBeforeFilter",dhtmlx.bind(function(g,f){if(this._settings.dataFeed){var e={};if(!g&&!e){return}if(typeof g=="function"){if(!f){return}g(f,e)}else{e={text:f}}this.clearAll();var b=this._settings.dataFeed;if(typeof b=="function"){return b.call(this,f,e)}var d=[];for(var c in e){d.push("dhx_filter["+c+"]="+encodeURIComponent(e[c]))}this.load(b+(b.indexOf("?")<0?"?":"&")+d.join("&"),this._settings.datatype);return false}},this));return a},_call_onready:function(){if(this._settings.ready){var a=dhtmlx.toFunctor(this._settings.ready);if(a&&a.call){a.apply(this,arguments)}}}};dhtmlx.DataStore=function(){this.name="DataStore";dhtmlx.extend(this,dhtmlx.EventSystem);this.setDriver("xml");this.pull={};this.order=dhtmlx.toArray()};dhtmlx.DataStore.prototype={setDriver:function(a){dhtmlx.assert(dhtmlx.DataDriver[a],"incorrect DataDriver");this.driver=dhtmlx.DataDriver[a]},_parse:function(e){this.callEvent("onParse",[this.driver,e]);if(this._filter_order){this.filter()}var f=this.driver.getInfo(e);if(f._key){dhtmlx.security_key=f._key}var d=this.driver.getRecords(e);var h=(f._from||0)*1;if(h===0&&this.order[0]){h=this.order.length}var b=0;for(var c=0;c<d.length;c++){var a=this.driver.getDetails(d[c]);var g=this.id(a);if(!this.pull[g]){this.order[b+h]=g;b++}this.pull[g]=a;if(this.extraParser){this.extraParser(a)}if(this._scheme){if(this._scheme.$init){this._scheme.$update(a)}else{if(this._scheme.$update){this._scheme.$update(a)}}}}for(var c=0;c<f._size;c++){if(!this.order[c]){var g=dhtmlx.uid();var a={id:g,$template:"loading"};this.pull[g]=a;this.order[c]=g}}this.callEvent("onStoreLoad",[this.driver,e]);this.refresh()},id:function(a){return a.id||(a.id=dhtmlx.uid())},changeId:function(b,a){dhtmlx.assert(this.pull[b],"Can't change id, for non existing item: "+b);this.pull[a]=this.pull[b];this.pull[a].id=a;this.order[this.order.find(b)]=a;if(this._filter_order){this._filter_order[this._filter_order.find(b)]=a}this.callEvent("onIdChange",[b,a]);if(this._render_change_id){this._render_change_id(b,a)}},get:function(a){return this.item(a)},set:function(b,a){return this.update(b,a)},item:function(a){return this.pull[a]},update:function(b,a){if(this._scheme&&this._scheme.$update){this._scheme.$update(a)}if(this.callEvent("onBeforeUpdate",[b,a])===false){return false}this.pull[b]=a;this.refresh(b)},refresh:function(a){if(this._skip_refresh){return}if(a){this.callEvent("onStoreUpdated",[a,this.pull[a],"update"])}else{this.callEvent("onStoreUpdated",[null,null,null])}},silent:function(a){this._skip_refresh=true;a.call(this);this._skip_refresh=false},getRange:function(d,c){if(d){d=this.indexById(d)}else{d=this.startOffset||0}if(c){c=this.indexById(c)}else{c=Math.min((this.endOffset||Infinity),(this.dataCount()-1));if(c<0){c=0}}if(this.min){d=this.min}if(this.max){c=this.max}if(d>c){var b=c;c=d;d=b}return this.getIndexRange(d,c)},getIndexRange:function(d,c){c=Math.min((c||Infinity),this.dataCount()-1);var a=dhtmlx.toArray();for(var b=(d||0);b<=c;b++){a.push(this.item(this.order[b]))}return a},dataCount:function(){return this.order.length},exists:function(a){return !!(this.pull[a])},move:function(a,d){if(a<0||d<0){dhtmlx.error("DataStore::move","Incorrect indexes");return}var c=this.idByIndex(a);var b=this.item(c);this.order.removeAt(a);this.order.insertAt(c,Math.min(this.order.length,d));this.callEvent("onStoreUpdated",[c,b,"move"])},scheme:function(a){this._scheme=a},sync:function(e,d,a){if(typeof d!="function"){a=d;d=null}if(dhtmlx.debug_bind){this.debug_sync_master=e;dhtmlx.log("[sync] "+this.debug_bind_master.name+"@"+this.debug_bind_master._settings.id+" <= "+this.debug_sync_master.name+"@"+this.debug_sync_master._settings.id)}var c=e;if(e.name!="DataStore"){e=e.data}var b=dhtmlx.bind(function(h,f,g){if(g!="update"||d){h=null}if(!h){this.order=dhtmlx.toArray([].concat(e.order));this._filter_order=null;this.pull=e.pull;if(d){this.silent(d)}if(this._on_sync){this._on_sync()}}if(dhtmlx.debug_bind){dhtmlx.log("[sync:request] "+this.debug_sync_master.name+"@"+this.debug_sync_master._settings.id+" <= "+this.debug_bind_master.name+"@"+this.debug_bind_master._settings.id)}if(!a){this.refresh(h)}else{a=false}},this);e.attachEvent("onStoreUpdated",b);this.feed=function(g,f){c.loadNext(f,g)};b()},add:function(e,a){if(this._scheme){e=e||{};for(var b in this._scheme){e[b]=e[b]||this._scheme[b]}if(this._scheme){if(this._scheme.$init){this._scheme.$update(e)}else{if(this._scheme.$update){this._scheme.$update(e)}}}}var f=this.id(e);var d=this.dataCount();if(dhtmlx.isNotDefined(a)||a<0){a=d}if(a>d){dhtmlx.log("Warning","DataStore:add","Index of out of bounds");a=Math.min(this.order.length,a)}if(this.callEvent("onBeforeAdd",[f,e,a])===false){return false}if(this.exists(f)){return dhtmlx.error("Not unique ID")}this.pull[f]=e;this.order.insertAt(f,a);if(this._filter_order){var c=this._filter_order.length;if(!a&&this.order.length){c=0}this._filter_order.insertAt(f,c)}this.callEvent("onafterAdd",[f,a]);this.callEvent("onStoreUpdated",[f,e,"add"]);return f},remove:function(c){if(c instanceof Array){for(var a=0;a<c.length;a++){this.remove(c[a])}return}if(this.callEvent("onBeforeDelete",[c])===false){return false}if(!this.exists(c)){return dhtmlx.error("Not existing ID",c)}var b=this.item(c);this.order.remove(c);if(this._filter_order){this._filter_order.remove(c)}delete this.pull[c];this.callEvent("onafterdelete",[c]);this.callEvent("onStoreUpdated",[c,b,"delete"])},clearAll:function(){this.pull={};this.order=dhtmlx.toArray();this.feed=null;this._filter_order=null;this.callEvent("onClearAll",[]);this.refresh()},idByIndex:function(a){if(a>=this.order.length||a<0){dhtmlx.log("Warning","DataStore::idByIndex Incorrect index")}return this.order[a]},indexById:function(b){var a=this.order.find(b);return a},next:function(b,a){return this.order[this.indexById(b)+(a||1)]},first:function(){return this.order[0]},last:function(){return this.order[this.order.length-1]},previous:function(b,a){return this.order[this.indexById(b)-(a||1)]},sort:function(f,b,a){var c=f;if(typeof f=="function"){c={as:f,dir:b}}else{if(typeof f=="string"){c={by:f,dir:b,as:a}}}var e=[c.by,c.dir,c.as];if(!this.callEvent("onbeforesort",e)){return}if(this.order.length){var g=dhtmlx.sort.create(c);var d=this.getRange(this.first(),this.last());d.sort(g);this.order=d.map(function(h){return this.id(h)},this)}this.refresh();this.callEvent("onaftersort",e)},filter:function(e,d){if(!this.callEvent("onBeforeFilter",[e,d])){return}if(this._filter_order){this.order=this._filter_order;delete this._filter_order}if(!this.order.length){return}if(e){var b=e;d=d||"";if(typeof e=="string"){e=dhtmlx.Template.fromHTML(e);d=d.toString().toLowerCase();b=function(h,g){return e(h).toLowerCase().indexOf(g)!=-1}}var c=dhtmlx.toArray();for(var a=0;a<this.order.length;a++){var f=this.order[a];if(b(this.item(f),d)){c.push(f)}}this._filter_order=this.order;this.order=c}this.refresh();this.callEvent("onAfterFilter",[])},each:function(c,b){for(var a=0;a<this.order.length;a++){c.call((b||this),this.item(this.order[a]))}},provideApi:function(d,b){this.debug_bind_master=d;if(b){this.mapEvent({onbeforesort:d,onaftersort:d,onbeforeadd:d,onafteradd:d,onbeforedelete:d,onafterdelete:d,onbeforeupdate:d})}var c=["get","set","sort","add","remove","exists","idByIndex","indexById","item","update","refresh","dataCount","filter","next","previous","clearAll","first","last","serialize"];for(var a=0;a<c.length;a++){d[c[a]]=dhtmlx.methodPush(this,c[a])}if(dhtmlx.assert_enabled()){this.assert_event(d)}},serialize:function(){var c=this.order;var a=[];for(var b=0;b<c.length;b++){a.push(this.pull[c[b]])}return a}};dhtmlx.sort={create:function(a){return dhtmlx.sort.dir(a.dir,dhtmlx.sort.by(a.by,a.as))},as:{"int":function(d,c){d=d*1;c=c*1;return d>c?1:(d<c?-1:0)},string_strict:function(d,c){d=d.toString();c=c.toString();return d>c?1:(d<c?-1:0)},string:function(d,c){d=d.toString().toLowerCase();c=c.toString().toLowerCase();return d>c?1:(d<c?-1:0)}},by:function(b,a){if(!b){return a}if(typeof a!="function"){a=dhtmlx.sort.as[a||"string"]}b=dhtmlx.Template.fromHTML(b);return function(d,c){return a(b(d),b(c))}},dir:function(b,a){if(b=="asc"){return a}return function(d,c){return a(d,c)*-1}}};dhtmlx.KeyEvents={_init:function(){dhtmlx.event(this._obj,"keypress",this._onKeyPress,this)},_onKeyPress:function(b){b=b||event;var a=b.which||b.keyCode;this.callEvent((this._edit_id?"onEditKeyPress":"onKeyPress"),[a,b.ctrlKey,b.shiftKey,b])}};dhtmlx.MouseEvents={_init:function(){if(this.on_click){dhtmlx.event(this._obj,"click",this._onClick,this);dhtmlx.event(this._obj,"contextmenu",this._onContext,this)}if(this.on_dblclick){dhtmlx.event(this._obj,"dblclick",this._onDblClick,this)}if(this.on_mouse_move){dhtmlx.event(this._obj,"mousemove",this._onMouse,this);dhtmlx.event(this._obj,(dhtmlx._isIE?"mouseleave":"mouseout"),this._onMouse,this)}},_onClick:function(a){return this._mouseEvent(a,this.on_click,"ItemClick")},_onDblClick:function(a){return this._mouseEvent(a,this.on_dblclick,"ItemDblClick")},_onContext:function(a){var b=dhtmlx.html.locate(a,this._id);if(b&&!this.callEvent("onBeforeContextMenu",[b,a])){return dhtmlx.html.preventEvent(a)}},_onMouse:function(a){if(dhtmlx._isIE){a=document.createEventObject(event)}if(this._mouse_move_timer){window.clearTimeout(this._mouse_move_timer)}this.callEvent("onMouseMoving",[a]);this._mouse_move_timer=window.setTimeout(dhtmlx.bind(function(){if(a.type=="mousemove"){this._onMouseMove(a)}else{this._onMouseOut(a)}},this),500)},_onMouseMove:function(a){if(!this._mouseEvent(a,this.on_mouse_move,"MouseMove")){this.callEvent("onMouseOut",[a||event])}},_onMouseOut:function(a){this.callEvent("onMouseOut",[a||event])},_mouseEvent:function(g,f,b){g=g||event;var a=g.target||g.srcElement;var c="";var h=null;var d=false;while(a&&a.parentNode){if(!d&&a.getAttribute){h=a.getAttribute(this._id);if(h){if(a.getAttribute("userdata")){this.callEvent("onLocateData",[h,a,g])}if(!this.callEvent("on"+b,[h,g,a])){return}d=true}}c=a.className;if(c){c=c.split(" ");c=c[0]||c[1];if(f[c]){return f[c].call(this,g,h||dhtmlx.html.locate(g,this._id),a)}}a=a.parentNode}return d}};dhtmlx.Settings={_init:function(){this._settings=this.config={}},define:function(b,a){if(typeof b=="object"){return this._parseSeetingColl(b)}return this._define(b,a)},_define:function(b,a){dhtmlx.assert_settings.call(this,b,a);var c=this[b+"_setter"];return this._settings[b]=c?c.call(this,a):a},_parseSeetingColl:function(c){if(c){for(var b in c){this._define(b,c[b])}}},_parseSettings:function(c,a){var b=dhtmlx.extend({},a);if(typeof c=="object"&&!c.tagName){dhtmlx.extend(b,c)}this._parseSeetingColl(b)},_mergeSettings:function(a,c){for(var b in c){switch(typeof a[b]){case"object":a[b]=this._mergeSettings((a[b]||{}),c[b]);break;case"undefined":a[b]=c[b];break;default:break}}return a},_parseContainer:function(b,a,c){if(typeof b=="object"&&!b.tagName){b=b.container}this._obj=this.$view=dhtmlx.toNode(b);if(!this._obj&&c){this._obj=c(b)}dhtmlx.assert(this._obj,"Incorrect html container");this._obj.className+=" "+a;this._obj.onselectstart=function(){return false};this._dataobj=this._obj},_set_type:function(a){if(typeof a=="object"){return this.type_setter(a)}dhtmlx.assert(this.types,"RenderStack :: Types are not defined");dhtmlx.assert(this.types[a],"RenderStack :: Inccorect type name",a);this.type=dhtmlx.extend({},this.types[a]);this.customize()},customize:function(a){if(a){dhtmlx.extend(this.type,a)}this.type._item_start=dhtmlx.Template.fromHTML(this.template_item_start(this.type));this.type._item_end=this.template_item_end(this.type);this.render()},type_setter:function(a){this._set_type(typeof a=="object"?dhtmlx.Type.add(this,a):a);return a},template_setter:function(a){return this.type_setter({template:a})},css_setter:function(a){this._obj.className+=" "+a;return a}};dhtmlx.Template={_cache:{},empty:function(){return""},setter:function(a){return dhtmlx.Template.fromHTML(a)},obj_setter:function(b){var a=dhtmlx.Template.setter(b);var c=this;return function(){return a.apply(c,arguments)}},fromHTML:function(a){if(typeof a=="function"){return a}if(this._cache[a]){return this._cache[a]}a=(a||"").toString();a=a.replace(/[\r\n]+/g,"\\n");a=a.replace(/\{obj\.([^}?]+)\?([^:]*):([^}]*)\}/g,'"+(obj.$1?"$2":"$3")+"');a=a.replace(/\{common\.([^}\(]*)\}/g,'"+common.$1+"');a=a.replace(/\{common\.([^\}\(]*)\(\)\}/g,'"+(common.$1?common.$1(obj):"")+"');a=a.replace(/\{obj\.([^}]*)\}/g,'"+obj.$1+"');a=a.replace(/#([a-z0-9_]+)#/gi,'"+obj.$1+"');a=a.replace(/\{obj\}/g,'"+obj+"');a=a.replace(/\{-obj/g,"{obj");a=a.replace(/\{-common/g,"{common");a='return "'+a+'";';return this._cache[a]=Function("obj","common",a)}};dhtmlx.Type={add:function(c,b){if(!c.types&&c.prototype.types){c=c.prototype}if(dhtmlx.assert_enabled()){this.assert_event(b)}var a=b.name||"default";this._template(b);this._template(b,"edit");this._template(b,"loading");c.types[a]=dhtmlx.extend(dhtmlx.extend({},(c.types[a]||this._default)),b);return a},_default:{css:"default",template:function(){return""},template_edit:function(){return""},template_loading:function(){return"..."},width:150,height:80,margin:5,padding:0},_template:function(c,a){a="template"+(a?("_"+a):"");var b=c[a];if(b&&(typeof b=="string")){if(b.indexOf("->")!=-1){b=b.split("->");switch(b[0]){case"html":b=dhtmlx.html.getValue(b[1]).replace(/\"/g,'\\"');break;case"http":b=new dhtmlx.ajax().sync().get(b[1],{uid:(new Date()).valueOf()}).responseText;break;default:break}}c[a]=dhtmlx.Template.fromHTML(b)}}};dhtmlx.SingleRender={_init:function(){},_toHTML:function(a){return this.type._item_start(a,this.type)+this.type.template(a,this.type)+this.type._item_end},render:function(){if(!this.callEvent||this.callEvent("onBeforeRender",[this.data])){if(this.data){this._dataobj.innerHTML=this._toHTML(this.data)}if(this.callEvent){this.callEvent("onAfterRender",[])}}}};dhtmlx.ui.Tooltip=function(a){this.name="Tooltip";if(dhtmlx.assert_enabled()){this._assert()}if(typeof a=="string"){a={template:a}}dhtmlx.extend(this,dhtmlx.Settings);dhtmlx.extend(this,dhtmlx.SingleRender);this._parseSettings(a,{type:"default",dy:0,dx:20});this._dataobj=this._obj=document.createElement("DIV");this._obj.className="dhx_tooltip";dhtmlx.html.insertBefore(this._obj,document.body.firstChild)};dhtmlx.ui.Tooltip.prototype={show:function(a,b){if(this._disabled){return}if(this.data!=a){this.data=a;this.render(a)}this._obj.style.top=b.y+this._settings.dy+"px";this._obj.style.left=b.x+this._settings.dx+"px";this._obj.style.display="block"},hide:function(){this.data=null;this._obj.style.display="none"},disable:function(){this._disabled=true},enable:function(){this._disabled=false},types:{"default":dhtmlx.Template.fromHTML("{obj.id}")},template_item_start:dhtmlx.Template.empty,template_item_end:dhtmlx.Template.empty};dhtmlx.AutoTooltip={tooltip_setter:function(b){var a=new dhtmlx.ui.Tooltip(b);this.attachEvent("onMouseMove",function(d,c){a.show(this.get(d),dhtmlx.html.pos(c))});this.attachEvent("onMouseOut",function(d,c){a.hide()});this.attachEvent("onMouseMoving",function(d,c){a.hide()});return a}};dhtmlx.compat=function(a,b){if(dhtmlx.compat[a]){dhtmlx.compat[a](b)}};if(!dhtmlx.attaches){dhtmlx.attaches={}}dhtmlx.attaches.attachAbstract=function(b,a){var e=document.createElement("DIV");e.id="CustomObject_"+dhtmlx.uid();e.style.width="100%";e.style.height="100%";e.cmp="grid";document.body.appendChild(e);this.attachObject(e.id);a.container=e.id;var d=this.vs[this.av];d.grid=new window[b](a);d.gridId=e.id;d.gridObj=e;d.grid.setSizes=function(){if(this.resize){this.resize()}else{this.render()}};var c="_viewRestore";return this.vs[this[c]()].grid};dhtmlx.attaches.attachDataView=function(a){return this.attachAbstract("dhtmlXDataView",a)};dhtmlx.attaches.attachChart=function(a){return this.attachAbstract("dhtmlXChart",a)};dhtmlx.compat.layout=function(){};dhtmlx.Group={_init:function(){dhtmlx.assert(this.data,"DataStore required for grouping");this.data.attachEvent("onStoreLoad",dhtmlx.bind(function(){if(this._settings.group){this.group(this._settings.group,false)}},this));this.attachEvent("onBeforeRender",dhtmlx.bind(function(a){if(this._settings.sort){a.block();a.sort(this._settings.sort);a.unblock()}},this));this.data.attachEvent("onClearAll",dhtmlx.bind(function(){this.data._not_grouped_order=this.data._not_grouped_pull=null},this));this.attachEvent("onBeforeSort",dhtmlx.bind(function(){this._settings.sort=null},this))},_init_group_data_event:function(b,a){b.attachEvent("onClearAll",dhtmlx.bind(function(){this.ungroup(false);this.block();this.clearAll();this.unblock()},a))},sum:function(b,a){b=dhtmlx.Template.setter(b);a=a||this.data;var c=0;a.each(function(d){c+=b(d)*1});return c},min:function(c,b){c=dhtmlx.Template.setter(c);b=b||this.data;var a=Infinity;b.each(function(d){if(c(d)*1<a){a=c(d)*1}});return a*1},max:function(c,b){c=dhtmlx.Template.setter(c);b=b||this.data;var a=-Infinity;b.each(function(d){if(c(d)*1>a){a=c(d)*1}});return a},_split_data_by:function(f){var h=function(l,k){l=dhtmlx.Template.setter(l);return l(k[0])};var j=dhtmlx.Template.setter(f.by);if(!f.map[j]){f.map[j]=[j,h]}var c={};var g=[];this.data.each(function(k){var l=j(k);if(!c[l]){g.push({id:l});c[l]=dhtmlx.toArray()}c[l].push(k)});for(var a in f.map){var e=(f.map[a][1]||h);if(typeof e!="function"){e=this[e]}for(var d=0;d<g.length;d++){g[d][a]=e.call(this,f.map[a][0],c[g[d].id])}}this.data._not_grouped_order=this.data.order;this.data._not_grouped_pull=this.data.pull;this.data.order=dhtmlx.toArray();this.data.pull={};for(var d=0;d<g.length;d++){var b=this.data.id(g[d]);this.data.pull[b]=g[d];this.data.order.push(b)}this.callEvent("onStoreUpdated",[])},group:function(a,b){this.ungroup(false);this._split_data_by(a);if(b!==false){this.data.callEvent("onStoreUpdated",[])}},ungroup:function(a){if(this.data._not_grouped_order){this.data.order=this.data._not_grouped_order;this.data.pull=this.data._not_grouped_pull;this.data._not_grouped_pull=this.data._not_grouped_order=null}if(a!==false){this.data.callEvent("onStoreUpdated",[])}},group_setter:function(a){dhtmlx.assert(typeof a=="object","Incorrect group value");dhtmlx.assert(a.by,"group.by is mandatory");dhtmlx.assert(a.map,"group.map is mandatory");return a},sort_setter:function(a){if(typeof a!="object"){a={by:a}}this._mergeSettings(a,{as:"string",dir:"asc"});return a}};dhtmlx.Date={Locale:{month_full:["January","February","March","April","May","June","July","August","September","October","November","December"],month_short:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],day_full:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],day_short:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]},date_part:function(a){a.setHours(0);a.setMinutes(0);a.setSeconds(0);a.setMilliseconds(0);return a},time_part:function(a){return(a.valueOf()/1000-a.getTimezoneOffset()*60)%86400},week_start:function(b){var a=b.getDay();if(this.config.start_on_monday){if(a===0){a=6}else{a--}}return this.date_part(this.add(b,-1*a,"day"))},month_start:function(a){a.setDate(1);return this.date_part(a)},year_start:function(a){a.setMonth(0);return this.month_start(a)},day_start:function(a){return this.date_part(a)},add:function(b,c,d){var a=new Date(b.valueOf());switch(d){case"day":a.setDate(a.getDate()+c);break;case"week":a.setDate(a.getDate()+7*c);break;case"month":a.setMonth(a.getMonth()+c);break;case"year":a.setYear(a.getFullYear()+c);break;case"hour":a.setHours(a.getHours()+c);break;case"minute":a.setMinutes(a.getMinutes()+c);break;default:return dhtmlx.Date["add_"+d](b,c,d)}return a},to_fixed:function(a){if(a<10){return"0"+a}return a},copy:function(a){return new Date(a.valueOf())},date_to_str:function(b,a){b=b.replace(/%[a-zA-Z]/g,function(c){switch(c){case"%d":return'"+dhtmlx.Date.to_fixed(date.getDate())+"';case"%m":return'"+dhtmlx.Date.to_fixed((date.getMonth()+1))+"';case"%j":return'"+date.getDate()+"';case"%n":return'"+(date.getMonth()+1)+"';case"%y":return'"+dhtmlx.Date.to_fixed(date.getFullYear()%100)+"';case"%Y":return'"+date.getFullYear()+"';case"%D":return'"+dhtmlx.Date.Locale.day_short[date.getDay()]+"';case"%l":return'"+dhtmlx.Date.Locale.day_full[date.getDay()]+"';case"%M":return'"+dhtmlx.Date.Locale.month_short[date.getMonth()]+"';case"%F":return'"+dhtmlx.Date.Locale.month_full[date.getMonth()]+"';case"%h":return'"+dhtmlx.Date.to_fixed((date.getHours()+11)%12+1)+"';case"%g":return'"+((date.getHours()+11)%12+1)+"';case"%G":return'"+date.getHours()+"';case"%H":return'"+dhtmlx.Date.to_fixed(date.getHours())+"';case"%i":return'"+dhtmlx.Date.to_fixed(date.getMinutes())+"';case"%a":return'"+(date.getHours()>11?"pm":"am")+"';case"%A":return'"+(date.getHours()>11?"PM":"AM")+"';case"%s":return'"+dhtmlx.Date.to_fixed(date.getSeconds())+"';case"%W":return'"+dhtmlx.Date.to_fixed(dhtmlx.Date.getISOWeek(date))+"';default:return c}});if(a){b=b.replace(/date\.get/g,"date.getUTC")}return new Function("date",'return "'+b+'";')},str_to_date:function(e,c){var f="var temp=date.split(/[^0-9a-zA-Z]+/g);";var a=e.match(/%[a-zA-Z]/g);for(var b=0;b<a.length;b++){switch(a[b]){case"%j":case"%d":f+="set[2]=temp["+b+"]||1;";break;case"%n":case"%m":f+="set[1]=(temp["+b+"]||1)-1;";break;case"%y":f+="set[0]=temp["+b+"]*1+(temp["+b+"]>50?1900:2000);";break;case"%g":case"%G":case"%h":case"%H":f+="set[3]=temp["+b+"]||0;";break;case"%i":f+="set[4]=temp["+b+"]||0;";break;case"%Y":f+="set[0]=temp["+b+"]||0;";break;case"%a":case"%A":f+="set[3]=set[3]%12+((temp["+b+"]||'').toLowerCase()=='am'?0:12);";break;case"%s":f+="set[5]=temp["+b+"]||0;";break}}var d="set[0],set[1],set[2],set[3],set[4],set[5]";if(c){d=" Date.UTC("+d+")"}return new Function("date","var set=[0,0,1,0,0,0]; "+f+" return new Date("+d+");")},getISOWeek:function(c){if(!c){return false}var b=c.getDay();if(b===0){b=7}var d=new Date(c.valueOf());d.setDate(c.getDate()+(4-b));var a=d.getFullYear();var f=Math.floor((d.getTime()-new Date(a,0,1).getTime())/86400000);var e=1+Math.floor(f/7);return e},getUTCISOWeek:function(a){return this.getISOWeek(a)}};dhtmlx.math={};dhtmlx.math._toHex=["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"];dhtmlx.math.toHex=function(b,a){b=parseInt(b,10);str="";while(b>0){str=this._toHex[b%16]+str;b=Math.floor(b/16)}while(str.length<a){str="0"+str}return str};dhtmlx.math.hexToDec=function(a){return parseInt(a,16)};dhtmlx.math.toRgb=function(c){var e,d,a,f;if(typeof(c)!="string"){e=c[0];d=c[1];a=c[2]}else{if(c.indexOf("rgb")!=-1){f=c.substr(c.indexOf("(")+1,c.lastIndexOf(")")-c.indexOf("(")-1).split(",");e=f[0];d=f[1];a=f[2]}else{if(c.substr(0,1)=="#"){c=c.substr(1)}e=this.hexToDec(c.substr(0,2));d=this.hexToDec(c.substr(2,2));a=this.hexToDec(c.substr(4,2))}}e=(parseInt(e,10)||0);d=(parseInt(d,10)||0);a=(parseInt(a,10)||0);if(e<0||e>255){e=0}if(d<0||d>255){d=0}if(a<0||a>255){a=0}return[e,d,a]};dhtmlx.math.hsvToRgb=function(j,u,n){var e,l,d,c,o,a,k,m;e=Math.floor((j/60))%6;l=j/60-e;d=n*(1-u);c=n*(1-l*u);o=n*(1-(1-l)*u);a=0;k=0;m=0;switch(e){case 0:a=n;k=o;m=d;break;case 1:a=c;k=n;m=d;break;case 2:a=d;k=n;m=o;break;case 3:a=d;k=c;m=n;break;case 4:a=o;k=d;m=n;break;case 5:a=n;k=d;m=c;break}a=Math.floor(a*255);k=Math.floor(k*255);m=Math.floor(m*255);return[a,k,m]};dhtmlx.math.rgbToHsv=function(c,j,k){var e,d,l,a,m,o,f,n;e=c/255;d=j/255;l=k/255;var a=Math.min(e,d,l);var m=Math.max(e,d,l);f=0;o=m==0?0:(1-a/m);n=m;if(m==a){f=0}else{if(m==e&&d>=l){f=60*(d-l)/(m-a)+0}else{if(m==e&&d<l){f=60*(d-l)/(m-a)+360}else{if(m==d){f=60*(l-e)/(m-a)+120}else{if(m==l){f=60*(e-d)/(m-a)+240}}}}}return[f,o,n]};if(!dhtmlx.presets){dhtmlx.presets={}}dhtmlx.presets.chart={simple:{item:{borderColor:"#ffffff",color:"#2b7100",shadow:false,borderWidth:2},line:{color:"#8ecf03",width:2}},plot:{color:"#1293f8",item:{borderColor:"#636363",borderWidth:1,color:"#ffffff",type:"r",shadow:false},line:{color:"#1293f8",width:2}},diamond:{color:"#b64040",item:{borderColor:"#b64040",color:"#b64040",type:"d",radius:3,shadow:true},line:{color:"#ff9000",width:2}},point:{color:"#fe5916",disableLines:true,fill:false,disableItems:false,item:{color:"#feb916",borderColor:"#fe5916",radius:2,borderWidth:1,type:"r"},alpha:1},line:{line:{color:"#3399ff",width:2},item:{color:"#ffffff",borderColor:"#3399ff",radius:2,borderWidth:2,type:"d"},fill:false,disableItems:false,disableLines:false,alpha:1},area:{fill:"#3399ff",line:{color:"#3399ff",width:1},disableItems:true,alpha:0.2,disableLines:false},round:{item:{radius:3,borderColor:"#3f83ff",borderWidth:1,color:"#3f83ff",type:"r",shadow:false,alpha:0.6}},square:{item:{radius:3,borderColor:"#447900",borderWidth:2,color:"#69ba00",type:"s",shadow:false,alpha:1}},column:{color:"RAINBOW",gradient:false,width:45,radius:0,alpha:1,border:true},stick:{width:5,gradient:false,color:"#67b5c9",radius:2,alpha:1,border:false},alpha:{color:"#b9a8f9",width:70,gradient:"falling",radius:0,alpha:0.5,border:true}};dhtmlx.ui.Map=function(a){this.name="Map";this._id="map_"+dhtmlx.uid();this._key=a;this._map=[];this._areas=[]};dhtmlx.ui.Map.prototype={addRect:function(c,b,a){this._areas.push({index:a,points:b});this._createMapArea(c,"RECT",b,a)},addPoly:function(c,b,a){this._createMapArea(c,"POLY",b,a)},_createMapArea:function(e,b,d,c){var a="";if(arguments.length==4){a="userdata='"+c+"'"}this._map.push("<area "+this._key+"='"+e+"' shape='"+b+"' coords='"+d.join()+"' "+a+"></area>")},addSector:function(a,k,j,g,e,c,d,f){var h=[];h.push(g);h.push(Math.floor(e*d));for(var b=k;b<j;b+=Math.PI/18){h.push(Math.floor(g+c*Math.cos(b)));h.push(Math.floor((e+c*Math.sin(b))*d))}h.push(Math.floor(g+c*Math.cos(j)));h.push(Math.floor((e+c*Math.sin(j))*d));h.push(g);h.push(Math.floor(e*d));return this.addPoly(a,h,f)},render:function(a){var c=dhtmlx.html.create("DIV");c.style.cssText="position:absolute; width:100%; height:100%; top:0px; left:0px;";a.appendChild(c);var b=dhtmlx._isIE?"":"src='data:image/gif;base64,R0lGODlhEgASAIAAAP///////yH5BAUUAAEALAAAAAASABIAAAIPjI+py+0Po5y02ouz3pwXADs='";c.innerHTML="<map id='"+this._id+"' name='"+this._id+"'>"+this._map.join("\n")+"</map><img "+b+" class='dhx_map_img' usemap='#"+this._id+"' onmousedown='return false;'>";a._htmlmap=c;this._map=[]}};dhtmlx.chart={};dhtmlx.chart.scatter={pvt_render_scatter:function(k,f,j,h,g,a){if(!this._settings.xValue){return dhtmlx.log("warning","Undefined propery: xValue")}var c=this._getLimits();var e=this._getLimits("h","xValue");if(!g){if(!this.canvases.x){this.canvases.x=new dhtmlx.ui.Canvas(this._obj,"axis_x")}if(!this.canvases.y){this.canvases.y=new dhtmlx.ui.Canvas(this._obj,"axis_y")}this._drawYAxis(this.canvases.y.getCanvas(),f,j,h,c.min,c.max);this._drawHXAxis(this.canvases.x.getCanvas(),f,j,h,e.min,e.max)}c={min:this._settings.yAxis.start,max:this._settings.yAxis.end};e={min:this._settings.xAxis.start,max:this._settings.xAxis.end};var b=this._getScatterParams(k,f,j,h,e,c);this._mapStart=j;for(var d=0;d<f.length;d++){this._drawScatterItem(k,a,j,h,b,e,c,f[d],g)}},_getScatterParams:function(a,d,c,b,g,f){var e={};e.totalHeight=b.y-c.y;e.totalWidth=b.x-c.x;this._calcScatterUnit(e,g.min,g.max,e.totalWidth,"X");this._calcScatterUnit(e,f.min,f.max,e.totalHeight,"Y");return e},_drawScatterItem:function(l,a,j,h,c,e,d,f,g){var b=this._calculateScatterItemPosition(c,h,j,e,f,"X");var k=this._calculateScatterItemPosition(c,j,h,d,f,"Y");this._drawItem(l,b,k,f,this._settings.label.call(this,f),g,a)},_calculateScatterItemPosition:function(c,h,g,a,e,b){var k=this._settings[b=="X"?"xValue":"value"].call(this,e);var d=c["valueFactor"+b];var l=(parseFloat(k||0)-a.min)*d;var j=c["unit"+b];var f=g[b.toLowerCase()]-(b=="X"?(-1):1)*Math.floor(j*l);if(l<0){f=g[b.toLowerCase()]}if(k>a.max){f=h[b.toLowerCase()]}if(k<a.min){f=g[b.toLowerCase()]}return f},_calcScatterUnit:function(f,c,a,b,d){var e=this._getRelativeValue(c,a);d=(d||"");f["relValue"+d]=e[0];f["valueFactor"+d]=e[1];f["unit"+d]=(f["relValue"+d]?b/f["relValue"+d]:10)}};dhtmlx.chart.radar={pvt_render_radar:function(b,d,a,f,c,e){this._renderRadarChart(b,d,a,f,c,e)},_renderRadarChart:function(n,e,l,k,j,a){if(!e.length){return}var g=this._getPieParameters(l,k);var h=(this._settings.radius?this._settings.radius:g.radius);var b=(this._settings.x?this._settings.x:g.x);var m=(this._settings.y?this._settings.y:g.y);var c=[];for(var d=0;d<e.length;d++){c.push(1)}var f=this._getRatios(c,e.length);this._mapStart=l;if(!j){this._drawRadarAxises(f,b,m,h,e)}this._drawRadarData(n,f,b,m,h,e,j,a)},_drawRadarData:function(s,m,h,g,e,E,t,D){var r,o,C,A,u,z,d,c,v,B,w,n,b,q,k,j,a,l,f;C=this._settings;u=C.yAxis.start;z=C.yAxis.end;f=this._getRelativeValue(u,z);n=f[0];l=(n?e/n:e/2);a=f[1];b=-Math.PI/2;r=o=b;v=[];c=0;for(A=0;A<E.length;A++){if(!j){q=C.value(E[A]);k=(parseFloat(q||0)-u)*a}else{k=j}B=Math.floor(l*k);q=C.value((A!=(E.length-1))?E[A+1]:E[0]);j=(parseFloat(q||0)-u)*a;w=Math.floor(l*j);r=o;o=((A!=(E.length-1))?(b+m[A]-0.0001):b);d=(c||this._getPositionByAngle(r,h,g,B));c=this._getPositionByAngle(o,h,g,w);v.push(d)}if(C.fill){this._fillRadarChart(s,v,E)}if(!C.disableLines){this._strokeRadarChart(s,v,E)}if(!C.disableItems){this._drawRadarItemMarkers(s,v,E,t,D)}v=null},_drawRadarItemMarkers:function(a,c,e,d,f){for(var b=0;b<c.length;b++){this._drawItem(a,c[b].x,c[b].y,e[b],this._settings.label.call(this,e),d,f)}},_fillRadarChart:function(a,d,f){var e,c;a.globalAlpha=this._settings.alpha.call(this,{});a.beginPath();for(var b=0;b<d.length;b++){a.fillStyle=this._settings.fill.call(this,f[b]);e=d[b];c=(d[b+1]||d[0]);if(!b){a.moveTo(e.x,e.y)}a.lineTo(c.x,c.y)}a.fill();a.globalAlpha=1},_strokeRadarChart:function(a,d,f){var e,c;for(var b=0;b<d.length;b++){e=d[b];c=(d[b+1]||d[0]);this._drawLine(a,e.x,e.y,c.x,c.y,this._settings.line.color.call(this,f[b]),this._settings.line.width)}},_drawRadarAxises:function(s,q,o,g,G){var a=this._settings.yAxis;var d=this._settings.xAxis;var h=a.start;var f=a.end;var l=a.step;var t={};var F=this._configYAxis;if(typeof F.step=="undefined"||typeof F.start=="undefined"||typeof F.end=="undefined"){var m=this._getLimits();t=this._calculateScale(m.min,m.max);h=t.start;f=t.end;l=t.step;a.end=f;a.start=h}var A=[];var D,C,u;var E=0;var b=g*l/(f-h);var n,r;if(l<1){n=Math.min(this._log10(l),(h<=0?0:this._log10(h)));r=Math.pow(10,-n)}var B=[];if(!this.canvases.scale){this.canvases.scale=new dhtmlx.ui.Canvas(this._obj,"radar_scale")}var z=this.canvases.scale.getCanvas();for(D=f;D>=h;D-=l){if(t.fixNum){D=parseFloat((new Number(D)).toFixed(t.fixNum))}A.push(Math.floor(E*b)+0.5);if(r){D=Math.round(D*r)/r}var k=o-g+A[A.length-1];this.canvases.scale.renderTextAt("middle","left",q,k,a.template(D.toString()),"dhx_axis_item_y dhx_radar");if(s.length<2){this._drawScaleSector(z,"arc",q,o,g-A[A.length-1],-Math.PI/2,3*Math.PI/2,D);return}var e=-Math.PI/2;var w=e;var v;for(C=0;C<s.length;C++){if(D==f){B.push(w)}v=e+s[C]-0.0001;this._drawScaleSector(z,(F.lineShape||"line"),q,o,g-A[A.length-1],w,v,D,C,G[D]);w=v}E++}for(D=0;D<B.length;D++){u=this._getPositionByAngle(B[D],q,o,g);if(d.lines.call(this,G[D],D)){this._drawLine(z,q,o,u.x,u.y,(d?d.lineColor.call(this,G[D]):"#cfcfcf"),1)}this._drawRadarScaleLabel(z,q,o,g,B[D],(d?d.template.call(this,G[D]):"&nbsp;"))}},_drawScaleSector:function(n,f,m,k,e,b,a,d,c){var l,h;if(e<0){return false}l=this._getPositionByAngle(b,m,k,e);h=this._getPositionByAngle(a,m,k,e);var g=this._settings.yAxis;if(g.bg){n.beginPath();n.moveTo(m,k);if(f=="arc"){n.arc(m,k,e,b,a,false)}else{n.lineTo(l.x,l.y);n.lineTo(h.x,h.y)}n.fillStyle=g.bg(d,c);n.moveTo(m,k);n.fill();n.closePath()}if(g.lines.call(this,d)){n.lineWidth=1;n.beginPath();if(f=="arc"){n.arc(m,k,e,b,a,false)}else{n.moveTo(l.x,l.y);n.lineTo(h.x,h.y)}n.strokeStyle=g.lineColor.call(this,d);n.stroke()}},_drawRadarScaleLabel:function(o,j,g,b,h,m){var n=this.canvases.scale.renderText(0,0,m,"dhx_axis_radar_title",1);var c=n.scrollWidth;var l=n.offsetHeight;var k=0.001;var f=this._getPositionByAngle(h,j,g,b+5);var e=0,d=0;if(h<0||h>Math.PI){d=-l}if(h>Math.PI/2){e=-c}if(Math.abs(h+Math.PI/2)<k||Math.abs(h-Math.PI/2)<k){e=-c/2}else{if(Math.abs(h)<k||Math.abs(h-Math.PI)<k){d=-l/2}}n.style.top=f.y+d+"px";n.style.left=f.x+e+"px";n.style.width=c+"px";n.style.whiteSpace="nowrap"}};dhtmlx.chart.area={pvt_render_area:function(h,w,e,d,j,t){var l,s,m,k,f,r,g,v,u,q,o,b,n,a,c;r=this._calculateLineParams(h,w,e,d,j);s=this._settings;k=(s.eventRadius||Math.floor(r.cellWidth/2));if(w.length){g=[];q=(!s.offset?e.x:e.x+r.cellWidth*0.5);for(m=0;m<w.length;m++){f=w[m];u=this._getPointY(f,e,d,r);n=q+r.cellWidth*m;if(u){a=(typeof u=="object"?u.y0:u);if(m&&this._settings.fixOverflow){v=this._getPointY(w[m-1],e,d,r);if(v.out&&v.out==u.out){continue}o=r.cellWidth*(m-1)-0.5+q;b=(typeof v=="object"?v.y0:v);if(v.out){c=(v.out=="min"?d.y:e.y);g.push([this._calcOverflowX(o,n,b,a,c),c])}if(u.out){c=(u.out=="min"?d.y:e.y);g.push([this._calcOverflowX(o,n,b,a,c),c]);if(m==(w.length-1)&&c==e.y){g.push([n,e.y])}}}if(!u.out){g.push([n,a]);t.addRect(f.id,[n-k-e.x,a-k-e.y,n+k-e.x,a+k-e.y],j)}if(!s.yAxis){l=(!s.offset&&(m==w.length-1)?"left":"center");this.canvases[j].renderTextAt(false,l,n,a-s.labelOffset,s.label(f))}}}if(g.length){g.push([n,d.y]);g.push([g[0][0],d.y])}h.globalAlpha=this._settings.alpha.call(this,w[0]);h.fillStyle=this._settings.color.call(this,w[0]);h.beginPath();this._path(h,g);h.fill();if(s.border){h.lineWidth=s.borderWidth||1;if(s.borderColor){h.strokeStyle=s.borderColor.call(this,w[0])}else{this._setBorderStyles(h,h.fillStyle)}h.beginPath();this._path(h,g);h.stroke()}h.lineWidth=1;h.globalAlpha=1}}};dhtmlx.chart.stackedArea={pvt_render_stackedArea:function(k,w,b,a,l,u){var A,z,o,t,r,q,e,n,f,s,h,d,c,g;s=this._calculateLineParams(k,w,b,a,l);t=this._settings;n=(t.eventRadius||Math.floor(s.cellWidth/2));if(w.length){h=[];g=[];d=(!t.offset?b.x:b.x+s.cellWidth*0.5);var v=function(j,x){return l?(w[j].$startY?x-a.y+w[j].$startY:0):x};var m=function(j,C,B){var y=(B.y-C.y)/(B.x-C.x);return y*j+C.y-y*C.x};for(r=0;r<w.length;r++){f=w[r];if(!r){c=v(r,a.y);h.push([d,c])}else{d+=s.cellWidth}c=v(r,this._getPointY(f,b,a,s));g.push((isNaN(c)&&!r)?(w[r].$startY||a.y):c);if(c){h.push([d,c]);u.addRect(f.id,[d-n-b.x,c-n-b.y,d+n-b.x,c+n-b.y],l);if(!t.yAxis){o=(!t.offset&&e?"left":"center");this.canvases[l].renderTextAt(false,o,d,c-t.labelOffset,t.label(f))}}}h.push([d,v(r-1,a.y)]);if(l){for(r=w.length-2;r>0;r--){d-=s.cellWidth;c=w[r].$startY;if(c){h.push([d,c])}}}h.push([h[0][0],h[0][1]]);k.globalAlpha=this._settings.alpha.call(this,w[0]);k.fillStyle=this._settings.color.call(this,w[0]);k.beginPath();this._path(k,h);k.fill();for(r=0;r<w.length;r++){c=g[r];if(!c){if(r==w.length-1){c=w[r].$startY}for(q=r+1;q<w.length;q++){if(g[q]){A={x:b.x,y:g[0]};z={x:(b.x+s.cellWidth*q),y:g[q]};c=m(b.x+s.cellWidth*r,A,z);break}}}w[r].$startY=c}}}};dhtmlx.chart.spline={pvt_render_spline:function(k,z,d,c,l,w){var v,n,h,m,u,g,f,r,q,o,e,b,a;u=this._calculateLineParams(k,z,d,c,l);v=this._settings;this._mapStart=d;h=[];if(z.length){r=(v.offset?d.x+u.cellWidth*0.5:d.x);for(n=0;n<z.length;n++){e=this._getPointY(z[n],d,c,u);if(e){f=((!n)?r:u.cellWidth*n-0.5+r);h.push({x:f,y:e,index:n})}}g=this._getSplineParameters(h);for(n=0;n<h.length;n++){q=h[n].x;b=h[n].y;if(n<h.length-1){o=h[n+1].x;a=h[n+1].y;for(m=q;m<o;m++){var t=this._getSplineYPoint(m,q,n,g.a,g.b,g.c,g.d);if(t<d.y){t=d.y}if(t>c.y){t=c.y}var s=this._getSplineYPoint(m+1,q,n,g.a,g.b,g.c,g.d);if(s<d.y){s=d.y}if(s>c.y){s=c.y}this._drawLine(k,m,t,m+1,s,v.line.color(z[n]),v.line.width)}this._drawLine(k,o-1,this._getSplineYPoint(m,q,n,g.a,g.b,g.c,g.d),o,a,v.line.color(z[n]),v.line.width)}this._drawItem(k,q,b,z[h[n].index],v.label(z[h[n].index]),l,w)}}},_getSplineParameters:function(r){var g,w,t,x,q,o,l,k,j=[],f=[],e=r.length;for(g=0;g<e-1;g++){j[g]=r[g+1].x-r[g].x;f[g]=(r[g+1].y-r[g].y)/j[g]}w=[];t=[];w[0]=0;w[1]=2*(j[0]+j[1]);t[0]=0;t[1]=6*(f[1]-f[0]);for(g=2;g<e-1;g++){w[g]=2*(j[g-1]+j[g])-j[g-1]*j[g-1]/w[g-1];t[g]=6*(f[g]-f[g-1])-j[g-1]*t[g-1]/w[g-1]}x=[];x[e-1]=x[0]=0;for(g=e-2;g>=1;g--){x[g]=(t[g]-j[g]*x[g+1])/w[g]}q=[];o=[];l=[];k=[];for(g=0;g<e-1;g++){q[g]=r[g].y;o[g]=-j[g]*x[g+1]/6-j[g]*x[g]/3+(r[g+1].y-r[g].y)/j[g];l[g]=x[g]/2;k[g]=(x[g+1]-x[g])/(6*j[g])}return{a:q,b:o,c:l,d:k}},_getSplineYPoint:function(f,h,j,g,e,l,k){return g[j]+(f-h)*(e[j]+(f-h)*(l[j]+(f-h)*k[j]))}};dhtmlx.chart.barH={pvt_render_barH:function(u,G,g,f,v,F){var m,o,x,w,a,z,k,D,q,E,b,s,h,A,r,e,t,n,C,d,l;x=(f.y-g.y)/G.length;k=this._getLimits("h");D=k.max;q=k.min;e=f.x-g.x;l=!!this._settings.yAxis;if(!v){this._drawHScales(u,G,g,f,q,D,x)}if(l){D=parseFloat(this._settings.xAxis.end);q=parseFloat(this._settings.xAxis.start)}A=this._getRelativeValue(q,D);s=A[0];b=A[1];n=(s?e/s:10);if(!l){r=10;n=(s?(e-r)/s:10)}o=parseInt(this._settings.width,10);var B=this._series.length;var j=this._settings.seriesMargin;var c=this._settings.seriesPadding;if(this._series&&(o*B+c+(B>2?j*B:0)>x)){o=x/B-c-(B>2?j:0)}m=(x-o*B-j*(B-1))/2;if(this._settings.border){o=parseInt(o,10);m=parseInt(m,10)}h=(typeof this._settings.radius!="undefined"?parseInt(this._settings.radius,10):Math.round(o/5));E=false;a=this._settings.gradient;if(a&&typeof(a)!="function"){E=a;a=false}else{if(a){a=u.createLinearGradient(g.x,g.y,f.x,g.y);this._settings.gradient(a)}}if(!l){this._drawLine(u,g.x-0.5,g.y,g.x-0.5,f.y,"#000000",1)}for(z=0;z<G.length;z++){t=parseFloat(this._settings.value(G[z]||0));if(t>D){t=D}t-=q;t*=b;C=g.x;d=g.y+m+(B>2?j*v:0)+parseInt(z*x,10)+o*v;if((t<0&&this._settings.origin=="auto")||(this._settings.xAxis&&t===0&&!(this._settings.origin!="auto"&&this._settings.origin>q))){this.canvases[v].renderTextAt("middle","right",C+10,d+o/2+m,this._settings.label(G[z]));continue}if(t<0&&this._settings.origin!="auto"&&this._settings.origin>q){t=0}if(!l){t+=r/n}w=a||this._settings.color.call(this,G[z]);if(this._settings.border){this._drawBarHBorder(u,C,d,o,q,h,n,t,w)}u.globalAlpha=this._settings.alpha.call(this,G[z]);var y=this._drawBarH(u,f,C,d,o,q,h,n,t,w,a,E);if(E!=false){this._drawBarHGradient(u,C,d,o,q,h,n,t,w,E)}u.globalAlpha=1;if(y[3]==d){this.canvases[v].renderTextAt("middle","left",y[0]-5,y[3]+Math.floor(o/2),this._settings.label(G[z]));F.addRect(G[z].id,[y[0]-g.x,y[3]-g.y,y[2]-g.x,y[3]+o-g.y],v)}else{this.canvases[v].renderTextAt("middle",false,y[2]+5,y[1]+Math.floor(o/2),this._settings.label(G[z]));F.addRect(G[z].id,[y[0]-g.x,d-g.y,y[2]-g.x,y[3]-g.y],v)}}},_setBarHPoints:function(q,d,n,r,g,o,m,f,e){var b=0;if(g>o*m){var l=(g-o*m)/g;b=-Math.asin(l)+Math.PI/2}q.moveTo(d,n+f);var c=d+o*m-g-(g?0:f);if(g<o*m){q.lineTo(c,n+f)}var k=n+g;if(g&&g>0){q.arc(c,k,g-f,-Math.PI/2+b,0,false)}var j=n+r-g-(g?0:f);var a=c+g-(g?f:0);q.lineTo(a,j);if(g&&g>0){q.arc(c,j,g-f,0,Math.PI/2-b,false)}var h=n+r-f;q.lineTo(d,h);if(!e){q.lineTo(d,n+f)}return[a,h]},_drawHScales:function(c,g,f,e,h,b,d){var a=0;if(this._settings.xAxis){if(!this.canvases.x){this.canvases.x=new dhtmlx.ui.Canvas(this._obj)}a=this._drawHXAxis(this.canvases.x.getCanvas(),g,f,e,h,b)}if(this._settings.yAxis){if(!this.canvases.y){this.canvases.y=new dhtmlx.ui.Canvas(this._obj)}this._drawHYAxis(this.canvases.y.getCanvas(),g,f,e,d,a)}},_drawHYAxis:function(m,e,j,g,c,a){if(!this._settings.yAxis){return}var f;var b=parseInt((a?a:j.x),10)-0.5;var k=g.y+0.5;var h=j.y;this._drawLine(m,b,k,b,h,this._settings.yAxis.color,1);for(var d=0;d<e.length;d++){var l=((this._settings.origin!="auto")&&(this._settings.view=="barH")&&(parseFloat(this._settings.value(e[d]))<this._settings.origin));f=h+c/2+d*c;this.canvases.y.renderTextAt("middle",(l?false:"left"),(l?b+5:b-5),f,this._settings.yAxis.template(e[d]),"dhx_axis_item_y",(l?0:b-10));if(this._settings.yAxis.lines.call(this,e[d])){this._drawLine(m,j.x,f,g.x,f,this._settings.yAxis.lineColor.call(this,e[d]),1)}}this._drawLine(m,j.x+0.5,h+0.5,g.x,h+0.5,this._settings.yAxis.lineColor.call(this,{}),1);this._setYAxisTitle(j,g)},_drawHXAxis:function(r,w,f,e,h,g){var j;var o={};var b=this._settings.xAxis;if(!b){return}var d=e.y+0.5;var u=f.x-0.5;var t=e.x-0.5;var n=f.x;this._drawLine(r,u,d,t,d,b.color,1);if(b.step){j=parseFloat(b.step)}if(typeof this._configXAxis.step=="undefined"||typeof this._configXAxis.start=="undefined"||typeof this._configXAxis.end=="undefined"){o=this._calculateScale(h,g);h=o.start;g=o.end;j=o.step;this._settings.xAxis.end=g;this._settings.xAxis.start=h;this._settings.xAxis.step=j}if(j===0){return}var a=(t-u)*j/(g-h);var v=0;for(var s=h;s<=g;s+=j){if(o.fixNum){s=parseFloat((new Number(s)).toFixed(o.fixNum))}var q=Math.floor(u+v*a)+0.5;if(!(s==h&&this._settings.origin=="auto")&&b.lines.call(this,s)){this._drawLine(r,q,d,q,f.y,this._settings.xAxis.lineColor.call(this,s),1)}if(s==this._settings.origin){n=q+1}var k=s;if(j<1){var l=Math.min(this._log10(j),(h<=0?0:this._log10(h)));var m=Math.pow(10,-l);k=Math.round(s*m)/m}this.canvases.x.renderTextAt(false,true,q,d+2,b.template(k.toString()),"dhx_axis_item_x");v++}this.canvases.x.renderTextAt(true,false,u,e.y+this._settings.padding.bottom-3,this._settings.xAxis.title,"dhx_axis_title_x",e.x-f.x);if(!b.lines.call(this,{})){this._drawLine(r,u,f.y-0.5,t,f.y-0.5,this._settings.xAxis.color,0.2)}return n},_correctBarHParams:function(h,e,c,f,g,j,d){var a=this._settings.yAxis;var b=e;if(!!a&&this._settings.origin!="auto"&&(this._settings.origin>d)){e+=(this._settings.origin-d)*g;b=e;f=f-(this._settings.origin-d);if(f<0){f*=(-1);h.translate(e,c+j);h.rotate(Math.PI);e=0.5;c=0}e+=0.5}return{value:f,x0:e,y0:c,start:b}},_drawBarH:function(n,e,t,d,j,k,f,h,m,o,a,g){var q;n.save();var l=this._correctBarHParams(n,t,d,m,h,j,k);n.fillStyle=o;n.beginPath();if(h*l.value>0){q=this._setBarHPoints(n,l.x0,l.y0,j,f,h,l.value,(this._settings.border?1:0));if(a&&!g){n.lineTo(e.x,l.y0+(this._settings.border?1:0))}}else{q=[l.x0,l.y0+1]}n.fill();n.restore();var c=l.y0;var b=(l.y0!=d?d:q[1]);var s=(l.y0!=d?(l.start-q[0]):l.start);var r=(l.y0!=d?l.start:q[0]);return[s,c,r,b]},_drawBarHBorder:function(j,b,g,k,e,d,h,f,c){j.save();var a=this._correctBarHParams(j,b,g,f,h,k,e);j.beginPath();this._setBorderStyles(j,c);j.globalAlpha=0.9;if(h*a.value>0){this._setBarHPoints(j,a.x0,a.y0,k,d,h,a.value,j.lineWidth/2,1)}j.stroke();j.restore()},_drawBarHGradient:function(l,c,j,m,g,f,k,h,d,a){l.save();var b=this._correctBarHParams(l,c,j,h,k,m,g);var e=this._setBarGradient(l,b.x0,b.y0+m,b.x0+k*b.value,b.y0,a,d,"x");l.fillStyle=e.gradient;l.beginPath();if(k*b.value>0){this._setBarHPoints(l,b.x0,b.y0+e.offset,m-e.offset*2,f,k,b.value,e.offset)}l.fill();l.globalAlpha=1;l.restore()}};dhtmlx.assert(dhtmlx.chart.barH);dhtmlx.chart.stackedBarH={pvt_render_stackedBarH:function(u,G,e,d,v,F){var E,o;var b;var q;var s=d.x-e.x;var h=!!this._settings.yAxis;var g=this._getStackedLimits(G);E=g.max;o=g.min;var x=Math.floor((d.y-e.y)/G.length);if(!v){this._drawHScales(u,G,e,d,o,E,x)}if(h){E=parseFloat(this._settings.xAxis.end);o=parseFloat(this._settings.xAxis.start)}var B=this._getRelativeValue(o,E);q=B[0];b=B[1];var m=(q?s/q:10);if(!h){var r=10;m=(q?(s-r)/q:10)}var n=parseInt(this._settings.width,10);if((n+4)>x){n=x-4}var j=(x-n)/2;var f=0;var k=false;var a=this._settings.gradient;if(a){k=true}if(!h){this._drawLine(u,e.x-0.5,e.y,e.x-0.5,d.y,"#000000",1)}var D=0;var A=0;for(z=0;z<this._series.length;z++){if(z==v){A=D}if(this._series[z].view=="stackedBarH"){D++}}for(var z=0;z<G.length;z++){if(!A){G[z].$startX=e.x}var t=parseFloat(this._settings.value(G[z]||0));if(t>E){t=E}t-=o;t*=b;var C=e.x;var c=e.y+j+z*x;if(!A){G[z].$startX=C}else{C=G[z].$startX}if(t<0||(this._settings.yAxis&&t===0)){this.canvases.y.renderTextAt("middle",true,C+10,c+n/2,this._settings.label(G[z]));continue}if(!h){t+=r/m}var w=this._settings.color.call(this,G[z]);u.globalAlpha=this._settings.alpha.call(this,G[z]);u.fillStyle=this._settings.color.call(this,G[z]);u.beginPath();var y=this._setBarHPoints(u,C,c,n,f,m,t,(this._settings.border?1:0));if(a&&!k){u.lineTo(e.x+s,c+(this._settings.border?1:0))}u.fill();if(k!=false){var l=this._setBarGradient(u,C,c+n,C,c,k,w,"x");u.fillStyle=l.gradient;u.beginPath();y=this._setBarHPoints(u,C,c,n,f,m,t,0);u.fill()}if(this._settings.border){this._drawBarHBorder(u,C,c,n,o,f,m,t,w)}u.globalAlpha=1;this.canvases[v].renderTextAt("middle",true,G[z].$startX+(y[0]-G[z].$startX)/2-1,c+(y[1]-c)/2,this._settings.label(G[z]));F.addRect(G[z].id,[G[z].$startX-e.x,c-e.y,y[0]-e.x,y[1]-e.y],v);G[z].$startX=y[0]}}};dhtmlx.chart.stackedBar={pvt_render_stackedBar:function(v,I,f,e,w,G){var D,r,a,C,d;var b;var s;var F=this._settings;var t=e.y-f.y;var h=!!F.yAxis;var E=!!F.xAxis;var g=this._getStackedLimits(I);var H=(F.origin===0);D=g.max;r=g.min;if(!I.length){return}var y=(e.x-f.x)/I.length;if(!w){a=this._drawScales(I,f,e,r,D,y)}if(h){D=parseFloat(F.yAxis.end);r=parseFloat(F.yAxis.start)}var B=this._getRelativeValue(r,D);s=B[0];b=B[1];var o=(s?t/s:10);var q=parseInt(F.width,10);if(q+4>y){q=y-4}var j=Math.floor((y-q)/2);var l=(F.gradient?F.gradient:false);if(!E){this._drawLine(v,f.x,e.y+0.5,e.x,e.y+0.5,"#000000",1)}for(var A=0;A<I.length;A++){var u=parseFloat(F.value(I[A]||0));if(this._logScaleCalc){u=this._log10(u)}C=f.x+j+A*y;var k=H&&u<0;if(!w){d=a-1;I[A].$startY=d;if(H){if(k){d=a+1}I[A].$startYN=a+1}}else{d=k?I[A].$startYN:I[A].$startY}if(!u){continue}if(!w&&!H){u-=r}u*=b;if(d<(f.y+1)){continue}if(F.yAxis&&u===0){this.canvases.y.renderTextAt(true,true,C+Math.floor(q/2),d,this._settings.label(I[A]));continue}var x=this._settings.color.call(this,I[A]);var n=Math.abs(d-(H?(e.y+r*o):e.y))<3;v.globalAlpha=F.alpha.call(this,I[A]);v.fillStyle=v.strokeStyle=F.color.call(this,I[A]);v.beginPath();var c=d-o*u+(n?(k?-1:1):0);var z=this._setStakedBarPoints(v,C-(F.border?0.5:0),d,q+(F.border?0.5:0),c,0,f.y);v.fill();v.stroke();if(l){v.save();var m=this._setBarGradient(v,C,d,C+q,z[1],l,x,"y");v.fillStyle=m.gradient;v.beginPath();z=this._setStakedBarPoints(v,C+m.offset,d,q-m.offset*2,c,(F.border?1:0),f.y);v.fill();v.restore()}if(F.border){v.save();if(typeof F.border=="string"){v.strokeStyle=F.border}else{this._setBorderStyles(v,x)}v.beginPath();this._setStakedBarPoints(v,C-0.5,parseInt(d,10)+0.5,q+1,parseInt(c,10)+0.5,0,f.y,n);v.stroke();v.restore()}v.globalAlpha=1;this.canvases[w].renderTextAt(false,true,C+Math.floor(q/2),(z[1]+(d-z[1])/2)-7,this._settings.label(I[A]));G.addRect(I[A].id,[C-f.x,z[1]-f.y,z[0]-f.x,I[A][k?"$startYN":"$startY"]-f.y],w);I[A][k?"$startYN":"$startY"]=z[1]}},_setStakedBarPoints:function(k,b,h,l,g,d,c,e){k.moveTo(b,h);if(g<c){g=c}k.lineTo(b,g);var a=b+l;var f=g;k.lineTo(a,f);var j=b+l;k.lineTo(j,h);if(!e){k.lineTo(b,h)}return[j,f]}};dhtmlx.chart.line={pvt_render_line:function(g,t,e,d,h,r){var q,j,f,n,m,l,k,b,a,c,s,o;n=this._calculateLineParams(g,t,e,d,h);q=this._settings;if(t.length){m=(q.offset?e.x+n.cellWidth*0.5:e.x);f=[];for(j=0;j<t.length;j++){o=this._getPointY(t[j],e,d,n);if(o){k=((!j)?m:n.cellWidth*j-0.5+m);a=(typeof o=="object"?o.y0:o);if(j&&this._settings.fixOverflow){s=this._getPointY(t[j-1],e,d,n);if(s.out&&s.out==o.out){continue}l=n.cellWidth*(j-1)-0.5+m;b=(typeof s=="object"?s.y0:s);if(s.out){c=(s.out=="min"?d.y:e.y);f.push({x:this._calcOverflowX(l,k,b,a,c),y:c})}if(o.out){c=(o.out=="min"?d.y:e.y);f.push({x:this._calcOverflowX(l,k,b,a,c),y:c})}}if(!o.out){f.push({x:k,y:o,index:j})}}}this._mapStart=e;for(j=1;j<=f.length;j++){l=f[j-1].x;b=f[j-1].y;if(j<f.length){k=f[j].x;a=f[j].y;this._drawLine(g,l,b,k,a,q.line.color.call(this,t[j-1]),q.line.width);if(q.line&&q.line.shadow){g.globalAlpha=0.3;this._drawLine(g,l+2,b+q.line.width+8,k+2,a+q.line.width+8,"#eeeeee",q.line.width+3);g.globalAlpha=1}}if(typeof f[j-1].index!="undefined"){this._drawItem(g,l,b,t[f[j-1].index],q.label(t[f[j-1].index]),h,r,e)}}}},_calcOverflowX:function(b,a,d,c,e){return b+(e-d)*(a-b)/(c-d)},_drawItem:function(n,c,m,j,l,k,b){var d=this._settings.item;var h=parseInt(d.radius.call(this,j),10)||0;var g=this._mapStart;if(h){n.save();if(d.shadow){n.lineWidth=1;n.strokeStyle="#bdbdbd";n.fillStyle="#bdbdbd";var a=[0.1,0.2,0.3];for(var f=(a.length-1);f>=0;f--){n.globalAlpha=a[f];n.strokeStyle="#d0d0d0";n.beginPath();this._strokeChartItem(n,c,m+2*h/3,h+f+1,d.type);n.stroke()}n.beginPath();n.globalAlpha=0.3;n.fillStyle="#bdbdbd";this._strokeChartItem(n,c,m+2*h/3,h+1,d.type);n.fill()}n.restore();if(d.type=="image"&&d.src){this._drawImage(n,c-h,m-h,d.src,h*2,h*2)}else{n.lineWidth=d.borderWidth;n.fillStyle=d.color.call(this,j);n.strokeStyle=d.borderColor.call(this,j);n.globalAlpha=d.alpha.call(this,j);n.beginPath();this._strokeChartItem(n,c,m,h+1,d.type);n.fill();n.stroke();n.globalAlpha=1}}if(l){this.canvases[k].renderTextAt(false,true,c,m-h-this._settings.labelOffset,this._settings.label.call(this,j))}var e=(this._settings.eventRadius||h+1);b.addRect(j.id,[c-e-g.x,m-e-g.y,c+e-g.x,m+e-g.y],k)},_drawImage:function(c,b,h,f,d,a){var e=document.createElement("img");e.style.display="none";e.style.width=d+"px";e.style.height=a+"px";document.body.appendChild(e);e.src=f;var g=function(){c.drawImage(e,b,h)};if(e.complete){g(e)}else{e.onload=g}},_strokeChartItem:function(a,b,e,d,c){var f=[];b=parseInt(b,10);e=parseInt(e,10);if(c&&(c=="square"||c=="s")){d*=Math.sqrt(2)/2;f=[[b-d-a.lineWidth/2,e-d],[b+d,e-d],[b+d,e+d],[b-d,e+d],[b-d,e-d]]}else{if(c&&(c=="diamond"||c=="d")){var g=(a.lineWidth>1?a.lineWidth*Math.sqrt(2)/4:0);f=[[b,e-d],[b+d,e],[b,e+d],[b-d,e],[b+g,e-d-g]]}else{if(c&&(c=="triangle"||c=="t")){f=[[b,e-d],[b+Math.sqrt(3)*d/2,e+d/2],[b-Math.sqrt(3)*d/2,e+d/2],[b,e-d]]}else{f=[[b,e,d,0,Math.PI*2,true]]}}}this._path(a,f)},_getPointY:function(c,h,f,a){var g=a.minValue;var d=a.maxValue;var k=a.unit;var b=a.valueFactor;var j=this._settings.value(c);var l=(parseFloat(j||0)-g)*b;if(!this._settings.yAxis){l+=a.startValue/k}var e=f.y-k*l;if(this._settings.fixOverflow&&(this._settings.view=="line"||this._settings.view=="area")){if(j>d){e={y:h.y,y0:e,out:"max"}}else{if(l<0||j<g){e={y:f.y,y0:e,out:"min"}}}}else{if(j>d){e=h.y}if(l<0||j<g){e=f.y}}return e},_calculateLineParams:function(j,d,g,f,e){var b={};var k;b.totalHeight=f.y-g.y;b.cellWidth=(f.x-g.x)/((!this._settings.offset)?(d.length-1):d.length);var c=!!this._settings.yAxis;var a=(this._settings.view.indexOf("stacked")!=-1?this._getStackedLimits(d):this._getLimits());b.maxValue=a.max;b.minValue=a.min;if(!e){this._drawScales(d,g,f,b.minValue,b.maxValue,b.cellWidth)}if(c){b.maxValue=parseFloat(this._settings.yAxis.end);b.minValue=parseFloat(this._settings.yAxis.start)}var h=this._getRelativeValue(b.minValue,b.maxValue);k=h[0];b.valueFactor=h[1];b.unit=(k?b.totalHeight/k:10);b.startValue=0;if(!c){b.startValue=10;if(b.unit!=b.totalHeight){b.unit=(k?(b.totalHeight-b.startValue)/k:10)}}return b}};dhtmlx.chart.bar={pvt_render_bar:function(u,I,f,e,v,H){var o,x,A,j,F,q,r,b,B,s,n,E,k,G=e.y-f.y;k=!!this._settings.yAxis;E=!!this._settings.xAxis;j=this._getLimits();F=j.max;q=j.min;x=(e.x-f.x)/I.length;if(!v&&!(this._settings.origin!="auto"&&!k)){this._drawScales(I,f,e,q,F,x)}if(k){F=parseFloat(this._settings.yAxis.end);q=parseFloat(this._settings.yAxis.start)}B=this._getRelativeValue(q,F);r=B[0];b=B[1];n=(r?G/r:r);if(!k&&!(this._settings.origin!="auto"&&E)){s=10;n=(r?(G-s)/r:s)}if(!v&&(this._settings.origin!="auto"&&!k)&&this._settings.origin>q){this._drawXAxis(u,I,f,e,x,e.y-n*(this._settings.origin-q))}o=parseInt(this._settings.width,10);var D=0;var z=0;for(A=0;A<this._series.length;A++){if(A==v){z=D}if(this._series[A].view=="bar"){D++}}var h=this._settings.seriesMargin;var d=this._settings.seriesPadding;if(this._series&&(o*D+d+(D>2?h*D:0)>x)){o=x/D-d-(D>2?h:0)}var l=(x-o*D-h*(D-1))/2;if(this._settings.border){o=parseInt(o,10);l=parseInt(l,10)}var g=(typeof this._settings.radius!="undefined"?parseInt(this._settings.radius,10):Math.round(o/5));var m=false;var a=this._settings.gradient;if(a&&typeof(a)!="function"){m=a;a=false}else{if(a){a=u.createLinearGradient(0,e.y,0,f.y);this._settings.gradient(a)}}if(!E){this._drawLine(u,f.x,e.y+0.5,e.x,e.y+0.5,"#000000",1)}for(A=0;A<I.length;A++){var t=parseFloat(this._settings.value(I[A])||0);if(isNaN(t)){continue}if(t>F){t=F}t-=q;t*=b;var C=f.x+l+(D>2?h*z:0)+A*x+o*z;var c=e.y;if(t<0||(this._settings.yAxis&&t===0&&!(this._settings.origin!="auto"&&this._settings.origin>q))){this.canvases[v].renderTextAt(true,true,C+Math.floor(o/2),c,this._settings.label(I[A]));continue}if(!k&&!(this._settings.origin!="auto"&&E)){t+=s/n}var w=a||this._settings.color.call(this,I[A]);u.globalAlpha=this._settings.alpha.call(this,I[A]);var y=this._drawBar(u,f,C,c,o,q,g,n,t,w,a,m);if(m){this._drawBarGradient(u,C,c,o,q,g,n,t,w,m)}if(this._settings.border){this._drawBarBorder(u,C,c,o,q,g,n,t,w)}u.globalAlpha=1;if(y[0]!=C){this.canvases[v].renderTextAt(false,true,C+Math.floor(o/2),y[1],this._settings.label(I[A]))}else{this.canvases[v].renderTextAt(true,true,C+Math.floor(o/2),y[3],this._settings.label(I[A]))}H.addRect(I[A].id,[C-f.x,y[3]-f.y,y[2]-f.x,y[1]-f.y],v)}},_correctBarParams:function(h,e,c,f,g,j,d){var a=this._settings.xAxis;var b=c;if(!!a&&this._settings.origin!="auto"&&(this._settings.origin>d)){c-=(this._settings.origin-d)*g;b=c;f=f-(this._settings.origin-d);if(f<0){f*=(-1);h.translate(e+j,c);h.rotate(Math.PI);e=0;c=0}c-=0.5}return{value:f,x0:e,y0:c,start:b}},_drawBar:function(n,e,t,d,j,k,f,h,m,o,a,g){var q;n.save();n.fillStyle=o;var l=this._correctBarParams(n,t,d,m,h,j,k);if(h*l.value>0){q=this._setBarPoints(n,l.x0,l.y0,j,f,h,l.value,(this._settings.border?1:0))}else{q=[l.x0,l.y0]}if(a&&!g){n.lineTo(l.x0+(this._settings.border?1:0),e.y)}n.fill();n.restore();var s=l.x0;var r=(l.x0!=t?t+q[0]:q[0]);var c=(l.x0!=t?(l.start-q[1]-l.y0):l.y0);var b=(l.x0!=t?l.start-l.y0:q[1]);return[s,c,r,b]},_drawBarBorder:function(j,b,g,k,e,d,h,f,c){var a;j.save();a=this._correctBarParams(j,b,g,f,h,k,e);this._setBorderStyles(j,c);if(h*a.value>0){this._setBarPoints(j,a.x0,a.y0,k,d,h,a.value,j.lineWidth/2,1)}j.stroke();j.restore()},_drawBarGradient:function(m,d,k,n,h,g,l,j,e,b){m.save();var c=this._correctBarParams(m,d,k,j,l,n,h);var f=this._setBarGradient(m,c.x0,c.y0,c.x0+n,c.y0-l*c.value+2,b,e,"y");var a=this._settings.border?1:0;m.fillStyle=f.gradient;if(l*c.value>0){this._setBarPoints(m,c.x0+f.offset,c.y0,n-f.offset*2,g,l,c.value,f.offset+a)}m.fill();m.restore()},_setBarPoints:function(q,d,m,r,h,n,l,e,g){q.beginPath();var b=0;if(h>n*l){var f=(h-n*l)/h;if(f<=1&&f>=-1){b=-Math.acos(f)+Math.PI/2}}q.moveTo(d+e,m);var k=m-Math.floor(n*l)+h+(h?0:e);if(h<n*l){q.lineTo(d+e,k)}var c=d+h;if(h&&h>0){q.arc(c,k,h-e,-Math.PI+b,-Math.PI/2,false)}var a=d+r-h-e;var j=k-h+(h?e:0);q.lineTo(a,j);if(h&&h>0){q.arc(a,k,h-e,-Math.PI/2,0-b,false)}var o=d+r-e;q.lineTo(o,m);if(!g){q.lineTo(d+e,m)}return[o,j]}};dhtmlx.chart.pie={pvt_render_pie:function(b,d,a,f,c,e){this._renderPie(b,d,a,f,1,e,c)},_renderPie:function(m,x,e,d,v,w,n){if(!x.length){return}var o=this._getPieParameters(e,d);var g=(this._settings.radius?this._settings.radius:o.radius);if(g<0){return}var a=this._getValues(x);var f=this._getTotalValue(a);var h=this._getRatios(a,f);var u=(this._settings.x?this._settings.x:o.x);var c=(this._settings.y?this._settings.y:o.y);if(v==1&&this._settings.shadow){this._addShadow(m,u,c,g)}c=c/v;var l=-Math.PI/2;var k;var r=[];m.scale(1,v);if(this._settings.gradient){var t=(v!=1?u+g/3:u);var b=(v!=1?c+g/3:c);this._showRadialGradient(m,u,c,g,t,b)}if(this._settings.labelLines){this._labelMargins=this._getLabelMargins(h,g)}for(var s=0;s<x.length;s++){if(!a[s]){continue}m.strokeStyle=(x.length==1?this._settings.color.call(this,x[s]):this._settings.lineColor.call(this,x[s]));m.beginPath();m.moveTo(u,c);r.push(l);k=-Math.PI/2+h[s]-0.0001;m.arc(u,c,g,l,k,false);m.lineTo(u,c);var q=this._settings.color.call(this,x[s]);m.fillStyle=q;m.fill();if(this._settings.pieInnerText){this._drawSectorLabel(u,c,5*g/6,l,k,v,this._settings.pieInnerText(x[s],f),true)}if(this._settings.label){this._drawSectorLabel(u,c,g,l,k,v,this._settings.label(x[s]),0,(this._labelMargins?this._labelMargins[s]:{}),m)}if(v!=1){this._createLowerSector(m,u,c,l,k,g,true);m.fillStyle="#000000";m.globalAlpha=0.2;this._createLowerSector(m,u,c,l,k,g,false);m.globalAlpha=1;m.fillStyle=q}w.addSector(x[s].id,l,k,u-e.x,c-e.y/v,g,v,n);l=k}m.globalAlpha=0.8;var j;if(r.length>1){for(s=0;s<r.length;s++){j=this._getPositionByAngle(r[s],u,c,g);this._drawLine(m,u,c,j.x,j.y,this._settings.lineColor.call(this,x[s]),2)}}if(v==1){m.lineWidth=2;m.strokeStyle="#ffffff";m.beginPath();m.arc(u,c,g+1,0,2*Math.PI,false);m.stroke()}m.globalAlpha=1;m.scale(1,1/v)},_getLabelMargins:function(o,f){var x,w,C,B,a=[],s=[];var F={1:[0]};for(C=1;C<o.length;C++){x=-Math.PI/2+(C>1?(o[C-1]-(o[C-1]-o[C-2])/2):o[C-1]/2);w=-Math.PI/2+o[C]-(o[C]-o[C-1])/2;var e=Math.cos(w);var u=Math.sin(w);var g=Math.cos(x);var v=Math.sin(x);var y=Math.round((f+8)*Math.abs(Math.sin(w)-Math.sin(x)));var m=(e<0?(u<0?4:3):(u<0?1:2));var n=(g<0?(v<0?4:3):(v<0?1:2));if(!F[m]){F[m]=[]}F[m].push(n==m?y:0)}var z=[];var E=0;for(var t in F){var d=0;var b=F[t].length;var l=0;var h=0;if(t==1||t==3){B=t-1;var D=0;while(B>0){if(F[B]){D+=F[B].length}B--}z[D+F[t].length-1]={y:0,x:0};var B=F[t].length-2;while(B>=0){if((l||B)&&F[t][B+1]-l<18){l+=18-F[t][B+1]}else{l=0}z[D+B]={y:l*(t==1?-1:1)};B--}for(var A=z.length-F[t].length;A<z.length;A++){if(z[A]["y"]!=0){h+=6;z[A]["x"]=h}else{z[A]["x"]=0;h=0}}}else{var B=1;z.push({y:0,x:0});while(B<F[t].length){if(F[t][B]-l<18){l+=18-F[t][B]}else{l=0}z.push({y:l*(t==4?-1:1)});B++}for(var A=z.length-1;A>=z.length-F[t].length;A--){if(z[A]["y"]!=0){h+=8;z[A]["x"]=h}else{h=0;z[A]["x"]=0}}}}return z},_getValues:function(c){var a=[];for(var b=0;b<c.length;b++){a.push(parseFloat(this._settings.value(c[b])||0))}return a},_getTotalValue:function(a){var c=0;for(var b=0;b<a.length;b++){c+=a[b]}return c},_getRatios:function(b,a){var f;var e=[];var d=0;a=a||this._getTotalValue(b);for(var c=0;c<b.length;c++){f=b[c];e[c]=Math.PI*2*(a?((f+d)/a):(1/b.length));d+=f}return e},_getPieParameters:function(g,e){var d=e.x-g.x;var b=e.y-g.y;var c=g.x+d/2;var f=g.y+b/2;var a=Math.min(d/2,b/2);return{x:c,y:f,radius:a}},_createLowerSector:function(d,e,g,c,a,f,b){d.lineWidth=1;if(!((c<=0&&a>=0)||(c>=0&&a<=Math.PI)||(Math.abs(c-Math.PI)>0.003&&c<=Math.PI&&a>=Math.PI))){return}if(c<=0&&a>=0){c=0;b=false;this._drawSectorLine(d,e,g,f,c,a)}if(c<=Math.PI&&a>=Math.PI){a=Math.PI;b=false;this._drawSectorLine(d,e,g,f,c,a)}var h=(this._settings.height||Math.floor(f/4))/this._settings.cant;d.beginPath();d.arc(e,g,f,c,a,false);d.lineTo(e+f*Math.cos(a),g+f*Math.sin(a)+h);d.arc(e,g+h,f,a,c,true);d.lineTo(e+f*Math.cos(c),g+f*Math.sin(c));d.fill();if(b){d.stroke()}},_drawSectorLine:function(c,d,f,e,b,a){c.beginPath();c.arc(d,f,e,b,a,false);c.stroke()},_addShadow:function(b,a,f,d){b.globalAlpha=0.5;var e=["#c4c4c4","#c6c6c6","#cacaca","#dcdcdc","#dddddd","#e0e0e0","#eeeeee","#f5f5f5","#f8f8f8"];for(var c=e.length-1;c>-1;c--){b.beginPath();b.fillStyle=e[c];b.arc(a+1,f+1,d+c,0,Math.PI*2,true);b.fill()}b.globalAlpha=1},_getGrayGradient:function(a){a.addColorStop(0,"#ffffff");a.addColorStop(0.7,"#7a7a7a");a.addColorStop(1,"#000000");return a},_showRadialGradient:function(c,b,g,a,d,e){c.beginPath();var f;if(typeof this._settings.gradient!="function"){f=c.createRadialGradient(d,e,a/4,b,g,a);f=this._getGrayGradient(f)}else{f=this._settings.gradient(f)}c.fillStyle=f;c.arc(b,g,a,0,Math.PI*2,true);c.fill();c.globalAlpha=0.7},_drawSectorLabel:function(E,d,g,v,u,F,r,a,s,z){var q=this.canvases[0].renderText(0,0,r,0,1);if(!q){return}var G=q.scrollWidth;q.style.width=G+"px";if(G>E){G=E}var w=(u-v<0.2?4:8);if(a){w=G/1.8}var f=v+(u-v)/2;var e=g;g=(a?5*g/6:g+this._settings.labelOffset);g=g-(w-8)/2;var l=-w;var k=-8;var A="right";if(f>=Math.PI/2&&f<Math.PI||f<=3*Math.PI/2&&f>=Math.PI){l=-G-l;A="left"}var h=0;if(!a&&F<1&&(f>0&&f<Math.PI)){h=(this._settings.height||Math.floor(g/4))/F}var m=(d+Math.floor(g+h)*Math.sin(f))*F+k;var n=E+Math.floor(g+w/2)*Math.cos(f)+l;var j=(u<Math.PI/2+0.01);var o=(v<Math.PI/2);if(o&&j){n=Math.max(n,E+3)}else{if(!o&&!j){n=Math.min(n,E-G)}else{if(!a&&!this._settings.labelLines&&(f>=Math.PI/2&&f<Math.PI||f<=3*Math.PI/2&&f>=Math.PI)){n+=G/3}}}if(this._settings.labelLines&&!a){var B=Math.abs((Math.abs(s||0)+Math.abs(e*Math.sin(f)))/Math.sin(f));if(s.y){m+=s.y}if(A=="left"){n-=s.x}else{n+=s.x}z.beginPath();z.strokeStyle="#555";var D=E+e*Math.cos(f);var c=d+e*Math.sin(f);z.moveTo(D,c);var C=n-(A=="left"?l-8:2);var b=m;if(A=="left"&&C>D){C=D-Math.abs(b-c+16)/Math.tan(f-Math.PI);b=b+16;if(f<Math.PI){b-=8}}else{b+=8}z.lineTo(C,b);z.lineTo(C+(A=="left"?-5:5),b);z.stroke();m=b-8;n=C+l+(A=="left"?-15:15)}q.style.top=m+"px";q.style.left=n+"px";q.style.width=G+"px";q.style.textAlign=A;q.style.whiteSpace="nowrap"}};dhtmlx.chart.pie3D={pvt_render_pie3D:function(b,d,a,f,c,e){this._renderPie(b,d,a,f,this._settings.cant,e)}};dhtmlx.chart.donut={pvt_render_donut:function(m,e,k,j,g,b){if(!e.length){return}this._renderPie(m,e,k,j,1,b);var d=this._settings;var f=this._getPieParameters(k,j);var a=(d.radius?d.radius:f.radius);var h=((d.innerRadius&&(d.innerRadius<a))?d.innerRadius:a/3);var c=(d.x?d.x:f.x);var l=(d.y?d.y:f.y);m.fillStyle="#ffffff";m.beginPath();m.arc(c,l,h,0,Math.PI*2,true);m.fill()}};dhtmlx.DataDriver.dhtmlxgrid={_grid_getter:"_get_cell_value",toObject:function(a){this._grid=a;return a},getRecords:function(a){return a.rowsBuffer},getDetails:function(c){var a={};for(var b=0;b<this._grid.getColumnsNum();b++){a["data"+b]=this._grid[this._grid_getter](c,b)}return a},getInfo:function(a){return{_size:0,_from:0}}};dhtmlx.ui.Canvas=function(b,c,e){this._canvas_labels=[];this._canvas_name=c;this._obj=b;var d=b.offsetWidth*(window.devicePixelRatio||1);var a=b.offsetHeight*(window.devicePixelRatio||1);var e=e||"";e+=";width:"+b.offsetWidth+"px;height:"+b.offsetHeight+"px;";this._prepareCanvas(c,e,d,a)};dhtmlx.ui.Canvas.prototype={_prepareCanvas:function(b,d,c,a){this._canvas=dhtmlx.html.create("canvas",{width:c,height:a,canvas_id:b,style:(d||"")});this._obj.appendChild(this._canvas);if(!this._canvas.getContext){if(dhtmlx._isIE){dhtmlx.require("thirdparty/excanvas/excanvas.js");G_vmlCanvasManager.init_(document);G_vmlCanvasManager.initElement(this._canvas)}else{dhtmlx.error("Canvas is not supported in the current browser")}}return this._canvas},getCanvas:function(b){var a=(this._canvas||this._prepareCanvas()).getContext(b||"2d");if(!this._dhtmlxDevicePixelRatio){this._dhtmlxDevicePixelRatio=true;a.scale(window.devicePixelRatio||1,window.devicePixelRatio||1)}return a},_resizeCanvas:function(){if(this._canvas){var a=this._canvas.parentNode.offsetWidth;var b=this._canvas.parentNode.offsetHeight;this._canvas.setAttribute("width",a*(window.devicePixelRatio||1));this._canvas.setAttribute("height",b*(window.devicePixelRatio||1));this._canvas.style.width=a+"px";this._canvas.style.height=b+"px";this._dhtmlxDevicePixelRatio=false}},renderText:function(a,f,e,d,b){if(!e){return}var c=dhtmlx.html.create("DIV",{"class":"dhx_canvas_text"+(d?(" "+d):""),style:"left:"+a+"px; top:"+f+"px;"},e);this._obj.appendChild(c);this._canvas_labels.push(c);if(b){c.style.width=b+"px"}return c},renderTextAt:function(e,j,a,h,d,g,b){var f=this.renderText.call(this,a,h,d,g,b);if(f){if(e){if(e=="middle"){f.style.top=parseInt(h-f.offsetHeight/2,10)+"px"}else{f.style.top=h-f.offsetHeight+"px"}}if(j){if(j=="left"){f.style.left=a-f.offsetWidth+"px"}else{f.style.left=parseInt(a-f.offsetWidth/2,10)+"px"}}}return f},clearCanvas:function(a){var b=[],c;for(c=0;c<this._canvas_labels.length;c++){this._obj.removeChild(this._canvas_labels[c])}this._canvas_labels=[];if(!a&&this._obj._htmlmap){b=this._getMapAreas();while(b.length){b[0].parentNode.removeChild(b[0]);b.splice(0,1)}b=null;if(!this._obj._htmlmap.getElementsByTagName("AREA").length){this._obj._htmlmap.parentNode.removeChild(this._obj._htmlmap);this._obj._htmlmap=null}}this.getCanvas().clearRect(0,0,this._canvas.width,this._canvas.height)},toggleCanvas:function(){this._toggleCanvas(this._canvas.style.display=="none")},showCanvas:function(){this._toggleCanvas(true)},hideCanvas:function(){this._toggleCanvas(false)},_toggleCanvas:function(a){var b,c;for(c=0;c<this._canvas_labels.length;c++){this._canvas_labels[c].style.display=(a?"":"none")}if(this._obj._htmlmap){b=this._getMapAreas();for(c=0;c<b.length;c++){if(a){b[c].removeAttribute("disabled")}else{b[c].setAttribute("disabled","true")}}}this._canvas.style.display=(a?"":"none")},_getMapAreas:function(){var c=[],a,b;a=this._obj._htmlmap.getElementsByTagName("AREA");for(b=0;b<a.length;b++){if(a[b].getAttribute("userdata")==this._canvas_name){c.push(a[b])}}return c}};dhtmlXChart=function(a){this.name="Chart";if(dhtmlx.assert_enabled()){this._assert()}dhtmlx.extend(this,dhtmlx.Settings);this._parseContainer(a,"dhx_chart");dhtmlx.extend(this,dhtmlx.AtomDataLoader);dhtmlx.extend(this,dhtmlx.DataLoader);this.data.provideApi(this,true);dhtmlx.extend(this,dhtmlx.EventSystem);dhtmlx.extend(this,dhtmlx.MouseEvents);dhtmlx.destructors.push(this);dhtmlx.extend(this,dhtmlx.Group);dhtmlx.extend(this,dhtmlx.AutoTooltip);for(var b in dhtmlx.chart){dhtmlx.extend(this,dhtmlx.chart[b])}if(a.preset){this.definePreset(a)}this._parseSettings(a,this.defaults);this._series=[this._settings];this.data.attachEvent("onStoreUpdated",dhtmlx.bind(function(){this.render()},this));this.attachEvent("onLocateData",this._switchSerie)};dhtmlXChart.prototype={_id:"dhx_area_id",on_click:{dhx_chart_legend_item:function(g,h,f){var d=f.getAttribute("series_id");if(this.callEvent("onLegendClick",[g,d,f])){var c=this._settings;var b=c.legend.values;var a=(b&&(typeof b[d].toggle!="undefined"))?b[d].toggle:c.legend.toggle;if((typeof d!="undefined")&&this._series.length>1){if(a){if(f.className.indexOf("hidden")!=-1){this.showSeries(d)}else{this.hideSeries(d)}}}}}},on_dblclick:{},on_mouse_move:{},destructor:function(){dhtmlx.Destruction.destructor.apply(this,arguments);if(this.canvases){for(var a in this.canvases){this.canvases[a]._obj=null;this.canvases[a]=null}this.canvases=null}if(this.legendObj){this.legendObj.innerHTML="";this.legendObj=null}if(this.config.tooltip){this.config.tooltip._obj=null;this.config.tooltip._dataobj=null}},bind:function(){dhtmlx.BaseBind.legacyBind.apply(this,arguments)},sync:function(){dhtmlx.BaseBind.legacySync.apply(this,arguments)},resize:function(){for(var a in this.canvases){this.canvases[a]._resizeCanvas()}this.render()},view_setter:function(a){if(!dhtmlx.chart[a]){dhtmlx.error("Chart type extension is not loaded: "+a)}if(typeof this._settings.offset=="undefined"){this._settings.offset=!(a=="area"||a=="stackedArea")}if(a=="radar"&&!this._settings.yAxis){this.define("yAxis",{})}if(a=="scatter"){if(!this._settings.yAxis){this.define("yAxis",{})}if(!this._settings.xAxis){this.define("xAxis",{})}}return a},clearCanvas:function(){if(this.canvases&&typeof this.canvases=="object"){for(var a in this.canvases){this.canvases[a].clearCanvas()}}},render:function(){var c,b,d,e,a;if(!this.callEvent("onBeforeRender",[this.data])){return}if(this.canvases&&typeof this.canvases=="object"){for(b in this.canvases){this.canvases[b].clearCanvas()}}else{this.canvases={}}if(this._settings.legend){if(!this.canvases.legend){this.canvases.legend=new dhtmlx.ui.Canvas(this._obj,"legend")}this._drawLegend(this.data.getRange(),this._obj.offsetWidth)}c=this._getChartBounds(this._obj.offsetWidth,this._obj.offsetHeight);this._map=e=new dhtmlx.ui.Map(this._id);a=this._settings;d=this._getChartData();for(b=0;b<this._series.length;b++){this._settings=this._series[b];if(!this.canvases[b]){this.canvases[b]=new dhtmlx.ui.Canvas(this._obj,b,"z-index:"+(2+b))}this["pvt_render_"+this._settings.view](this.canvases[b].getCanvas(),d,c.start,c.end,b,e)}e.render(this._obj);this._obj.lastChild.style.zIndex=1000;this._applyBounds(this._obj.lastChild,c);this.callEvent("onAfterRender",[]);this._settings=a},_applyBounds:function(c,b){var a={};a.left=b.start.x;a.top=b.start.y;a.width=b.end.x-b.start.x;a.height=b.end.y-b.start.y;for(var d in a){c.style[d]=a[d]+"px"}},_getChartData:function(){var d,g,c,e,f,k,a,h,j,b;e=this.data.getRange();d=(this._settings.view.toLowerCase().indexOf("barh")!=-1?"yAxis":"xAxis");g=this._settings[d];if(g&&g.units&&(typeof g.units=="object")){c=g.units;h=[];if(typeof c.start!="undefined"&&typeof c.end!="undefined"&&typeof c.next!="undefined"){a=c.start;while(a<=c.end){h.push(a);a=c.next.call(this,a)}}else{if(Object.prototype.toString.call(c)==="[object Array]"){h=c}}k=[];if(h.length){j=g.value;b={};for(f=0;f<e.length;f++){b[j(e[f])]=f}for(f=0;f<h.length;f++){if(typeof b[h[f]]!="undefined"){e[b[h[f]]].$unit=h[f];k.push(e[b[h[f]]])}else{k.push({$unit:h[f]})}}}return k}return e},value_setter:dhtmlx.Template.obj_setter,xValue_setter:dhtmlx.Template.obj_setter,yValue_setter:function(a){this.define("value",a)},alpha_setter:dhtmlx.Template.obj_setter,label_setter:dhtmlx.Template.obj_setter,lineColor_setter:dhtmlx.Template.obj_setter,borderColor_setter:dhtmlx.Template.obj_setter,pieInnerText_setter:dhtmlx.Template.obj_setter,gradient_setter:function(a){if((typeof(a)!="function")&&a&&(a===true)){a="light"}return a},colormap:{RAINBOW:function(a){var b=Math.floor(this.indexById(a.id)/this.dataCount()*1536);if(b==1536){b-=1}return this._rainbow[Math.floor(b/256)](b%256)}},color_setter:function(a){return this.colormap[a]||dhtmlx.Template.obj_setter(a)},fill_setter:function(a){return((!a||a==0)?false:dhtmlx.Template.obj_setter(a))},definePreset:function(a){this.define("preset",a.preset);delete a.preset},preset_setter:function(f){var d,c,e;this.defaults=dhtmlx.extend({},this.defaults);if(typeof dhtmlx.presets.chart[f]=="object"){e=dhtmlx.presets.chart[f];for(d in e){if(typeof e[d]=="object"){if(!this.defaults[d]||typeof this.defaults[d]!="object"){this.defaults[d]=dhtmlx.extend({},e[d])}else{this.defaults[d]=dhtmlx.extend({},this.defaults[d]);for(c in e[d]){this.defaults[d][c]=e[d][c]}}}else{this.defaults[d]=e[d]}}return f}return false},legend_setter:function(a){if(!a){if(this.legendObj){this.legendObj.innerHTML="";this.legendObj=null}return false}if(typeof(a)!="object"){a={template:a}}this._mergeSettings(a,{width:150,height:18,layout:"y",align:"left",valign:"bottom",template:"",toggle:(this._settings.view.toLowerCase().indexOf("stacked")!=-1?"":"hide"),marker:{type:"square",width:15,height:15,radius:3},margin:4,padding:3});a.template=dhtmlx.Template.setter(a.template);return a},defaults:{color:"RAINBOW",alpha:"1",label:false,value:"{obj.value}",padding:{},view:"pie",lineColor:"#ffffff",cant:0.5,width:30,labelWidth:100,line:{width:2,color:"#1293f8"},seriesMargin:1,seriesPadding:4,item:{radius:3,borderColor:"#636363",borderWidth:1,color:"#ffffff",alpha:1,type:"r",shadow:false},shadow:true,gradient:false,border:true,labelOffset:20,origin:"auto"},item_setter:function(a){if(typeof(a)!="object"){a={color:a,borderColor:a}}this._mergeSettings(a,dhtmlx.extend({},this.defaults.item));var c=["alpha","borderColor","color","radius"];for(var b=0;b<c.length;b++){a[c[b]]=dhtmlx.Template.setter(a[c[b]])}return a},line_setter:function(a){if(typeof(a)!="object"){a={color:a}}dhtmlx.extend(this.defaults.line,a);a=dhtmlx.extend({},this.defaults.line);a.color=dhtmlx.Template.setter(a.color);return a},padding_setter:function(a){if(typeof(a)!="object"){a={left:a,right:a,top:a,bottom:a}}this._mergeSettings(a,{left:50,right:20,top:35,bottom:40});return a},xAxis_setter:function(a){if(!a){return false}if(typeof(a)!="object"){a={template:a}}if(!a.value){a.value=a.template}this._mergeSettings(a,{title:"",color:"#000000",lineColor:"#cfcfcf",template:"{obj}",value:"{obj}",lines:true});var b=["lineColor","template","lines","value"];this._converToTemplate(b,a);this._configXAxis=dhtmlx.extend({},a);return a},yAxis_setter:function(a){if(!a){return false}this._mergeSettings(a,{title:"",color:"#000000",lineColor:"#cfcfcf",template:"{obj}",lines:true,bg:"#ffffff"});var b=["lineColor","template","lines","bg"];this._converToTemplate(b,a);this._configYAxis=dhtmlx.extend({},a);return a},_converToTemplate:function(a,b){for(var c=0;c<a.length;c++){b[a[c]]=dhtmlx.Template.setter(b[a[c]])}},_drawScales:function(e,d,c,g,a,b){var f=0;if(this._settings.yAxis){if(!this.canvases.y){this.canvases.y=new dhtmlx.ui.Canvas(this._obj,"axis_y")}f=this._drawYAxis(this.canvases.y.getCanvas(),e,d,c,g,a)}if(this._settings.xAxis){if(!this.canvases.x){this.canvases.x=new dhtmlx.ui.Canvas(this._obj,"axis_x")}this._drawXAxis(this.canvases.x.getCanvas(),e,d,c,b,f)}return f},_drawXAxis:function(o,f,m,l,d,k){var c=m.x-0.5;var n=parseInt((k?k:l.y),10)+0.5;var b=l.x;var g;var a=true;var h=(this._settings.origin===0&&this._settings.view=="stackedBar")?l.y+0.5:n;for(var e=0;e<f.length;e++){if(this._settings.offset===true){g=c+d/2+e*d}else{g=(e==f.length-1)?l.x:c+e*d;a=!!e}g=Math.ceil(g)-0.5;var j=((this._settings.origin!="auto")&&(this._settings.view=="bar")&&(parseFloat(this._settings.value(f[e]))<this._settings.origin));this._drawXAxisLabel(g,h,f[e],a,j);if((this._settings.offset||e)&&this._settings.xAxis.lines.call(this,f[e])){this._drawXAxisLine(o,g,l.y,m.y,f[e])}}this.canvases.x.renderTextAt(true,false,c,l.y+this._settings.padding.bottom-3,this._settings.xAxis.title,"dhx_axis_title_x",l.x-m.x);this._drawLine(o,c,n,b,n,this._settings.xAxis.color,1);if(!this._settings.xAxis.lines.call(this,{})||!this._settings.offset){return}this._drawLine(o,b+0.5,l.y,b+0.5,m.y+0.5,this._settings.xAxis.color,0.2)},_drawYAxis:function(q,v,f,e,h,g){var j;var n={};if(!this._settings.yAxis){return}var s=f.x-0.5;var d=e.y;var b=f.y;var o=e.y;if(this._settings.yAxis.step){j=parseFloat(this._settings.yAxis.step)}if(typeof this._configYAxis.step=="undefined"||typeof this._configYAxis.start=="undefined"||typeof this._configYAxis.end=="undefined"){n=this._calculateScale(h,g);h=n.start;g=n.end;j=n.step;this._settings.yAxis.end=g;this._settings.yAxis.start=h}this._setYAxisTitle(f,e);if(j===0){g=h;j=1}var a=(g==h?d-b:(d-b)*j/(g-h));var t=0;for(var r=h;r<=g;r+=j){if(n.fixNum){r=parseFloat((new Number(r)).toFixed(n.fixNum))}var u=Math.floor(d-t*a)+0.5;if(!(r==h&&this._settings.origin=="auto")&&this._settings.yAxis.lines.call(this,r)){this._drawLine(q,s,u,e.x,u,this._settings.yAxis.lineColor.call(this,r),1)}if(r==this._settings.origin){o=u}var k=r;if(j<1){var l=Math.min(this._log10(j),(h<=0?0:this._log10(h)));var m=Math.pow(10,-l);k=Math.round(r*m)/m;r=k}this.canvases.y.renderText(0,u-5,this._settings.yAxis.template(k.toString()),"dhx_axis_item_y",f.x-5);t++}this._drawLine(q,s,d+1,s,b,this._settings.yAxis.color,1);return o},_setYAxisTitle:function(c,b){var a="dhx_axis_title_y"+(dhtmlx._isIE&&dhtmlx._isIE!=9?" dhx_ie_filter":"");var d=this.canvases.y.renderTextAt("middle",false,0,parseInt((b.y-c.y)/2+c.y,10),this._settings.yAxis.title,a);if(d){d.style.left=(dhtmlx.env.transform?(d.offsetHeight-d.offsetWidth)/2:0)+"px"}},_calculateScale:function(k,b){if(this._settings.origin!="auto"&&this._settings.origin<k){k=this._settings.origin}var e,d,g;e=((b-k)/8)||1;var c=Math.floor(this._log10(e));var a=Math.pow(10,c);var f=e/a;f=(f>5?10:5);e=parseInt(f,10)*a;if(e>Math.abs(k)){d=(k<0?-e:0)}else{var l=Math.abs(k);var j=Math.floor(this._log10(l));var h=l/Math.pow(10,j);d=Math.ceil(h*10)/10*Math.pow(10,j)-e;if(l>1&&e>0.1){d=Math.ceil(d)}while(k<0?d<=k:d>=k){d-=e}if(k<0){d=-d-2*e}}g=d;while(g<b){g+=e;g=parseFloat((new Number(g)).toFixed(Math.abs(c)))}return{start:d,end:g,step:e,fixNum:Math.abs(c)}},_getLimits:function(b,g){var h,f;var e=((arguments.length&&b=="h")?this._configXAxis:this._configYAxis);g=g||"value";if(e&&(typeof e.end!="undefined")&&(typeof e.start!="undefined")&&e.step){h=parseFloat(e.end);f=parseFloat(e.start)}else{h=this.max(this._series[0][g]);f=(e&&(typeof e.start!="undefined"))?parseFloat(e.start):this.min(this._series[0][g]);if(this._series.length>1){for(var d=1;d<this._series.length;d++){var a=this.max(this._series[d][g]);var c=this.min(this._series[d][g]);if(a>h){h=a}if(c<f){f=c}}}}return{max:h,min:f}},_log10:function(b){var a="log";return Math.floor((Math[a](b)/Math.LN10))},_drawXAxisLabel:function(b,f,e,a,d){if(!this._settings.xAxis){return}var c=this.canvases.x.renderTextAt(d,a,b,f-(d?2:0),this._settings.xAxis.template(e));if(c){c.className+=" dhx_axis_item_x"}},_drawXAxisLine:function(b,a,d,c,e){if(!this._settings.xAxis||!this._settings.xAxis.lines){return}this._drawLine(b,a,d,a,c,this._settings.xAxis.lineColor.call(this,e),1)},_drawLine:function(a,d,g,c,e,b,f){a.strokeStyle=b;a.lineWidth=f;a.beginPath();a.moveTo(d,g);a.lineTo(c,e);a.stroke();a.lineWidth=1},_getRelativeValue:function(d,e){var c,a;var b=1;if(e!=d){c=e-d}else{c=d}return[c,b]},_rainbow:[function(a){return"#FF"+dhtmlx.math.toHex(a/2,2)+"00"},function(a){return"#FF"+dhtmlx.math.toHex(a/2+128,2)+"00"},function(a){return"#"+dhtmlx.math.toHex(255-a,2)+"FF00"},function(a){return"#00FF"+dhtmlx.math.toHex(a,2)},function(a){return"#00"+dhtmlx.math.toHex(255-a,2)+"FF"},function(a){return"#"+dhtmlx.math.toHex(a,2)+"00FF"}],addSeries:function(b){var a=this._settings;this._settings=dhtmlx.extend({},a);this._parseSettings(b,{});this._series.push(this._settings);this._settings=a},_switchSerie:function(f,a,d){var c;this._active_serie=(this._series.length==1?a.getAttribute("userdata"):this._getActiveSeries(d));if(!this._series[this._active_serie]){return}for(var b=0;b<this._series.length;b++){c=this._series[b].tooltip;if(c){c.disable()}}if(!a.getAttribute("disabled")){c=this._series[this._active_serie].tooltip;if(c){c.enable()}}},_getActiveSeries:function(f){var j,b,d,c,h,l,k,g;b=this._map._areas;c=dhtmlx.html.offset(this._obj._htmlmap);h=dhtmlx.html.pos(f);k=h.x-c.x;g=h.y-c.y;for(d=0;d<b.length;d++){j=b[d].points;if(k<=j[2]&&k>=j[0]&&g<=j[3]&&g>=j[1]){if(l){if(b[d].index>l.index){l=b[d]}}else{l=b[d]}}}return l?l.index:0},hideSeries:function(a){this.canvases[a].hideCanvas();if(this._settings.legend.values&&this._settings.legend.values[a]){this._settings.legend.values[a].$hidden=true}this._drawLegend()},showSeries:function(a){this.canvases[a].showCanvas();if(this._settings.legend.values&&this._settings.legend.values[a]){delete this._settings.legend.values[a].$hidden}this._drawLegend()},_changeColorSV:function(b,e,a){var d,c;c=dhtmlx.math.toRgb(b);d=dhtmlx.math.rgbToHsv(c[0],c[1],c[2]);d[1]*=e;d[2]*=a;return"rgb("+dhtmlx.math.hsvToRgb(d[0],d[1],d[2])+")"},_setBorderStyles:function(a,b){var d,c;c=dhtmlx.math.toRgb(b);d=dhtmlx.math.rgbToHsv(c[0],c[1],c[2]);d[2]/=2;b="rgb("+dhtmlx.math.hsvToRgb(d[0],d[1],d[2])+")";a.strokeStyle=b;if(a.globalAlpha==1){a.globalAlpha=0.9}},_drawLegend:function(e,b){var f,l,r,m,g,n,a,j=0,h=0,q,k,d,o;e=e||[];b=b||this._obj.offsetWidth;q=this.canvases.legend.getCanvas();l=this._settings.legend;a=(this._settings.legend.layout!="x"?"width:"+l.width+"px":"");if(this.legendObj){this.legendObj.innerHTML="";this.legendObj.parentNode.removeChild(this.legendObj)}this.canvases.legend.clearCanvas(true);r=dhtmlx.html.create("DIV",{"class":"dhx_chart_legend",style:"left:"+j+"px; top:"+h+"px;"+a},"");if(l.padding){r.style.padding=l.padding+"px"}this.legendObj=r;this._obj.appendChild(r);g=[];if(!l.values){for(f=0;f<e.length;f++){g.push(this._drawLegendText(r,l.template(e[f])))}}else{for(f=0;f<l.values.length;f++){g.push(this._drawLegendText(r,l.values[f].text,(typeof l.values[f].id!="undefined"?typeof l.values[f].id:f),l.values[f].$hidden))}}n=r.offsetWidth;m=r.offsetHeight;if(n<this._obj.offsetWidth){if(l.layout=="x"&&l.align=="center"){j=(this._obj.offsetWidth-n)/2}if(l.align=="right"){j=this._obj.offsetWidth-n}if(l.margin&&l.align!="center"){j+=(l.align=="left"?1:-1)*l.margin}}if(m<this._obj.offsetHeight){if(l.valign=="middle"&&l.align!="center"&&l.layout!="x"){h=(this._obj.offsetHeight-m)/2}else{if(l.valign=="bottom"){h=this._obj.offsetHeight-m}}if(l.margin&&l.valign!="middle"){h+=(l.valign=="top"?1:-1)*l.margin}}r.style.left=j+"px";r.style.top=h+"px";q.save();for(f=0;f<g.length;f++){o=g[f];if(l.values&&l.values[f].$hidden){d=true;k=(l.values[f].disableColor?l.values[f].disableColor:"#d9d9d9")}else{d=false;k=(l.values?l.values[f].color:this._settings.color.call(this,e[f]))}var c=(l.marker.position=="right"?o.offsetWidth-l.marker.width:0);this._drawLegendMarker(q,o.offsetLeft+j+c,o.offsetTop+h,k,o.offsetHeight,d,f)}q.restore();g=null},_drawLegendText:function(a,f,b,e){var d="";var c=this._settings.legend;if(c.layout=="x"){d="float:left;"}var h=c.marker.position;var g=dhtmlx.html.create("DIV",{style:d+"padding-"+(h&&h=="right"?"right":"left")+":"+(10+c.marker.width)+"px","class":"dhx_chart_legend_item"+(e?" hidden":"")},f);if(arguments.length>2){g.setAttribute("series_id",b)}a.appendChild(g);return g},_drawLegendMarker:function(r,m,l,e,q,f,h){var b=[];var g=this._settings.legend.marker;var o=this._settings.legend.values;var k=(o&&o[h].markerType?o[h].markerType:g.type);if(e){r.fillStyle=e;r.strokeStyle=this._getDarkenColor(e,0.75)}r.beginPath();if(k=="round"||!g.radius){r.lineWidth=g.height;r.lineCap=k;m+=r.lineWidth/2+5;l+=q/2;r.moveTo(m,l);var a=m+g.width-g.height+1;r.lineTo(a,l)}else{if(k=="item"){if(this._settings.line&&this._settings.view!="scatter"&&!this._settings.disableLines){r.beginPath();r.lineWidth=this._series[h].line.width;r.strokeStyle=f?e:this._series[h].line.color.call(this,{});var c=m+5;var n=l+q/2;r.moveTo(c,n);var a=c+g.width;r.lineTo(a,n);r.stroke()}var d=this._series[h].item;var j=parseInt(d.radius.call(this,{}),10)||0;if(j){if(d.type=="image"&&d.src){this._drawImage(r,m+5,l+g.height/2-5,d.src,j*2,j*2);return}else{r.beginPath();if(f){r.lineWidth=d.borderWidth;r.strokeStyle=e;r.fillStyle=e}else{r.lineWidth=d.borderWidth;r.fillStyle=d.color.call(this,{});r.strokeStyle=d.borderColor.call(this,{});r.globalAlpha=d.alpha.call(this,{})}r.beginPath();m+=g.width/2+5;l+=q/2;this._strokeChartItem(r,m,l,j+1,d.type);r.fill();r.stroke()}}r.globalAlpha=1}else{r.lineWidth=1;m+=5;l+=parseInt(q/2-g.height/2,10);b=[[m+g.radius,l+g.radius,g.radius,Math.PI,3*Math.PI/2,false],[m+g.width-g.radius,l],[m+g.width-g.radius,l+g.radius,g.radius,-Math.PI/2,0,false],[m+g.width,l+g.height-g.radius],[m+g.width-g.radius,l+g.height-g.radius,g.radius,0,Math.PI/2,false],[m+g.radius,l+g.height],[m+g.radius,l+g.height-g.radius,g.radius,Math.PI/2,Math.PI,false],[m,l+g.radius]];this._path(r,b)}}r.stroke();r.fill()},_getDarkenColor:function(a,d){var c,b;b=dhtmlx.math.toRgb(a);c=dhtmlx.math.rgbToHsv(b[0],b[1],b[2]);c[2]=c[2]*d;return"rgb("+dhtmlx.math.hsvToRgb(c[0],c[1],c[2])+")"},_getChartBounds:function(a,g){var j,c,h,b;j=this._settings.padding.left;c=this._settings.padding.top;h=a-this._settings.padding.right;b=g-this._settings.padding.bottom;if(this._settings.legend){var e=this._settings.legend;var f=this._settings.legend.width;var d=this._settings.legend.height;if(e.layout=="x"){if(e.valign=="center"){if(e.align=="right"){h-=f}else{if(e.align=="left"){j+=f}}}else{if(e.valign=="bottom"){b-=d}else{c+=d}}}else{if(e.align=="right"){h-=f}else{if(e.align=="left"){j+=f}}}}return{start:{x:j,y:c},end:{x:h,y:b}}},_getStackedLimits:function(e){var b,a,f,d,c;if(this._settings.yAxis&&(typeof this._settings.yAxis.end!="undefined")&&(typeof this._settings.yAxis.start!="undefined")&&this._settings.yAxis.step){f=parseFloat(this._settings.yAxis.end);d=parseFloat(this._settings.yAxis.start)}else{for(b=0;b<e.length;b++){e[b].$sum=0;e[b].$min=Infinity;for(a=0;a<this._series.length;a++){c=parseFloat(this._series[a].value(e[b])||0);if(isNaN(c)){continue}if(this._series[a].view.toLowerCase().indexOf("stacked")!=-1){e[b].$sum+=c}if(c<e[b].$min){e[b].$min=c}}}f=-Infinity;d=Infinity;for(b=0;b<e.length;b++){if(e[b].$sum>f){f=e[b].$sum}if(e[b].$min<d){d=e[b].$min}}if(d>0){d=0}}return{max:f,min:d}},_setBarGradient:function(o,b,l,a,j,h,d,c){var k,e,g,f,n,m;if(h=="light"){if(c=="x"){k=o.createLinearGradient(b,l,a,l)}else{k=o.createLinearGradient(b,l,b,j)}m=[[0,"#FFFFFF"],[0.9,d],[1,d]];e=2}else{if(h=="falling"||h=="rising"){if(c=="x"){k=o.createLinearGradient(b,l,a,l)}else{k=o.createLinearGradient(b,l,b,j)}g=dhtmlx.math.toRgb(d);f=dhtmlx.math.rgbToHsv(g[0],g[1],g[2]);f[1]*=1/2;n="rgb("+dhtmlx.math.hsvToRgb(f[0],f[1],f[2])+")";if(h=="falling"){m=[[0,n],[0.7,d],[1,d]]}else{if(h=="rising"){m=[[0,d],[0.3,d],[1,n]]}}e=0}else{o.globalAlpha=0.37;e=0;if(c=="x"){k=o.createLinearGradient(b,j,b,l)}else{k=o.createLinearGradient(b,l,a,l)}m=[[0,"#9d9d9d"],[0.3,"#e8e8e8"],[0.45,"#ffffff"],[0.55,"#ffffff"],[0.7,"#e8e8e8"],[1,"#9d9d9d"]]}}this._gradient(k,m);return{gradient:k,offset:e}},_getPositionByAngle:function(c,b,e,d){c*=(-1);b=b+Math.cos(c)*d;e=e-Math.sin(c)*d;return{x:b,y:e}},_gradient:function(c,b){for(var a=0;a<b.length;a++){c.addColorStop(b[a][0],b[a][1])}},_path:function(a,c){var b,d;for(b=0;b<c.length;b++){d=(b?"lineTo":"moveTo");if(c[b].length>2){d="arc"}a[d].apply(a,c[b])}},_circle:function(b,a,d,c){b.arc(a,d,c,Math.PI*2,true)},_addMapRect:function(d,e,a,c,b){d.addRect(e,[a[0].x-c.x,a[0].y-c.y,a[1].x-c.x,a[1].y-c.y],b)}};dhtmlx.compat("layout");if(typeof(window.dhtmlXCellObject)!="undefined"){dhtmlXCellObject.prototype.attachChart=function(a){this.callEvent("_onBeforeContentAttach",["chart"]);var b=document.createElement("DIV");b.id="dhxChartObj_"+window.dhx4.newId();b.style.width="100%";b.style.height="100%";document.body.appendChild(b);this._attachObject(b);a.container=b.id;this.dataType="chart";this.dataObj=new dhtmlXChart(a);if(!this.dataObj.setSizes){this.dataObj.setSizes=function(){if(this.resize){this.resize()}else{this.render()}}}return this.dataObj}};
+/*
+Copyright DHTMLX LTD. http://www.dhtmlx.com
+You allowed to use this component or parts of it under GPL terms
+To use it on other terms or get Professional edition of the component please contact us at sales@dhtmlx.com
+*/
+/*
+2014 March 19
+*/
+
+
+
+/* DHX DEPEND FROM FILE 'assert.js'*/
+
+
+if (!window.dhtmlx) 
+	dhtmlx={};
+
+//check some rule, show message as error if rule is not correct
+dhtmlx.assert = function(test, message){
+	if (!test)	dhtmlx.error(message);
+};
+dhtmlx.assert_enabled=function(){ return false; };
+
+//register names of event, which can be triggered by the object
+dhtmlx.assert_event = function(obj, evs){
+	if (!obj._event_check){
+		obj._event_check = {};
+		obj._event_check_size = {};
+	}
+		
+	for (var a in evs){
+		obj._event_check[a.toLowerCase()]=evs[a];
+		var count=-1; for (var t in evs[a]) count++;
+		obj._event_check_size[a.toLowerCase()]=count;
+	}
+};
+dhtmlx.assert_method_info=function(obj, name, descr, rules){
+	var args = [];
+	for (var i=0; i < rules.length; i++) {
+		args.push(rules[i][0]+" : "+rules[i][1]+"\n   "+rules[i][2].describe()+(rules[i][3]?"; optional":""));
+	}
+	return obj.name+"."+name+"\n"+descr+"\n Arguments:\n - "+args.join("\n - ");
+};
+dhtmlx.assert_method = function(obj, config){
+	for (var key in config)
+		dhtmlx.assert_method_process(obj, key, config[key].descr, config[key].args, (config[key].min||99), config[key].skip);
+};
+dhtmlx.assert_method_process = function (obj, name, descr, rules, min, skip){
+	var old = obj[name];
+	if (!skip)
+		obj[name] = function(){
+			if (arguments.length !=	rules.length && arguments.length < min) 
+				dhtmlx.log("warn","Incorrect count of parameters\n"+obj[name].describe()+"\n\nExpecting "+rules.length+" but have only "+arguments.length);
+			else
+				for (var i=0; i<rules.length; i++)
+					if (!rules[i][3] && !rules[i][2](arguments[i]))
+						dhtmlx.log("warn","Incorrect method call\n"+obj[name].describe()+"\n\nActual value of "+(i+1)+" parameter: {"+(typeof arguments[i])+"} "+arguments[i]);
+			
+			return old.apply(this, arguments);
+		};
+	obj[name].describe = function(){	return dhtmlx.assert_method_info(obj, name, descr, rules);	};
+};
+dhtmlx.assert_event_call = function(obj, name, args){
+	if (obj._event_check){
+		if (!obj._event_check[name])
+			dhtmlx.log("warn","Not expected event call :"+name);
+		else if (dhtmlx.isNotDefined(args))
+			dhtmlx.log("warn","Event without parameters :"+name);
+		else if (obj._event_check_size[name] != args.length)
+			dhtmlx.log("warn","Incorrect event call, expected "+obj._event_check_size[name]+" parameter(s), but have "+args.length +" parameter(s), for "+name+" event");
+	}		
+};
+dhtmlx.assert_event_attach = function(obj, name){
+	if (obj._event_check && !obj._event_check[name]) 
+			dhtmlx.log("warn","Unknown event name: "+name);
+};
+//register names of properties, which can be used in object's configuration
+dhtmlx.assert_property = function(obj, evs){
+	if (!obj._settings_check)
+		obj._settings_check={};
+	dhtmlx.extend(obj._settings_check, evs);		
+};
+//check all options in collection, against list of allowed properties
+dhtmlx.assert_check = function(data,coll){
+	if (typeof data == "object"){
+		for (var key in data){
+			dhtmlx.assert_settings(key,data[key],coll);
+		}
+	}
+};
+//check if type and value of property is the same as in scheme
+dhtmlx.assert_settings = function(mode,value,coll){
+	coll = coll || this._settings_check;
+
+	//if value is not in collection of defined ones
+	if (coll){
+		if (!coll[mode])	//not registered property
+			return dhtmlx.log("warn","Unknown propery: "+mode);
+			
+		var descr = "";
+		var error = "";
+		var check = false;
+		for (var i=0; i<coll[mode].length; i++){
+			var rule = coll[mode][i];
+			if (typeof rule == "string")
+				continue;
+			if (typeof rule == "function")
+				check = check || rule(value);
+			else if (typeof rule == "object" && typeof rule[1] == "function"){
+				check = check || rule[1](value);
+				if (check && rule[2])
+					dhtmlx["assert_check"](value, rule[2]); //temporary fix , for sources generator
+			}
+			if (check) break;
+		}
+		if (!check )
+			dhtmlx.log("warn","Invalid configuration\n"+dhtmlx.assert_info(mode,coll)+"\nActual value: {"+(typeof value)+"} "+value);
+	}
+};
+
+dhtmlx.assert_info=function(name, set){ 
+	var ruleset = set[name];
+	var descr = "";
+	var expected = [];
+	for (var i=0; i<ruleset.length; i++){
+		if (typeof rule == "string")
+			descr = ruleset[i];
+		else if (ruleset[i].describe)
+			expected.push(ruleset[i].describe());
+		else if (ruleset[i][1] && ruleset[i][1].describe)
+			expected.push(ruleset[i][1].describe());
+	}
+	return "Property: "+name+", "+descr+" \nExpected value: \n - "+expected.join("\n - ");
+};
+
+
+if (dhtmlx.assert_enabled()){
+	
+	dhtmlx.assert_rule_color=function(check){
+		if (typeof check != "string") return false;
+		if (check.indexOf("#")!==0) return false;
+		if (check.substr(1).replace(/[0-9A-F]/gi,"")!=="") return false;
+		return true;
+	};
+	dhtmlx.assert_rule_color.describe = function(){
+		return "{String} Value must start from # and contain hexadecimal code of color";
+	};
+	
+	dhtmlx.assert_rule_template=function(check){
+		if (typeof check == "function") return true;
+		if (typeof check == "string") return true;
+		return false;
+	};
+	dhtmlx.assert_rule_template.describe = function(){
+		return "{Function},{String} Value must be a function which accepts data object and return text string, or a sting with optional template markers";
+	};
+	
+	dhtmlx.assert_rule_boolean=function(check){
+		if (typeof check == "boolean") return true;
+		return false;
+	};
+	dhtmlx.assert_rule_boolean.describe = function(){
+		return "{Boolean} true or false";
+	};
+	
+	dhtmlx.assert_rule_object=function(check, sub){
+		if (typeof check == "object") return true;
+		return false;
+	};
+	dhtmlx.assert_rule_object.describe = function(){
+		return "{Object} Configuration object";
+	};
+	
+	
+	dhtmlx.assert_rule_string=function(check){
+		if (typeof check == "string") return true;
+		return false;
+	};
+	dhtmlx.assert_rule_string.describe = function(){
+		return "{String} Plain string";
+	};
+	
+	
+	dhtmlx.assert_rule_htmlpt=function(check){
+		return !!dhtmlx.toNode(check);
+	};
+	dhtmlx.assert_rule_htmlpt.describe = function(){
+		return "{Object},{String} HTML node or ID of HTML Node";
+	};
+	
+	dhtmlx.assert_rule_notdocumented=function(check){
+		return false;
+	};
+	dhtmlx.assert_rule_notdocumented.describe = function(){
+		return "This options wasn't documented";
+	};
+	
+	dhtmlx.assert_rule_key=function(obj){
+		var t = function (check){
+			return obj[check];
+		};
+		t.describe=function(){
+			var opts = [];
+			for(var key in obj)
+				opts.push(key);
+			return  "{String} can take one of next values: "+opts.join(", ");
+		};
+		return t;
+	};
+	
+	dhtmlx.assert_rule_dimension=function(check){
+		if (check*1 == check && !isNaN(check) && check >= 0) return true;
+		return false;
+	};
+	dhtmlx.assert_rule_dimension.describe=function(){
+		return "{Integer} value must be a positive number";
+	};
+	
+	dhtmlx.assert_rule_number=function(check){
+		if (typeof check == "number") return true;
+		return false;
+	};
+	dhtmlx.assert_rule_number.describe=function(){
+		return "{Integer} value must be a number";
+	};
+	
+	dhtmlx.assert_rule_function=function(check){
+		if (typeof check == "function") return true;
+		return false;
+	};
+	dhtmlx.assert_rule_function.describe=function(){
+		return "{Function} value must be a custom function";
+	};
+	
+	dhtmlx.assert_rule_any=function(check){
+		return true;
+	};
+	dhtmlx.assert_rule_any.describe=function(){
+		return "Any value";
+	};
+	
+	dhtmlx.assert_rule_mix=function(a,b){
+		var t = function(check){
+			if (a(check)||b(check)) return true;
+			return false;
+		};
+		t.describe = function(){
+			return a.describe();
+		};
+		return t;
+	};
+
+}
+
+
+/* DHX DEPEND FROM FILE 'dhtmlx.js'*/
+
+
+/*DHX:Depend assert.js*/
+
+/*
+	Common helpers
+*/
+dhtmlx.codebase="./";
+
+//coding helpers
+
+dhtmlx.copy = function(source){
+	var f = dhtmlx.copy._function;
+	f.prototype = source;
+	return new f();
+};
+dhtmlx.copy._function = function(){};
+
+//copies methods and properties from source to the target
+dhtmlx.extend = function(target, source){
+	for (var method in source)
+		target[method] = source[method];
+		
+	//applying asserts
+	if (dhtmlx.assert_enabled() && source._assert){
+		target._assert();
+		target._assert=null;
+	}
+	
+	dhtmlx.assert(target,"Invalid nesting target");
+	dhtmlx.assert(source,"Invalid nesting source");
+	//if source object has init code - call init against target
+	if (source._init)	
+		target._init();
+				
+	return target;	
+};
+dhtmlx.proto_extend = function(){
+	var origins = arguments;
+	var compilation = origins[0];
+	var construct = [];
+	
+	for (var i=origins.length-1; i>0; i--) {
+		if (typeof origins[i]== "function")
+			origins[i]=origins[i].prototype;
+		for (var key in origins[i]){
+			if (key == "_init") 
+				construct.push(origins[i][key]);
+			else if (!compilation[key])
+				compilation[key] = origins[i][key];
+		}
+	};
+	
+	if (origins[0]._init)
+		construct.push(origins[0]._init);
+	
+	compilation._init = function(){
+		for (var i=0; i<construct.length; i++)
+			construct[i].apply(this, arguments);
+	};
+	compilation.base = origins[1];
+	var result = function(config){
+		this._init(config);
+		if (this._parseSettings)
+			this._parseSettings(config, this.defaults);
+	};
+	result.prototype = compilation;
+	
+	compilation = origins = null;
+	return result;
+};
+//creates function with specified "this" pointer
+dhtmlx.bind=function(functor, object){ 
+	return function(){ return functor.apply(object,arguments); };  
+};
+
+//loads module from external js file
+dhtmlx.require=function(module){
+	if (!dhtmlx._modules[module]){
+		dhtmlx.assert(dhtmlx.ajax,"load module is required");
+		
+		//load and exec the required module
+		dhtmlx.exec( dhtmlx.ajax().sync().get(dhtmlx.codebase+module).responseText );
+		dhtmlx._modules[module]=true;	
+	}
+};
+dhtmlx._modules = {};	//hash of already loaded modules
+
+//evaluate javascript code in the global scoope
+dhtmlx.exec=function(code){
+	if (window.execScript)	//special handling for IE
+		window.execScript(code);
+	else window.eval(code);
+};
+
+/*
+	creates method in the target object which will transfer call to the source object
+	if event parameter was provided , each call of method will generate onBefore and onAfter events
+*/
+dhtmlx.methodPush=function(object,method,event){
+	return function(){
+		var res = false;
+		//if (!event || this.callEvent("onBefore"+event,arguments)){ //not used anymore, probably can be removed
+			res=object[method].apply(object,arguments);
+		//	if (event) this.callEvent("onAfter"+event,arguments);
+		//}
+		return res;	//result of wrapped method
+	};
+};
+//check === undefined
+dhtmlx.isNotDefined=function(a){
+	return typeof a == "undefined";
+};
+//delay call to after-render time
+dhtmlx.delay=function(method, obj, params, delay){
+	setTimeout(function(){
+		var ret = method.apply(obj,params);
+		method = obj = params = null;
+		return ret;
+	},delay||1);
+};
+
+//common helpers
+
+//generates unique ID (unique per window, nog GUID)
+dhtmlx.uid = function(){
+	if (!this._seed) this._seed=(new Date).valueOf();	//init seed with timestemp
+	this._seed++;
+	return this._seed;
+};
+//resolve ID as html object
+dhtmlx.toNode = function(node){
+	if (typeof node == "string") return document.getElementById(node);
+	return node;
+};
+//adds extra methods for the array
+dhtmlx.toArray = function(array){ 
+	return dhtmlx.extend((array||[]),dhtmlx.PowerArray);
+};
+//resolve function name
+dhtmlx.toFunctor=function(str){ 
+	return (typeof(str)=="string") ? eval(str) : str; 
+};
+
+//dom helpers
+
+//hash of attached events
+dhtmlx._events = {};
+//attach event to the DOM element
+dhtmlx.event=function(node,event,handler,master){
+	node = dhtmlx.toNode(node);
+	
+	var id = dhtmlx.uid();
+	dhtmlx._events[id]=[node,event,handler];	//store event info, for detaching
+	
+	if (master) 
+		handler=dhtmlx.bind(handler,master);	
+		
+	//use IE's of FF's way of event's attaching
+	if (node.addEventListener)
+		node.addEventListener(event, handler, false);
+	else if (node.attachEvent)
+		node.attachEvent("on"+event, handler);
+
+	return id;	//return id of newly created event, can be used in eventRemove
+};
+
+//remove previously attached event
+dhtmlx.eventRemove=function(id){
+	
+	if (!id) return;
+	dhtmlx.assert(this._events[id],"Removing non-existing event");
+		
+	var ev = dhtmlx._events[id];
+	//browser specific event removing
+	if (ev[0].removeEventListener)
+		ev[0].removeEventListener(ev[1],ev[2],false);
+	else if (ev[0].detachEvent)
+		ev[0].detachEvent("on"+ev[1],ev[2]);
+		
+	delete this._events[id];	//delete all traces
+};
+
+
+//debugger helpers
+//anything starting from error or log will be removed during code compression
+
+//add message in the log
+dhtmlx.log = function(type,message,details){
+	if (window.console && console.log){
+		type=type.toLowerCase();
+		if (window.console[type])
+			window.console[type](message||"unknown error");
+		else
+			window.console.log(type +": "+message);
+		if (details) 
+			window.console.log(details);
+	}	
+};
+//register rendering time from call point 
+dhtmlx.log_full_time = function(name){
+	dhtmlx._start_time_log = new Date();
+	dhtmlx.log("Info","Timing start ["+name+"]");
+	window.setTimeout(function(){
+		var time = new Date();
+		dhtmlx.log("Info","Timing end ["+name+"]:"+(time.valueOf()-dhtmlx._start_time_log.valueOf())/1000+"s");
+	},1);
+};
+//register execution time from call point
+dhtmlx.log_time = function(name){
+	var fname = "_start_time_log"+name;
+	if (!dhtmlx[fname]){
+		dhtmlx[fname] = new Date();
+		dhtmlx.log("Info","Timing start ["+name+"]");
+	} else {
+		var time = new Date();
+		dhtmlx.log("Info","Timing end ["+name+"]:"+(time.valueOf()-dhtmlx[fname].valueOf())/1000+"s");
+		dhtmlx[fname] = null;
+	}
+};
+//log message with type=error
+dhtmlx.error = function(message,details){
+	dhtmlx.log("error",message,details);
+};
+//event system
+dhtmlx.EventSystem={
+	_init:function(){
+		this._events = {};		//hash of event handlers, name => handler
+		this._handlers = {};	//hash of event handlers, ID => handler
+		this._map = {};
+	},
+	//temporary block event triggering
+	block : function(){
+		this._events._block = true;
+	},
+	//re-enable event triggering
+	unblock : function(){
+		this._events._block = false;
+	},
+	mapEvent:function(map){
+		dhtmlx.extend(this._map, map);
+	},
+	//trigger event
+	callEvent:function(type,params){
+		if (this._events._block) return true;
+		
+		type = type.toLowerCase();
+		dhtmlx.assert_event_call(this, type, params);
+		
+		var event_stack =this._events[type.toLowerCase()];	//all events for provided name
+		var return_value = true;
+
+		if (dhtmlx.debug)	//can slowdown a lot
+			dhtmlx.log("info","["+this.name+"] event:"+type,params);
+		
+		if (event_stack)
+			for(var i=0; i<event_stack.length; i++)
+				/*
+					Call events one by one
+					If any event return false - result of whole event will be false
+					Handlers which are not returning anything - counted as positive
+				*/
+				if (event_stack[i].apply(this,(params||[]))===false) return_value=false;
+				
+		if (this._map[type] && !this._map[type].callEvent(type,params))
+			return_value =	false;
+			
+		return return_value;
+	},
+	//assign handler for some named event
+	attachEvent:function(type,functor,id){
+		type=type.toLowerCase();
+		dhtmlx.assert_event_attach(this, type);
+		
+		id=id||dhtmlx.uid(); //ID can be used for detachEvent
+		functor = dhtmlx.toFunctor(functor);	//functor can be a name of method
+
+		var event_stack=this._events[type]||dhtmlx.toArray();
+		//save new event handler
+		event_stack.push(functor);
+		this._events[type]=event_stack;
+		this._handlers[id]={ f:functor,t:type };
+		
+		return id;
+	},
+	//remove event handler
+	detachEvent:function(id){
+		if(this._handlers[id]){
+			var type=this._handlers[id].t;
+			var functor=this._handlers[id].f;
+			
+			//remove from all collections
+			var event_stack=this._events[type];
+			event_stack.remove(functor);
+			delete this._handlers[id];
+		}
+	} 
+};
+
+//array helper
+//can be used by dhtmlx.toArray()
+dhtmlx.PowerArray={
+	//remove element at specified position
+	removeAt:function(pos,len){
+		if (pos>=0) this.splice(pos,(len||1));
+	},
+	//find element in collection and remove it 
+	remove:function(value){
+		this.removeAt(this.find(value));
+	},	
+	//add element to collection at specific position
+	insertAt:function(data,pos){
+		if (!pos && pos!==0) 	//add to the end by default
+			this.push(data);
+		else {	
+			var b = this.splice(pos,(this.length-pos));
+  			this[pos] = data;
+  			this.push.apply(this,b); //reconstruct array without loosing this pointer
+  		}
+  	},  	
+  	//return index of element, -1 if it doesn't exists
+  	find:function(data){ 
+  		for (var i=0; i<this.length; i++) 
+  			if (data==this[i]) return i; 	
+  		return -1; 
+  	},
+  	//execute some method for each element of array
+  	each:function(functor,master){
+		for (var i=0; i < this.length; i++)
+			functor.call((master||this),this[i]);
+	},
+	//create new array from source, by using results of functor 
+	map:function(functor,master){
+		for (var i=0; i < this.length; i++)
+			this[i]=functor.call((master||this),this[i]);
+		return this;
+	}
+};
+
+dhtmlx.env = {};
+
+//environment detection
+if (navigator.userAgent.indexOf('Opera') != -1)
+	dhtmlx._isOpera=true;
+else{
+	//very rough detection, but it is enough for current goals
+	dhtmlx._isIE=!!document.all;
+	dhtmlx._isFF=!document.all;
+	dhtmlx._isWebKit=(navigator.userAgent.indexOf("KHTML")!=-1);
+	if (navigator.appVersion.indexOf("MSIE 8.0")!= -1 && document.compatMode != "BackCompat") 
+		dhtmlx._isIE=8;
+	if (navigator.appVersion.indexOf("MSIE 9.0")!= -1 && document.compatMode != "BackCompat") 
+		dhtmlx._isIE=9;
+}
+
+dhtmlx.env = {};
+
+// dhtmlx.env.transform 
+// dhtmlx.env.transition
+(function(){
+	dhtmlx.env.transform = false;
+	dhtmlx.env.transition = false;
+	var options = {};
+	options.names = ['transform', 'transition'];
+	options.transform = ['transform', 'WebkitTransform', 'MozTransform', 'oTransform','msTransform'];
+	options.transition = ['transition', 'WebkitTransition', 'MozTransition', 'oTransition'];
+	
+	var d = document.createElement("DIV");
+	var property;
+	for(var i=0; i<options.names.length; i++) {
+		while (p = options[options.names[i]].pop()) {
+			if(typeof d.style[p] != 'undefined')
+				dhtmlx.env[options.names[i]] = true;
+		}
+	}
+})();
+dhtmlx.env.transform_prefix = (function(){
+		var prefix;
+		if(dhtmlx._isOpera)
+			prefix = '-o-';
+		else {
+			prefix = ''; // default option
+			if(dhtmlx._isFF) 
+				prefix = '-moz-';
+			if(dhtmlx._isWebKit) 
+					prefix = '-webkit-';
+		}
+		return prefix;
+})();
+dhtmlx.env.svg = (function(){
+		return document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1");
+})();
+
+//store maximum used z-index
+dhtmlx.zIndex={ drag : 10000 };
+
+//html helpers
+dhtmlx.html={
+	create:function(name,attrs,html){
+		attrs = attrs || {};
+		var node = document.createElement(name);
+		for (var attr_name in attrs)
+			node.setAttribute(attr_name, attrs[attr_name]);
+		if (attrs.style)
+			node.style.cssText = attrs.style;
+		if (attrs["class"])
+			node.className = attrs["class"];
+		if (html)
+			node.innerHTML=html;
+		return node;
+	},
+	//return node value, different logic for different html elements
+	getValue:function(node){
+		node = dhtmlx.toNode(node);
+		if (!node) return "";
+		return dhtmlx.isNotDefined(node.value)?node.innerHTML:node.value;
+	},
+	//remove html node, can process an array of nodes at once
+	remove:function(node){
+		if (node instanceof Array)
+			for (var i=0; i < node.length; i++)
+				this.remove(node[i]);
+		else
+			if (node && node.parentNode)
+				node.parentNode.removeChild(node);
+	},
+	//insert new node before sibling, or at the end if sibling doesn't exist
+	insertBefore: function(node,before,rescue){
+		if (!node) return;
+		if (before)
+			before.parentNode.insertBefore(node, before);
+		else
+			rescue.appendChild(node);
+	},
+	//return custom ID from html element 
+	//will check all parents starting from event's target
+	locate:function(e,id){
+		e=e||event;
+		var trg=e.target||e.srcElement;
+		while (trg){
+			if (trg.getAttribute){	//text nodes has not getAttribute
+				var test = trg.getAttribute(id);
+				if (test) return test;
+			}
+			trg=trg.parentNode;
+		}	
+		return null;
+	},
+	//returns position of html element on the page
+	offset:function(elem) {
+		if (elem.getBoundingClientRect) { //HTML5 method
+			var box = elem.getBoundingClientRect();
+			var body = document.body;
+			var docElem = document.documentElement;
+			var scrollTop = window.pageYOffset || docElem.scrollTop || body.scrollTop;
+			var scrollLeft = window.pageXOffset || docElem.scrollLeft || body.scrollLeft;
+			var clientTop = docElem.clientTop || body.clientTop || 0;
+			var clientLeft = docElem.clientLeft || body.clientLeft || 0;
+			var top  = box.top +  scrollTop - clientTop;
+			var left = box.left + scrollLeft - clientLeft;
+			return { y: Math.round(top), x: Math.round(left) };
+		} else { //fallback to naive approach
+			var top=0, left=0;
+			while(elem) {
+				top = top + parseInt(elem.offsetTop,10);
+				left = left + parseInt(elem.offsetLeft,10);
+				elem = elem.offsetParent;
+			}
+			return {y: top, x: left};
+		}
+	},
+	//returns position of event
+	pos:function(ev){
+		ev = ev || event;
+        if(ev.pageX || ev.pageY)	//FF, KHTML
+            return {x:ev.pageX, y:ev.pageY};
+        //IE
+        var d  =  ((dhtmlx._isIE)&&(document.compatMode != "BackCompat"))?document.documentElement:document.body;
+        return {
+                x:ev.clientX + d.scrollLeft - d.clientLeft,
+                y:ev.clientY + d.scrollTop  - d.clientTop
+        };
+	},
+	//prevent event action
+	preventEvent:function(e){
+		if (e && e.preventDefault) e.preventDefault();
+		dhtmlx.html.stopEvent(e);
+	},
+	//stop event bubbling
+	stopEvent:function(e){
+		(e||event).cancelBubble=true;
+		return false;
+	},
+	//add css class to the node
+	addCss:function(node,name){
+        node.className+=" "+name;
+    },
+    //remove css class from the node
+    removeCss:function(node,name){
+        node.className=node.className.replace(RegExp(name,"g"),"");
+    }
+};
+
+//autodetect codebase folder
+(function(){
+	var temp = document.getElementsByTagName("SCRIPT");	//current script, most probably
+	dhtmlx.assert(temp.length,"Can't locate codebase");
+	if (temp.length){
+		//full path to script
+		temp = (temp[temp.length-1].getAttribute("src")||"").split("/");
+		//get folder name
+		temp.splice(temp.length-1, 1);
+		dhtmlx.codebase = temp.slice(0, temp.length).join("/")+"/";
+	}
+})();
+
+if (!dhtmlx.ui)
+	dhtmlx.ui={};
+
+
+/* DHX DEPEND FROM FILE 'destructor.js'*/
+
+
+/*
+	Behavior:Destruction
+	
+	@export
+		destructor
+*/
+
+/*DHX:Depend dhtmlx.js*/
+
+dhtmlx.Destruction = {
+	_init:function(){
+		//register self in global list of destructors
+		dhtmlx.destructors.push(this);
+	},
+	//will be called automatically on unload, can be called manually
+	//simplifies job of GC
+	destructor:function(mode){
+		this.destructor=function(){}; //destructor can be called only once
+		
+		//html collection
+		this._htmlmap  = null;
+		this._htmlrows = null;
+		
+		//temp html element, used by toHTML
+		if (this._html)
+			document.body.appendChild(this._html);	//need to attach, for IE's GC
+
+		this._html = null;
+		if (this._obj) {
+			this._obj.innerHTML="";
+			this._obj._htmlmap = null;
+		}
+		this._obj = this._dataobj = null;
+		this.data = null;
+		this._events = this._handlers = {};
+		this.canvases = [];
+		if(this.render)
+			this.render = function(){};//need in case of delayed method calls (virtual render case)
+
+		// not effective, need to remove all event listeners as well
+		//
+		// if (mode != -1)
+		// 	for (var i=0; i<dhtmlx.destructors.length; i++)
+		// 		if (dhtmlx.destructors[i] == this){
+		// 			dhtmlx.destructors.splice(i,1);
+		// 			break;
+		// 		}
+	}
+};
+//global list of destructors
+dhtmlx.destructors = [];
+dhtmlx.event(window,"unload",function(){
+	//call all registered destructors
+	if (dhtmlx.destructors){
+		for (var i=0; i<dhtmlx.destructors.length; i++)
+			dhtmlx.destructors[i].destructor(-1);
+		dhtmlx.destructors = [];
+	}
+	
+	//detach all known DOM events
+	for (var a in dhtmlx._events){
+		var ev = dhtmlx._events[a];
+		if (ev[0].removeEventListener)
+			ev[0].removeEventListener(ev[1],ev[2],false);
+		else if (ev[0].detachEvent)
+			ev[0].detachEvent("on"+ev[1],ev[2]);
+		delete dhtmlx._events[a];
+	}
+});
+
+
+
+
+
+/* DHX DEPEND FROM FILE 'load.js'*/
+
+
+/* 
+	ajax operations 
+	
+	can be used for direct loading as
+		dhtmlx.ajax(ulr, callback)
+	or
+		dhtmlx.ajax().item(url)
+		dhtmlx.ajax().post(url)
+
+*/
+
+/*DHX:Depend dhtmlx.js*/
+
+dhtmlx.ajax = function(url,call,master){
+	//if parameters was provided - made fast call
+	if (arguments.length!==0){
+		var http_request = new dhtmlx.ajax();
+		if (master) http_request.master=master;
+		http_request.get(url,null,call);
+	}
+	if (!this.getXHR) return new dhtmlx.ajax(); //allow to create new instance without direct new declaration
+	
+	return this;
+};
+dhtmlx.ajax.prototype={
+	//creates xmlHTTP object
+	getXHR:function(){
+		if (dhtmlx._isIE)
+		 return new ActiveXObject("Microsoft.xmlHTTP");
+		else 
+		 return new XMLHttpRequest();
+	},
+	/*
+		send data to the server
+		params - hash of properties which will be added to the url
+		call - callback, can be an array of functions
+	*/
+	send:function(url,params,call){
+		var x=this.getXHR();
+		if (typeof call == "function")
+		 call = [call];
+		//add extra params to the url
+		if (typeof params == "object"){
+			var t=[];
+			for (var a in params){
+				var value = params[a];
+				if (value === null || value === dhtmlx.undefined)
+					value = "";
+				t.push(a+"="+encodeURIComponent(value));// utf-8 escaping
+		 	}
+			params=t.join("&");
+		}
+		if (params && !this.post){
+			url=url+(url.indexOf("?")!=-1 ? "&" : "?")+params;
+			params=null;
+		}
+		
+		x.open(this.post?"POST":"GET",url,!this._sync);
+		if (this.post)
+		 x.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+		 
+		//async mode, define loading callback
+		//if (!this._sync){
+		 var self=this;
+		 x.onreadystatechange= function(){
+			if (!x.readyState || x.readyState == 4){
+				//dhtmlx.log_full_time("data_loading");	//log rendering time
+				if (call && self) 
+					for (var i=0; i < call.length; i++)	//there can be multiple callbacks
+					 if (call[i])
+						call[i].call((self.master||self),x.responseText,x.responseXML,x);
+				self.master=null;
+				call=self=null;	//anti-leak
+			}
+		 };
+		//}
+		
+		x.send(params||null);
+		return x; //return XHR, which can be used in case of sync. mode
+	},
+	//GET request
+	get:function(url,params,call){
+		this.post=false;
+		return this.send(url,params,call);
+	},
+	//POST request
+	post:function(url,params,call){
+		this.post=true;
+		return this.send(url,params,call);
+	}, 
+	sync:function(){
+		this._sync = true;
+		return this;
+	}
+};
+
+
+dhtmlx.AtomDataLoader={
+	_init:function(config){
+		//prepare data store
+		this.data = {}; 
+		if (config){
+			this._settings.datatype = config.datatype||"json";
+			this._after_init.push(this._load_when_ready);
+		}
+	},
+	_load_when_ready:function(){
+		this._ready_for_data = true;
+		
+		if (this._settings.url)
+			this.url_setter(this._settings.url);
+		if (this._settings.data)
+			this.data_setter(this._settings.data);
+	},
+	url_setter:function(value){
+		if (!this._ready_for_data) return value;
+		this.load(value, this._settings.datatype);	
+		return value;
+	},
+	data_setter:function(value){
+		if (!this._ready_for_data) return value;
+		this.parse(value, this._settings.datatype);
+		return true;
+	},
+	//loads data from external URL
+	load:function(url,call){
+		this.callEvent("onXLS",[]);
+		if (typeof call == "string"){	//second parameter can be a loading type or callback
+			this.data.driver = dhtmlx.DataDriver[call];
+			call = arguments[2];
+		}
+		else
+			this.data.driver = dhtmlx.DataDriver[this._settings.datatype||"xml"];
+		//load data by async ajax call
+		if (window.dhx4){
+			return dhx4.ajax.get(url,dhtmlx.bind(function(x){
+				var loader = x.xmlDoc;
+				var text = loader.responseText;
+				var xml = loader.responseXML;
+
+				if (this._onLoad)
+					this._onLoad.call(this, text, xml, loader);
+				if (call)
+					call.call(this, text, xml, loader);
+			},this));
+		} else {
+			dhtmlx.ajax(url,[this._onLoad,call],this);
+		}
+	},
+	//loads data from object
+	parse:function(data,type){
+		this.callEvent("onXLS",[]);
+		this.data.driver = dhtmlx.DataDriver[type||"xml"];
+		this._onLoad(data,null);
+	},
+	//default after loading callback
+	_onLoad:function(text,xml,loader){
+		var driver = this.data.driver;
+		var top = driver.getRecords(driver.toObject(text,xml))[0];
+		this.data=(driver?driver.getDetails(top):text);
+		this.callEvent("onXLE",[]);
+	},
+	_check_data_feed:function(data){
+		if (!this._settings.dataFeed || this._ignore_feed || !data) return true;
+		var url = this._settings.dataFeed;
+		if (typeof url == "function")
+			return url.call(this, (data.id||data), data);
+		url = url+(url.indexOf("?")==-1?"?":"&")+"action=get&id="+encodeURIComponent(data.id||data);
+		this.callEvent("onXLS",[]);
+		dhtmlx.ajax(url, function(text,xml){
+			this._ignore_feed=true;
+			this.setValues(dhtmlx.DataDriver.json.toObject(text)[0]);
+			this._ignore_feed=false;
+			this.callEvent("onXLE",[]);
+		}, this);
+		return false;
+	}
+};
+
+/*
+	Abstraction layer for different data types
+*/
+
+dhtmlx.DataDriver={};
+dhtmlx.DataDriver.json={
+	//convert json string to json object if necessary
+	toObject:function(data){
+		if (!data) data="[]";
+		if (typeof data == "string"){
+		 eval ("dhtmlx.temp="+data);
+		 return dhtmlx.temp;
+		}
+		return data;
+	},
+	//get array of records
+	getRecords:function(data){
+		if (data && data.data)
+			data = data.data;
+		if (data && !(data instanceof Array))
+		 return [data];
+		return data;
+	},
+	//get hash of properties for single record
+	getDetails:function(data){
+		return data;
+	},
+	//get count of data and position at which new data need to be inserted
+	getInfo:function(data){
+		return { 
+		 _size:(data.total_count||0),
+		 _from:(data.pos||0),
+		 _key:(data.dhx_security)
+		};
+	}
+};
+
+dhtmlx.DataDriver.json_ext={
+	//convert json string to json object if necessary
+	toObject:function(data){
+		if (!data) data="[]";
+		if (typeof data == "string"){
+			var temp;
+			eval ("temp="+data);
+			dhtmlx.temp = [];
+			var header  = temp.header;
+			for (var i = 0; i < temp.data.length; i++) {
+				var item = {};
+				for (var j = 0; j < header.length; j++) {
+					if (typeof(temp.data[i][j]) != "undefined")
+						item[header[j]] = temp.data[i][j];
+				}
+				dhtmlx.temp.push(item);
+			}
+			return dhtmlx.temp;
+		}
+		return data;
+	},
+	//get array of records
+	getRecords:function(data){
+		if (data && !(data instanceof Array))
+		 return [data];
+		return data;
+	},
+	//get hash of properties for single record
+	getDetails:function(data){
+		return data;
+	},
+	//get count of data and position at which new data need to be inserted
+	getInfo:function(data){
+		return {
+		 _size:(data.total_count||0),
+		 _from:(data.pos||0)
+		};
+	}
+};
+
+dhtmlx.DataDriver.html={
+	/*
+		incoming data can be
+		 - collection of nodes
+		 - ID of parent container
+		 - HTML text
+	*/
+	toObject:function(data){
+		if (typeof data == "string"){
+		 var t=null;
+		 if (data.indexOf("<")==-1)	//if no tags inside - probably its an ID
+			t = dhtmlx.toNode(data);
+		 if (!t){
+			t=document.createElement("DIV");
+			t.innerHTML = data;
+		 }
+		 
+		 return t.getElementsByTagName(this.tag);
+		}
+		return data;
+	},
+	//get array of records
+	getRecords:function(data){
+		if (data.tagName)
+		 return data.childNodes;
+		return data;
+	},
+	//get hash of properties for single record
+	getDetails:function(data){
+		return dhtmlx.DataDriver.xml.tagToObject(data);
+	},
+	//dyn loading is not supported by HTML data source
+	getInfo:function(data){
+		return { 
+		 _size:0,
+		 _from:0
+		};
+	},
+	tag: "LI"
+};
+
+dhtmlx.DataDriver.jsarray={
+	//eval jsarray string to jsarray object if necessary
+	toObject:function(data){
+		if (typeof data == "string"){
+		 eval ("dhtmlx.temp="+data);
+		 return dhtmlx.temp;
+		}
+		return data;
+	},
+	//get array of records
+	getRecords:function(data){
+		return data;
+	},
+	//get hash of properties for single record, in case of array they will have names as "data{index}"
+	getDetails:function(data){
+		var result = {};
+		for (var i=0; i < data.length; i++) 
+		 result["data"+i]=data[i];
+		 
+		return result;
+	},
+	//dyn loading is not supported by js-array data source
+	getInfo:function(data){
+		return { 
+		 _size:0,
+		 _from:0
+		};
+	}
+};
+
+dhtmlx.DataDriver.csv={
+	//incoming data always a string
+	toObject:function(data){
+		return data;
+	},
+	//get array of records
+	getRecords:function(data){
+		return data.split(this.row);
+	},
+	//get hash of properties for single record, data named as "data{index}"
+	getDetails:function(data){
+		data = this.stringToArray(data);
+		var result = {};
+		for (var i=0; i < data.length; i++) 
+		 result["data"+i]=data[i];
+		 
+		return result;
+	},
+	//dyn loading is not supported by csv data source
+	getInfo:function(data){
+		return { 
+		 _size:0,
+		 _from:0
+		};
+	},
+	//split string in array, takes string surrounding quotes in account
+	stringToArray:function(data){
+		data = data.split(this.cell);
+		for (var i=0; i < data.length; i++)
+		 data[i] = data[i].replace(/^[ \t\n\r]*(\"|)/g,"").replace(/(\"|)[ \t\n\r]*$/g,"");
+		return data;
+	},
+	row:"\n",	//default row separator
+	cell:","	//default cell separator
+};
+
+dhtmlx.DataDriver.xml={
+	//convert xml string to xml object if necessary
+	toObject:function(text,xml){
+		if (xml && (xml=this.checkResponse(text,xml)))	//checkResponse - fix incorrect content type and extra whitespaces errors
+		 return xml;
+		if (typeof text == "string"){
+		 return this.fromString(text);
+		}
+		return text;
+	},
+	//get array of records
+	getRecords:function(data){
+		return this.xpath(data,this.records);
+	},
+	records:"/*/item",
+	//get hash of properties for single record
+	getDetails:function(data){
+		return this.tagToObject(data,{});
+	},
+	//get count of data and position at which new data_loading need to be inserted
+	getInfo:function(data){
+		return { 
+		 _size:(data.documentElement.getAttribute("total_count")||0),
+		 _from:(data.documentElement.getAttribute("pos")||0),
+		 _key:(data.documentElement.getAttribute("dhx_security"))
+		};
+	},
+	//xpath helper
+	xpath:function(xml,path){
+		if (window.XPathResult){	//FF, KHTML, Opera
+		 var node=xml;
+		 if(xml.nodeName.indexOf("document")==-1)
+		 xml=xml.ownerDocument;
+		 var res = [];
+		 var col = xml.evaluate(path, node, null, XPathResult.ANY_TYPE, null);
+		 var temp = col.iterateNext();
+		 while (temp){ 
+			res.push(temp);
+			temp = col.iterateNext();
+		}
+		return res;
+		}	
+		else {
+			var test = true;
+			try {
+				if (typeof(xml.selectNodes)=="undefined")
+					test = false;
+			} catch(e){ /*IE7 and below can't operate with xml object*/ }
+			//IE
+			if (test)
+				return xml.selectNodes(path);
+			else {
+				//Google hate us, there is no interface to do XPath
+				//use naive approach
+				var name = path.split("/").pop();
+				return xml.getElementsByTagName(name);
+			}
+		}
+	},
+	//convert xml tag to js object, all subtags and attributes are mapped to the properties of result object
+	tagToObject:function(tag,z){
+		z=z||{};
+		var flag=false;
+		
+
+		//map subtags
+		var b=tag.childNodes;
+		var state = {};
+		for (var i=0; i<b.length; i++){
+			if (b[i].nodeType==1){
+				var name = b[i].tagName;
+				if (typeof z[name] != "undefined"){
+					if (!(z[name] instanceof Array))
+						z[name]=[z[name]];
+					z[name].push(this.tagToObject(b[i],{}));
+				}
+				else
+					z[b[i].tagName]=this.tagToObject(b[i],{});	//sub-object for complex subtags
+				flag=true;
+			}
+		}
+
+		//map attributes
+		var a=tag.attributes;
+		if(a && a.length){
+			for (var i=0; i<a.length; i++)
+		 		z[a[i].name]=a[i].value;
+		 	flag = true;
+	 	}
+		
+		if (!flag)
+			return this.nodeValue(tag);
+		//each object will have its text content as "value" property
+		z.value = this.nodeValue(tag);
+		return z;
+	},
+	//get value of xml node 
+	nodeValue:function(node){
+		if (node.firstChild)
+			return node.firstChild.wholeText||node.firstChild.data;
+		return "";
+	},
+	//convert XML string to XML object
+	fromString:function(xmlString){
+		if (window.DOMParser && !dhtmlx._isIE)		// FF, KHTML, Opera
+		 return (new DOMParser()).parseFromString(xmlString,"text/xml");
+		if (window.ActiveXObject){	// IE, utf-8 only 
+		 var temp=new ActiveXObject("Microsoft.xmlDOM");
+		 temp.loadXML(xmlString);
+		 return temp;
+		}
+		dhtmlx.error("Load from xml string is not supported");
+	},
+	//check is XML correct and try to reparse it if its invalid
+	checkResponse:function(text,xml){ 
+		if (xml && ( xml.firstChild && xml.firstChild.tagName != "parsererror") )
+			return xml;
+		//parsing as string resolves incorrect content type
+		//regexp removes whitespaces before xml declaration, which is vital for FF
+		var a=this.fromString(text.replace(/^[\s]+/,""));
+		if (a) return a;
+		
+		dhtmlx.error("xml can't be parsed",text);
+	}
+};
+
+
+
+
+/* DHX DEPEND FROM FILE 'datastore.js'*/
+
+
+/*DHX:Depend load.js*/
+/*DHX:Depend dhtmlx.js*/
+
+/*
+	Behavior:DataLoader - load data in the component
+	
+	@export
+		load
+		parse
+*/
+dhtmlx.DataLoader={
+	_init:function(config){
+		//prepare data store
+		config = config || "";
+		this.name = "DataStore";
+		this.data = (config.datastore)||(new dhtmlx.DataStore());
+		this._readyHandler = this.data.attachEvent("onStoreLoad",dhtmlx.bind(this._call_onready,this));
+	},
+	//loads data from external URL
+	load:function(url,call){
+		dhtmlx.AtomDataLoader.load.apply(this, arguments);
+		//prepare data feed for dyn. loading
+		if (!this.data.feed)
+		 this.data.feed = function(from,count){
+			//allow only single request at same time
+			if (this._load_count)
+				return this._load_count=[from,count];	//save last ignored request
+			else
+				this._load_count=true;
+				
+			this.load(url+((url.indexOf("?")==-1)?"?":"&")+"posStart="+from+"&count="+count,function(){
+				//after loading check if we have some ignored requests
+				var temp = this._load_count;
+				this._load_count = false;
+				if (typeof temp =="object")
+					this.data.feed.apply(this, temp);	//load last ignored request
+			});
+		};
+	},
+	//default after loading callback
+	_onLoad:function(text,xml,loader){
+		this.data._parse(this.data.driver.toObject(text,xml));
+		this.callEvent("onXLE",[]);
+		if(this._readyHandler){
+			this.data.detachEvent(this._readyHandler);
+			this._readyHandler = null;
+		}
+	},
+	dataFeed_setter:function(value){
+		this.data.attachEvent("onBeforeFilter", dhtmlx.bind(function(text, value){
+			if (this._settings.dataFeed){
+				var filter = {};
+				if (!text && !filter) return;
+				if (typeof text == "function"){
+					if (!value) return;
+					text(value, filter);
+				} else 
+					filter = { text:value };
+
+				this.clearAll();
+				var url = this._settings.dataFeed;
+				if (typeof url == "function")
+					return url.call(this, value, filter);
+				var urldata = [];
+				for (var key in filter)
+					urldata.push("dhx_filter["+key+"]="+encodeURIComponent(filter[key]));
+				this.load(url+(url.indexOf("?")<0?"?":"&")+urldata.join("&"), this._settings.datatype);
+				return false;
+			}
+		},this));
+		return value;
+	},
+	_call_onready:function(){
+		if (this._settings.ready){
+			var code = dhtmlx.toFunctor(this._settings.ready);
+			if (code && code.call) code.apply(this, arguments);
+		}
+	}
+};
+
+
+/*
+	DataStore is not a behavior, it standalone object, which represents collection of data.
+	Call provideAPI to map data API
+
+	@export
+		exists
+		idByIndex
+		indexById
+		get
+		set
+		refresh
+		dataCount
+		sort
+		filter
+		next
+		previous
+		clearAll
+		first
+		last
+*/
+dhtmlx.DataStore = function(){
+	this.name = "DataStore";
+	
+	dhtmlx.extend(this, dhtmlx.EventSystem);
+	
+	this.setDriver("xml");	//default data source is an XML
+	this.pull = {};						//hash of IDs
+	this.order = dhtmlx.toArray();		//order of IDs
+};
+
+dhtmlx.DataStore.prototype={
+	//defines type of used data driver
+	//data driver is an abstraction other different data formats - xml, json, csv, etc.
+	setDriver:function(type){
+		dhtmlx.assert(dhtmlx.DataDriver[type],"incorrect DataDriver");
+		this.driver = dhtmlx.DataDriver[type];
+	},
+	//process incoming raw data
+	_parse:function(data){
+		this.callEvent("onParse", [this.driver, data]);
+		if (this._filter_order)
+			this.filter();
+			
+		//get size and position of data
+		var info = this.driver.getInfo(data);
+		if (info._key)
+			dhtmlx.security_key = info._key;
+		//get array of records
+
+		var recs = this.driver.getRecords(data);
+		var from = (info._from||0)*1;
+		
+		if (from === 0 && this.order[0]) //update mode
+			from = this.order.length;
+		
+		var j=0;
+		for (var i=0; i<recs.length; i++){
+			//get has of details for each record
+			var temp = this.driver.getDetails(recs[i]);
+			var id = this.id(temp); 	//generate ID for the record
+			if (!this.pull[id]){		//if such ID already exists - update instead of insert
+				this.order[j+from]=id;	
+				j++;
+			}
+			this.pull[id]=temp;
+			//if (this._format)	this._format(temp);
+			
+			if (this.extraParser)
+				this.extraParser(temp);
+			if (this._scheme){ 
+				if (this._scheme.$init)
+					this._scheme.$update(temp);
+				else if (this._scheme.$update)
+					this._scheme.$update(temp);
+			}
+		}
+
+		//for all not loaded data
+		for (var i=0; i < info._size; i++)
+			if (!this.order[i]){
+				var id = dhtmlx.uid();
+				var temp = {id:id, $template:"loading"};	//create fake records
+				this.pull[id]=temp;
+				this.order[i]=id;
+			}
+
+		this.callEvent("onStoreLoad",[this.driver, data]);
+		//repaint self after data loading
+		this.refresh();
+	},
+	//generate id for data object
+	id:function(data){
+		return data.id||(data.id=dhtmlx.uid());
+	},
+	changeId:function(old, newid){
+		dhtmlx.assert(this.pull[old],"Can't change id, for non existing item: "+old);
+		this.pull[newid] = this.pull[old];
+		this.pull[newid].id = newid;
+		this.order[this.order.find(old)]=newid;
+		if (this._filter_order)
+			this._filter_order[this._filter_order.find(old)]=newid;
+		this.callEvent("onIdChange", [old, newid]);
+		if (this._render_change_id)
+			this._render_change_id(old, newid);
+	},
+	get:function(id){
+		return this.item(id);
+	},
+	set:function(id, data){
+		return this.update(id, data);
+	},
+	//get data from hash by id
+	item:function(id){
+		return this.pull[id];
+	},
+	//assigns data by id
+	update:function(id,data){
+		if (this._scheme && this._scheme.$update)
+			this._scheme.$update(data);
+		if (this.callEvent("onBeforeUpdate", [id, data]) === false) return false;
+		this.pull[id]=data;
+		this.refresh(id);
+	},
+	//sends repainting signal
+	refresh:function(id){
+		if (this._skip_refresh) return; 
+		
+		if (id)
+			this.callEvent("onStoreUpdated",[id, this.pull[id], "update"]);
+		else
+			this.callEvent("onStoreUpdated",[null,null,null]);
+	},
+	silent:function(code){
+		this._skip_refresh = true;
+		code.call(this);
+		this._skip_refresh = false;
+	},
+	//converts range IDs to array of all IDs between them
+	getRange:function(from,to){		
+		//if some point is not defined - use first or last id
+		//BEWARE - do not use empty or null ID
+		if (from)
+			from = this.indexById(from);
+		else 
+			from = this.startOffset||0;
+		if (to)
+			to = this.indexById(to);
+		else {
+			to = Math.min((this.endOffset||Infinity),(this.dataCount()-1));
+			if (to<0) to = 0; //we have not data in the store
+		}
+
+		if (this.min)
+			from = this.min;
+		if (this.max)
+			to = this.max;
+
+		if (from>to){ //can be in case of backward shift-selection
+			var a=to; to=from; from=a;
+		}
+				
+		return this.getIndexRange(from,to);
+	},
+	//converts range of indexes to array of all IDs between them
+	getIndexRange:function(from,to){
+		to=Math.min((to||Infinity),this.dataCount()-1);
+		
+		var ret=dhtmlx.toArray(); //result of method is rich-array
+		for (var i=(from||0); i <= to; i++)
+			ret.push(this.item(this.order[i]));
+		return ret;
+	},
+	//returns total count of elements
+	dataCount:function(){
+		return this.order.length;
+	},
+	//returns truy if item with such ID exists
+	exists:function(id){
+		return !!(this.pull[id]);
+	},
+	//nextmethod is not visible on component level, check DataMove.move
+	//moves item from source index to the target index
+	move:function(sindex,tindex){
+		if (sindex<0 || tindex<0){
+			dhtmlx.error("DataStore::move","Incorrect indexes");
+			return;
+		}
+		
+		var id = this.idByIndex(sindex);
+		var obj = this.item(id);
+		
+		this.order.removeAt(sindex);	//remove at old position
+		//if (sindex<tindex) tindex--;	//correct shift, caused by element removing
+		this.order.insertAt(id,Math.min(this.order.length, tindex));	//insert at new position
+		
+		//repaint signal
+		this.callEvent("onStoreUpdated",[id,obj,"move"]);
+	},
+	scheme:function(config){
+		/*
+			some.scheme({
+				order:1,
+				name:"dummy",
+				title:""
+			})
+		*/
+		this._scheme = config;
+		
+	},
+	sync:function(source, filter, silent){
+		if (typeof filter != "function"){
+			silent = filter;
+			filter = null;
+		}
+		
+		if (dhtmlx.debug_bind){
+			this.debug_sync_master = source; 
+			dhtmlx.log("[sync] "+this.debug_bind_master.name+"@"+this.debug_bind_master._settings.id+" <= "+this.debug_sync_master.name+"@"+this.debug_sync_master._settings.id);
+		}
+		
+		var topsource = source;
+		if (source.name != "DataStore")
+			source = source.data;
+
+		var sync_logic = dhtmlx.bind(function(id, data, mode){
+			if (mode != "update" || filter) 
+				id = null;
+
+			if (!id){
+				this.order = dhtmlx.toArray([].concat(source.order));
+				this._filter_order = null;
+				this.pull = source.pull;
+				
+				if (filter)
+					this.silent(filter);
+				
+				if (this._on_sync)
+					this._on_sync();
+			}
+
+			if (dhtmlx.debug_bind)
+				dhtmlx.log("[sync:request] "+this.debug_sync_master.name+"@"+this.debug_sync_master._settings.id + " <= "+this.debug_bind_master.name+"@"+this.debug_bind_master._settings.id);
+			if (!silent) 
+				this.refresh(id);
+			else
+				silent = false;
+		}, this);
+		
+		source.attachEvent("onStoreUpdated", sync_logic);
+		this.feed = function(from, count){
+			topsource.loadNext(count, from);
+		};
+		sync_logic();
+	},
+	//adds item to the store
+	add:function(obj,index){
+		
+		if (this._scheme){
+			obj = obj||{};
+			for (var key in this._scheme)
+				obj[key] = obj[key]||this._scheme[key];
+			if (this._scheme){ 
+				if (this._scheme.$init)
+					this._scheme.$update(obj);
+				else if (this._scheme.$update)
+					this._scheme.$update(obj);
+			}
+		}
+		
+		//generate id for the item
+		var id = this.id(obj);
+		
+		//by default item is added to the end of the list
+		var data_size = this.dataCount();
+		
+		if (dhtmlx.isNotDefined(index) || index < 0)
+			index = data_size; 
+		//check to prevent too big indexes			
+		if (index > data_size){
+			dhtmlx.log("Warning","DataStore:add","Index of out of bounds");
+			index = Math.min(this.order.length,index);
+		}
+		if (this.callEvent("onBeforeAdd", [id, obj, index]) === false) return false;
+
+		if (this.exists(id)) return dhtmlx.error("Not unique ID");
+		
+		this.pull[id]=obj;
+		this.order.insertAt(id,index);
+		if (this._filter_order){	//adding during filtering
+			//we can't know the location of new item in full dataset, making suggestion
+			//put at end by default
+			var original_index = this._filter_order.length;
+			//put at start only if adding to the start and some data exists
+			if (!index && this.order.length)
+				original_index = 0;
+			
+			this._filter_order.insertAt(id,original_index);
+		}
+		this.callEvent("onafterAdd",[id,index]);
+		//repaint signal
+		this.callEvent("onStoreUpdated",[id,obj,"add"]);
+		return id;
+	},
+	
+	//removes element from datastore
+	remove:function(id){
+		//id can be an array of IDs - result of getSelect, for example
+		if (id instanceof Array){
+			for (var i=0; i < id.length; i++)
+				this.remove(id[i]);
+			return;
+		}
+		if (this.callEvent("onBeforeDelete",[id]) === false) return false;
+		if (!this.exists(id)) return dhtmlx.error("Not existing ID",id);
+		var obj = this.item(id);	//save for later event
+		//clear from collections
+		this.order.remove(id);
+		if (this._filter_order) 
+			this._filter_order.remove(id);
+			
+		delete this.pull[id];
+		this.callEvent("onafterdelete",[id]);
+		//repaint signal
+		this.callEvent("onStoreUpdated",[id,obj,"delete"]);
+	},
+	//deletes all records in datastore
+	clearAll:function(){
+		//instead of deleting one by one - just reset inner collections
+		this.pull = {};
+		this.order = dhtmlx.toArray();
+		this.feed = null;
+		this._filter_order = null;
+		this.callEvent("onClearAll",[]);
+		this.refresh();
+	},
+	//converts id to index
+	idByIndex:function(index){
+		if (index>=this.order.length || index<0)
+			dhtmlx.log("Warning","DataStore::idByIndex Incorrect index");
+			
+		return this.order[index];
+	},
+	//converts index to id
+	indexById:function(id){
+		var res = this.order.find(id);	//slower than idByIndex
+		
+		//if (!this.pull[id])
+		//	dhtmlx.log("Warning","DataStore::indexById Non-existing ID: "+ id);
+			
+		return res;
+	},
+	//returns ID of next element
+	next:function(id,step){
+		return this.order[this.indexById(id)+(step||1)];
+	},
+	//returns ID of first element
+	first:function(){
+		return this.order[0];
+	},
+	//returns ID of last element
+	last:function(){
+		return this.order[this.order.length-1];
+	},
+	//returns ID of previous element
+	previous:function(id,step){
+		return this.order[this.indexById(id)-(step||1)];
+	},
+	/*
+		sort data in collection
+			by - settings of sorting
+		
+		or
+		
+			by - sorting function
+			dir - "asc" or "desc"
+			
+		or
+		
+			by - property
+			dir - "asc" or "desc"
+			as - type of sortings
+		
+		Sorting function will accept 2 parameters and must return 1,0,-1, based on desired order
+	*/
+	sort:function(by, dir, as){
+		var sort = by;	
+		if (typeof by == "function")
+			sort = {as:by, dir:dir};
+		else if (typeof by == "string")
+			sort = {by:by, dir:dir, as:as};		
+		
+		
+		var parameters = [sort.by, sort.dir, sort.as];
+		if (!this.callEvent("onbeforesort",parameters)) return;	
+		
+		if (this.order.length){
+			var sorter = dhtmlx.sort.create(sort);
+			//get array of IDs
+			var neworder = this.getRange(this.first(), this.last());
+			neworder.sort(sorter);
+			this.order = neworder.map(function(obj){ return this.id(obj); },this);
+		}
+		
+		//repaint self
+		this.refresh();
+		
+		this.callEvent("onaftersort",parameters);
+	},
+	/*
+		Filter datasource
+		
+		text - property, by which filter
+		value - filter mask
+		
+		or
+		
+		text  - filter method
+		
+		Filter method will receive data object and must return true or false
+	*/
+	filter:function(text,value){
+		if (!this.callEvent("onBeforeFilter", [text, value])) return;
+		
+		//remove previous filtering , if any
+		if (this._filter_order){
+			this.order = this._filter_order;
+			delete this._filter_order;
+		}
+		
+		if (!this.order.length) return;
+		
+		//if text not define -just unfilter previous state and exit
+		if (text){
+			var filter = text;
+			value = value||"";
+			if (typeof text == "string"){
+				text = dhtmlx.Template.fromHTML(text);
+				value = value.toString().toLowerCase();
+				filter = function(obj,value){	//default filter - string start from, case in-sensitive
+					return text(obj).toLowerCase().indexOf(value)!=-1;
+				};
+			}
+			
+					
+			var neworder = dhtmlx.toArray();
+			for (var i=0; i < this.order.length; i++){
+				var id = this.order[i];
+				if (filter(this.item(id),value))
+					neworder.push(id);
+			}
+			//set new order of items, store original
+			this._filter_order = this.order;
+			this.order = neworder;
+		}
+		//repaint self
+		this.refresh();
+		
+		this.callEvent("onAfterFilter", []);
+	},
+	/*
+		Iterate through collection
+	*/
+	each:function(method,master){
+		for (var i=0; i<this.order.length; i++)
+			method.call((master||this), this.item(this.order[i]));
+	},
+	/*
+		map inner methods to some distant object
+	*/
+	provideApi:function(target,eventable){
+		this.debug_bind_master = target;
+			
+		if (eventable){
+			this.mapEvent({
+				onbeforesort:	target,
+				onaftersort:	target,
+				onbeforeadd:	target,
+				onafteradd:		target,
+				onbeforedelete:	target,
+				onafterdelete:	target,
+				onbeforeupdate: target/*,
+				onafterfilter:	target,
+				onbeforefilter:	target*/
+			});
+		}
+			
+		var list = ["get","set","sort","add","remove","exists","idByIndex","indexById","item","update","refresh","dataCount","filter","next","previous","clearAll","first","last","serialize"];
+		for (var i=0; i < list.length; i++)
+			target[list[i]]=dhtmlx.methodPush(this,list[i]);
+			
+		if (dhtmlx.assert_enabled())		
+			this.assert_event(target);
+	},
+	/*
+		serializes data to a json object
+	*/
+	serialize: function(){
+		var ids = this.order;
+		var result = [];
+		for(var i=0; i< ids.length;i++)
+			result.push(this.pull[ids[i]]); 
+		return result;
+	}
+};
+
+dhtmlx.sort = {
+	create:function(config){
+		return dhtmlx.sort.dir(config.dir, dhtmlx.sort.by(config.by, config.as));
+	},
+	as:{
+		"int":function(a,b){
+			a = a*1; b=b*1;
+			return a>b?1:(a<b?-1:0);
+		},
+		"string_strict":function(a,b){
+			a = a.toString(); b=b.toString();
+			return a>b?1:(a<b?-1:0);
+		},
+		"string":function(a,b){
+			a = a.toString().toLowerCase(); b=b.toString().toLowerCase();
+			return a>b?1:(a<b?-1:0);
+		}
+	},
+	by:function(prop, method){
+		if (!prop)
+			return method;
+		if (typeof method != "function")
+			method = dhtmlx.sort.as[method||"string"];
+		prop = dhtmlx.Template.fromHTML(prop);
+		return function(a,b){
+			return method(prop(a),prop(b));
+		};
+	},
+	dir:function(prop, method){
+		if (prop == "asc")
+			return method;
+		return function(a,b){
+			return method(a,b)*-1;
+		};
+	}
+};
+
+
+
+/* DHX DEPEND FROM FILE 'key.js'*/
+
+
+/*
+	Behavior:KeyEvents - hears keyboard 
+*/
+dhtmlx.KeyEvents = {
+	_init:function(){
+		//attach handler to the main container
+		dhtmlx.event(this._obj,"keypress",this._onKeyPress,this);
+	},
+	//called on each key press , when focus is inside of related component
+	_onKeyPress:function(e){
+		e=e||event;
+		var code = e.which||e.keyCode; //FIXME  better solution is required
+		this.callEvent((this._edit_id?"onEditKeyPress":"onKeyPress"),[code,e.ctrlKey,e.shiftKey,e]);
+	}
+};
+
+
+/* DHX DEPEND FROM FILE 'mouse.js'*/
+
+
+/*
+	Behavior:MouseEvents - provides inner evnets for  mouse actions
+*/
+dhtmlx.MouseEvents={
+	_init: function(){
+		//attach dom events if related collection is defined
+		if (this.on_click){
+			dhtmlx.event(this._obj,"click",this._onClick,this);
+			dhtmlx.event(this._obj,"contextmenu",this._onContext,this);
+		}
+		if (this.on_dblclick)
+			dhtmlx.event(this._obj,"dblclick",this._onDblClick,this);
+		if (this.on_mouse_move){
+			dhtmlx.event(this._obj,"mousemove",this._onMouse,this);
+			dhtmlx.event(this._obj,(dhtmlx._isIE?"mouseleave":"mouseout"),this._onMouse,this);
+		}
+
+	},
+	//inner onclick object handler
+	_onClick: function(e) {
+		return this._mouseEvent(e,this.on_click,"ItemClick");
+	},
+	//inner ondblclick object handler
+	_onDblClick: function(e) {
+		return this._mouseEvent(e,this.on_dblclick,"ItemDblClick");
+	},
+	//process oncontextmenu events
+	_onContext: function(e) {
+		var id = dhtmlx.html.locate(e, this._id);
+		if (id && !this.callEvent("onBeforeContextMenu", [id,e]))
+			return dhtmlx.html.preventEvent(e);
+	},
+	/*
+		event throttler - ignore events which occurs too fast
+		during mouse moving there are a lot of event firing - we need no so much
+		also, mouseout can fire when moving inside the same html container - we need to ignore such fake calls
+	*/
+	_onMouse:function(e){
+		if (dhtmlx._isIE)	//make a copy of event, will be used in timed call
+			e = document.createEventObject(event);
+			
+		if (this._mouse_move_timer)	//clear old event timer
+			window.clearTimeout(this._mouse_move_timer);
+				
+		//this event just inform about moving operation, we don't care about details
+		this.callEvent("onMouseMoving",[e]);
+		//set new event timer
+		this._mouse_move_timer = window.setTimeout(dhtmlx.bind(function(){
+			//called only when we have at least 100ms after previous event
+			if (e.type == "mousemove")
+				this._onMouseMove(e);
+			else
+				this._onMouseOut(e);
+		},this),500);
+	},
+	//inner mousemove object handler
+	_onMouseMove: function(e) {
+		if (!this._mouseEvent(e,this.on_mouse_move,"MouseMove"))
+			this.callEvent("onMouseOut",[e||event]);
+	},
+	//inner mouseout object handler
+	_onMouseOut: function(e) {
+		this.callEvent("onMouseOut",[e||event]);
+	},
+	//common logic for click and dbl-click processing
+	_mouseEvent:function(e,hash,name){
+		e=e||event;
+		var trg=e.target||e.srcElement;
+		var css = "";
+		var id = null;
+		var found = false;
+		//loop through all parents
+		while (trg && trg.parentNode){
+			if (!found && trg.getAttribute){													//if element with ID mark is not detected yet
+				id = trg.getAttribute(this._id);							//check id of current one
+				if (id){
+					if (trg.getAttribute("userdata"))
+						this.callEvent("onLocateData",[id,trg,e]);
+					if (!this.callEvent("on"+name,[id,e,trg])) return;		//it will be triggered only for first detected ID, in case of nested elements
+					found = true;											//set found flag
+				}
+			}
+			css=trg.className;
+			if (css){		//check if pre-defined reaction for element's css name exists
+				css = css.split(" ");
+				css = css[0]||css[1]; //FIXME:bad solution, workaround css classes which are starting from whitespace
+				if (hash[css])
+					return  hash[css].call(this,e,id||dhtmlx.html.locate(e, this._id),trg);
+			}
+			trg=trg.parentNode;
+		}		
+		return found;	//returns true if item was located and event was triggered
+	}
+};
+
+
+
+
+/* DHX DEPEND FROM FILE 'config.js'*/
+
+
+/*
+	Behavior:Settings
+	
+	@export
+		customize
+		config
+*/
+
+/*DHX:Depend template.js*/
+/*DHX:Depend dhtmlx.js*/
+
+dhtmlx.Settings={
+	_init:function(){
+		/* 
+			property can be accessed as this.config.some
+			in same time for inner call it have sense to use _settings
+			because it will be minified in final version
+		*/
+		this._settings = this.config= {}; 
+	},
+	define:function(property, value){
+		if (typeof property == "object")
+			return this._parseSeetingColl(property);
+		return this._define(property, value);
+	},
+	_define:function(property,value){
+		dhtmlx.assert_settings.call(this,property,value);
+		
+		//method with name {prop}_setter will be used as property setter
+		//setter is optional
+		var setter = this[property+"_setter"];
+		return this._settings[property]=setter?setter.call(this,value):value;
+	},
+	//process configuration object
+	_parseSeetingColl:function(coll){
+		if (coll){
+			for (var a in coll)				//for each setting
+				this._define(a,coll[a]);		//set value through config
+		}
+	},
+	//helper for object initialization
+	_parseSettings:function(obj,initial){
+		//initial - set of default values
+		var settings = dhtmlx.extend({},initial);
+		//code below will copy all properties over default one
+		if (typeof obj == "object" && !obj.tagName)
+			dhtmlx.extend(settings,obj);	
+		//call config for each setting
+		this._parseSeetingColl(settings);
+	},
+	_mergeSettings:function(config, defaults){
+		for (var key in defaults)
+			switch(typeof config[key]){
+				case "object": 
+					config[key] = this._mergeSettings((config[key]||{}), defaults[key]);
+					break;
+				case "undefined":
+					config[key] = defaults[key];
+					break;
+				default:	//do nothing
+					break;
+			}
+		return config;
+	},
+	//helper for html container init
+	_parseContainer:function(obj,name,fallback){
+		/*
+			parameter can be a config object, in such case real container will be obj.container
+			or it can be html object or ID of html object
+		*/
+		if (typeof obj == "object" && !obj.tagName) 
+			obj=obj.container;
+		this._obj = this.$view = dhtmlx.toNode(obj);
+		if (!this._obj && fallback)
+			this._obj = fallback(obj);
+			
+		dhtmlx.assert(this._obj, "Incorrect html container");
+		
+		this._obj.className+=" "+name;
+		this._obj.onselectstart=function(){return false;};	//block selection by default
+		this._dataobj = this._obj;//separate reference for rendering modules
+	},
+	//apply template-type
+	_set_type:function(name){
+		//parameter can be a hash of settings
+		if (typeof name == "object")
+			return this.type_setter(name);
+		
+		dhtmlx.assert(this.types, "RenderStack :: Types are not defined");
+		dhtmlx.assert(this.types[name],"RenderStack :: Inccorect type name",name);
+		//or parameter can be a name of existing template-type	
+		this.type=dhtmlx.extend({},this.types[name]);
+		this.customize();	//init configs
+	},
+	customize:function(obj){
+		//apply new properties
+		if (obj) dhtmlx.extend(this.type,obj);
+		
+		//init tempaltes for item start and item end
+		this.type._item_start = dhtmlx.Template.fromHTML(this.template_item_start(this.type));
+		this.type._item_end = this.template_item_end(this.type);
+		
+		//repaint self
+		this.render();
+	},
+	//config.type - creates new template-type, based on configuration object
+	type_setter:function(value){
+		this._set_type(typeof value == "object"?dhtmlx.Type.add(this,value):value);
+		return value;
+	},
+	//config.template - creates new template-type with defined template string
+	template_setter:function(value){
+		return this.type_setter({template:value});
+	},
+	//config.css - css name for top level container
+	css_setter:function(value){
+		this._obj.className += " "+value;
+		return value;
+	}
+};
+
+
+
+/* DHX DEPEND FROM FILE 'template.js'*/
+
+
+/*
+	Template - handles html templates
+*/
+
+/*DHX:Depend dhtmlx.js*/
+
+dhtmlx.Template={
+	_cache:{
+	},
+	empty:function(){	
+		return "";	
+	},
+	setter:function(value){
+		return dhtmlx.Template.fromHTML(value);
+	},
+	obj_setter:function(value){
+		var f = dhtmlx.Template.setter(value);
+		var obj = this;
+		return function(){
+			return f.apply(obj, arguments);
+		};
+	},
+	fromHTML:function(str){
+		if (typeof str == "function") return str;
+		if (this._cache[str])
+			return this._cache[str];
+			
+	//supported idioms
+	// {obj} => value
+	// {obj.attr} => named attribute or value of sub-tag in case of xml
+	// {obj.attr?some:other} conditional output
+	// {-obj => sub-template
+		str=(str||"").toString();		
+		str=str.replace(/[\r\n]+/g,"\\n");
+		str=str.replace(/\{obj\.([^}?]+)\?([^:]*):([^}]*)\}/g,"\"+(obj.$1?\"$2\":\"$3\")+\"");
+		str=str.replace(/\{common\.([^}\(]*)\}/g,"\"+common.$1+\"");
+		str=str.replace(/\{common\.([^\}\(]*)\(\)\}/g,"\"+(common.$1?common.$1(obj):\"\")+\"");
+		str=str.replace(/\{obj\.([^}]*)\}/g,"\"+obj.$1+\"");
+		str=str.replace(/#([a-z0-9_]+)#/gi,"\"+obj.$1+\"");
+		str=str.replace(/\{obj\}/g,"\"+obj+\"");
+		str=str.replace(/\{-obj/g,"{obj");
+		str=str.replace(/\{-common/g,"{common");
+		str="return \""+str+"\";";
+		return this._cache[str]= Function("obj","common",str);
+	}
+};
+
+dhtmlx.Type={
+	/*
+		adds new template-type
+		obj - object to which template will be added
+		data - properties of template
+	*/
+	add:function(obj, data){ 
+		//auto switch to prototype, if name of class was provided
+		if (!obj.types && obj.prototype.types)
+			obj = obj.prototype;
+		//if (typeof data == "string")
+		//	data = { template:data };
+			
+		if (dhtmlx.assert_enabled())
+			this.assert_event(data);
+		
+		var name = data.name||"default";
+		
+		//predefined templates - autoprocessing
+		this._template(data);
+		this._template(data,"edit");
+		this._template(data,"loading");
+		
+		obj.types[name]=dhtmlx.extend(dhtmlx.extend({},(obj.types[name]||this._default)),data);	
+		return name;
+	},
+	//default template value - basically empty box with 5px margin
+	_default:{
+		css:"default",
+		template:function(){ return ""; },
+		template_edit:function(){ return ""; },
+		template_loading:function(){ return "..."; },
+		width:150,
+		height:80,
+		margin:5,
+		padding:0
+	},
+	//template creation helper
+	_template:function(obj,name){ 
+		name = "template"+(name?("_"+name):"");
+		var data = obj[name];
+		//if template is a string - check is it plain string or reference to external content
+		if (data && (typeof data == "string")){
+			if (data.indexOf("->")!=-1){
+				data = data.split("->");
+				switch(data[0]){
+					case "html": 	//load from some container on the page
+						data = dhtmlx.html.getValue(data[1]).replace(/\"/g,"\\\"");
+						break;
+					case "http": 	//load from external file
+						data = new dhtmlx.ajax().sync().get(data[1],{uid:(new Date()).valueOf()}).responseText;
+						break;
+					default:
+						//do nothing, will use template as is
+						break;
+				}
+			}
+			obj[name] = dhtmlx.Template.fromHTML(data);
+		}
+	}
+};
+
+
+/* DHX DEPEND FROM FILE 'single_render.js'*/
+
+
+/*
+	REnders single item. 
+	Can be used for elements without datastore, or with complex custom rendering logic
+	
+	@export
+		render
+*/
+
+/*DHX:Depend template.js*/
+
+dhtmlx.SingleRender={
+	_init:function(){
+	},
+	//convert item to the HTML text
+	_toHTML:function(obj){
+			/*
+				this one doesn't support per-item-$template
+				it has not sense, because we have only single item per object
+			*/
+			return this.type._item_start(obj,this.type)+this.type.template(obj,this.type)+this.type._item_end;
+	},
+	//render self, by templating data object
+	render:function(){
+		if (!this.callEvent || this.callEvent("onBeforeRender",[this.data])){
+			if (this.data)
+				this._dataobj.innerHTML = this._toHTML(this.data);
+			if (this.callEvent) this.callEvent("onAfterRender",[]);
+		}
+	}
+};
+
+
+/* DHX DEPEND FROM FILE 'tooltip.js'*/
+
+
+/*
+	UI: Tooltip
+	
+	@export
+		show
+		hide
+*/
+
+/*DHX:Depend tooltip.css*/
+/*DHX:Depend template.js*/
+/*DHX:Depend single_render.js*/
+
+dhtmlx.ui.Tooltip=function(container){
+	this.name = "Tooltip";
+	
+	if (dhtmlx.assert_enabled()) this._assert();
+
+	if (typeof container == "string"){
+		container = { template:container };
+	}
+		
+	dhtmlx.extend(this, dhtmlx.Settings);
+	dhtmlx.extend(this, dhtmlx.SingleRender);
+	this._parseSettings(container,{
+		type:"default",
+		dy:0,
+		dx:20
+	});
+	
+	//create  container for future tooltip
+	this._dataobj = this._obj = document.createElement("DIV");
+	this._obj.className="dhx_tooltip";
+	dhtmlx.html.insertBefore(this._obj,document.body.firstChild);
+};
+dhtmlx.ui.Tooltip.prototype = {
+	//show tooptip
+	//pos - object, pos.x - left, pox.y - top
+	show:function(data,pos){
+		if (this._disabled) return;
+		//render sefl only if new data was provided
+		if (this.data!=data){
+			this.data=data;
+			this.render(data);
+		}
+		//show at specified position
+		this._obj.style.top = pos.y+this._settings.dy+"px";
+		this._obj.style.left = pos.x+this._settings.dx+"px";
+		this._obj.style.display="block";
+	},
+	//hide tooltip
+	hide:function(){
+		this.data=null; //nulify, to be sure that on next show it will be fresh-rendered
+		this._obj.style.display="none";
+	},
+	disable:function(){
+		this._disabled = true;	
+	},
+	enable:function(){
+		this._disabled = false;
+	},
+	types:{
+		"default":dhtmlx.Template.fromHTML("{obj.id}")
+	},
+	template_item_start:dhtmlx.Template.empty,
+	template_item_end:dhtmlx.Template.empty
+};
+
+
+
+/* DHX DEPEND FROM FILE 'autotooltip.js'*/
+
+
+/*
+	Behavior: AutoTooltip - links tooltip to data driven item
+*/
+
+/*DHX:Depend tooltip.js*/
+
+dhtmlx.AutoTooltip = {
+	tooltip_setter:function(value){
+		var t = new dhtmlx.ui.Tooltip(value);
+		this.attachEvent("onMouseMove",function(id,e){	//show tooltip on mousemove
+			t.show(this.get(id),dhtmlx.html.pos(e));
+		});
+		this.attachEvent("onMouseOut",function(id,e){	//hide tooltip on mouseout
+			t.hide();
+		});
+		this.attachEvent("onMouseMoving",function(id,e){	//hide tooltip just after moving start
+			t.hide();
+		});
+		return t;
+	}
+};
+
+
+/* DHX DEPEND FROM FILE 'compatibility.js'*/
+
+
+/*
+	Collection of compatibility hacks
+*/
+
+/*DHX:Depend dhtmlx.js*/
+
+dhtmlx.compat=function(name, obj){
+	//check if name hash present, and applies it when necessary
+	if (dhtmlx.compat[name])
+		dhtmlx.compat[name](obj);
+};
+
+
+/* DHX DEPEND FROM FILE 'compatibility_layout.js'*/
+
+
+/*DHX:Depend dhtmlx.js*/
+/*DHX:Depend compatibility.js*/
+
+if (!dhtmlx.attaches)
+	dhtmlx.attaches = {};
+	
+dhtmlx.attaches.attachAbstract=function(name, conf){
+	var obj = document.createElement("DIV");
+	obj.id = "CustomObject_"+dhtmlx.uid();
+	obj.style.width = "100%";
+	obj.style.height = "100%";
+	obj.cmp = "grid";
+	document.body.appendChild(obj);
+	this.attachObject(obj.id);
+	
+	conf.container = obj.id;
+	
+	var that = this.vs[this.av];
+	that.grid = new window[name](conf);
+	
+	that.gridId = obj.id;
+	that.gridObj = obj;
+	
+		
+	that.grid.setSizes = function(){
+		if (this.resize) this.resize();
+		else this.render();
+	};
+	
+	var method_name="_viewRestore";
+	return this.vs[this[method_name]()].grid;
+};
+dhtmlx.attaches.attachDataView = function(conf){
+	return this.attachAbstract("dhtmlXDataView",conf);
+};
+dhtmlx.attaches.attachChart = function(conf){
+	return this.attachAbstract("dhtmlXChart",conf);
+};
+
+dhtmlx.compat.layout = function(){};
+
+
+
+
+/*
+Product Name: dhtmlxSuite 
+Version: 5.2.0 
+Edition: Standard 
+License: content of this file is covered by GPL. Usage outside GPL terms is prohibited. To obtain Commercial or Enterprise license contact sales@dhtmlx.com
+Copyright UAB Dinamenta http://www.dhtmlx.com
+*/
+
+
+/* DHX DEPEND FROM FILE 'group.js'*/
+
+
+/*DHX:Depend datastore.js*/
+/*DHX:Depend dhtmlx.js*/
+
+dhtmlx.Group = {
+	_init:function(){
+		dhtmlx.assert(this.data,"DataStore required for grouping");
+		this.data.attachEvent("onStoreLoad",dhtmlx.bind(function(){
+			if (this._settings.group)
+				this.group(this._settings.group,false);
+		},this));
+		this.attachEvent("onBeforeRender",dhtmlx.bind(function(data){
+			if (this._settings.sort){
+				data.block();
+				data.sort(this._settings.sort);
+				data.unblock();
+			}
+		},this));
+		this.data.attachEvent("onClearAll",dhtmlx.bind(function(){
+			this.data._not_grouped_order = this.data._not_grouped_pull = null;
+		},this));
+		this.attachEvent("onBeforeSort",dhtmlx.bind(function(){
+			this._settings.sort = null;
+		},this));
+	},
+	_init_group_data_event:function(data,master){
+		data.attachEvent("onClearAll",dhtmlx.bind(function(){
+            this.ungroup(false);
+            this.block();
+            this.clearAll();
+            this.unblock();
+        },master));
+	},
+	sum:function(property, data){
+		property = dhtmlx.Template.setter(property);
+		
+		data = data || this.data;
+		var summ = 0; 
+		data.each(function(obj){
+			summ+=property(obj)*1;
+		});
+		return summ;
+	},
+	min:function(property, data){
+		property = dhtmlx.Template.setter(property);
+		
+		data = data || this.data;
+		var min = Infinity; 
+		data.each(function(obj){
+			if (property(obj)*1 < min) min = property(obj)*1;
+		});
+		return min*1;
+	},
+	max:function(property, data){
+		property = dhtmlx.Template.setter(property);
+		
+		data = data || this.data;
+		var max = -Infinity;
+		data.each(function(obj){
+			if (property(obj)*1 > max) max = property(obj)*1;
+		});
+		return max;
+	},
+	_split_data_by:function(stats){ 
+		var any=function(property, data){
+			property = dhtmlx.Template.setter(property);
+			return property(data[0]);
+		};
+		var key = dhtmlx.Template.setter(stats.by);
+		if (!stats.map[key])
+			stats.map[key] = [key, any];
+			
+		var groups = {};
+		var labels = [];
+		this.data.each(function(data){
+			var current = key(data);
+			if (!groups[current]){
+				labels.push({id:current});
+				groups[current] = dhtmlx.toArray();
+			}
+			groups[current].push(data);
+		});
+		for (var prop in stats.map){
+			var functor = (stats.map[prop][1]||any);
+			if (typeof functor != "function")
+				functor = this[functor];
+				
+			for (var i=0; i < labels.length; i++) {
+				labels[i][prop]=functor.call(this, stats.map[prop][0], groups[labels[i].id]);
+			}
+		}
+//		if (this._settings.sort)
+//			labels.sortBy(stats.sort);
+
+		/*this._not_grouped_data = this.data;
+		this.data = new dhtmlx.DataStore();
+		this.data.provideApi(this,true);
+		this._init_group_data_event(this.data, this);
+		this.parse(labels,"json");*/
+
+		this.data._not_grouped_order = this.data.order;
+		this.data._not_grouped_pull = this.data.pull;
+
+		this.data.order = dhtmlx.toArray();
+		this.data.pull = {};
+		for (var i=0; i < labels.length; i++){
+			var id = this.data.id(labels[i]);
+			/*if(!labels[i].id)
+				labels[i].id = dhtmlx.uid();
+			var id = labels[i].id;*/
+			this.data.pull[id] = labels[i];
+			this.data.order.push(id);
+		}
+
+		this.callEvent("onStoreUpdated",[]);
+	},
+	group:function(config,mode){
+		this.ungroup(false);
+		this._split_data_by(config);
+		if (mode!==false)
+			this.data.callEvent("onStoreUpdated",[]);
+	},
+	ungroup:function(mode){
+		/*if (this._not_grouped_data){
+			this.data = this._not_grouped_data;
+			this.data.provideApi(this, true);
+		}*/
+		if (this.data._not_grouped_order){
+			this.data.order = this.data._not_grouped_order;
+			this.data.pull = this.data._not_grouped_pull;
+			this.data._not_grouped_pull = this.data._not_grouped_order = null;
+		}
+		if (mode!==false)
+			this.data.callEvent("onStoreUpdated",[]);
+	},
+	group_setter:function(config){
+		dhtmlx.assert(typeof config == "object", "Incorrect group value");
+		dhtmlx.assert(config.by,"group.by is mandatory");
+		dhtmlx.assert(config.map,"group.map is mandatory");
+		return config;
+	},
+	//need to be moved to more appropriate object
+	sort_setter:function(config){
+		if (typeof config != "object")
+			config = { by:config };
+		
+		this._mergeSettings(config,{
+			as:"string",
+			dir:"asc"
+		});
+		return config;
+	}
+};
+
+
+
+
+/* DHX DEPEND FROM FILE 'date.js'*/
+
+
+/*DHX:Depend dhtmlx.js*/
+
+dhtmlx.Date={
+	Locale: {
+		month_full:["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+		month_short:["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+		day_full:["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+    	day_short:["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+    },
+
+	date_part:function(date){
+		date.setHours(0);
+		date.setMinutes(0);
+		date.setSeconds(0);
+		date.setMilliseconds(0);	
+		return date;
+	},
+	time_part:function(date){
+		return (date.valueOf()/1000 - date.getTimezoneOffset()*60)%86400;
+	},
+	week_start:function(date){
+			var shift=date.getDay();
+			if (this.config.start_on_monday){
+				if (shift===0) shift=6;
+				else shift--;
+			}
+			return this.date_part(this.add(date,-1*shift,"day"));
+	},
+	month_start:function(date){
+		date.setDate(1);
+		return this.date_part(date);
+	},
+	year_start:function(date){
+		date.setMonth(0);
+		return this.month_start(date);
+	},
+	day_start:function(date){
+			return this.date_part(date);
+	},
+	add:function(date,inc,mode){
+		var ndate=new Date(date.valueOf());
+		switch(mode){
+			case "day": ndate.setDate(ndate.getDate()+inc); break;
+			case "week": ndate.setDate(ndate.getDate()+7*inc); break;
+			case "month": ndate.setMonth(ndate.getMonth()+inc); break;
+			case "year": ndate.setYear(ndate.getFullYear()+inc); break;
+			case "hour": ndate.setHours(ndate.getHours()+inc); break;
+			case "minute": ndate.setMinutes(ndate.getMinutes()+inc); break;
+			default:
+				return dhtmlx.Date["add_"+mode](date,inc,mode);
+		}
+		return ndate;
+	},
+	to_fixed:function(num){
+		if (num<10)	return "0"+num;
+		return num;
+	},
+	copy:function(date){
+		return new Date(date.valueOf());
+	},
+	date_to_str:function(format,utc){
+		format=format.replace(/%[a-zA-Z]/g,function(a){
+			switch(a){
+				case "%d": return "\"+dhtmlx.Date.to_fixed(date.getDate())+\"";
+				case "%m": return "\"+dhtmlx.Date.to_fixed((date.getMonth()+1))+\"";
+				case "%j": return "\"+date.getDate()+\"";
+				case "%n": return "\"+(date.getMonth()+1)+\"";
+				case "%y": return "\"+dhtmlx.Date.to_fixed(date.getFullYear()%100)+\""; 
+				case "%Y": return "\"+date.getFullYear()+\"";
+				case "%D": return "\"+dhtmlx.Date.Locale.day_short[date.getDay()]+\"";
+				case "%l": return "\"+dhtmlx.Date.Locale.day_full[date.getDay()]+\"";
+				case "%M": return "\"+dhtmlx.Date.Locale.month_short[date.getMonth()]+\"";
+				case "%F": return "\"+dhtmlx.Date.Locale.month_full[date.getMonth()]+\"";
+				case "%h": return "\"+dhtmlx.Date.to_fixed((date.getHours()+11)%12+1)+\"";
+				case "%g": return "\"+((date.getHours()+11)%12+1)+\"";
+				case "%G": return "\"+date.getHours()+\"";
+				case "%H": return "\"+dhtmlx.Date.to_fixed(date.getHours())+\"";
+				case "%i": return "\"+dhtmlx.Date.to_fixed(date.getMinutes())+\"";
+				case "%a": return "\"+(date.getHours()>11?\"pm\":\"am\")+\"";
+				case "%A": return "\"+(date.getHours()>11?\"PM\":\"AM\")+\"";
+				case "%s": return "\"+dhtmlx.Date.to_fixed(date.getSeconds())+\"";
+				case "%W": return "\"+dhtmlx.Date.to_fixed(dhtmlx.Date.getISOWeek(date))+\"";
+				default: return a;
+			}
+		});
+		if (utc) format=format.replace(/date\.get/g,"date.getUTC");
+		return new Function("date","return \""+format+"\";");
+	},
+	str_to_date:function(format,utc){
+		var splt="var temp=date.split(/[^0-9a-zA-Z]+/g);";
+		var mask=format.match(/%[a-zA-Z]/g);
+		for (var i=0; i<mask.length; i++){
+			switch(mask[i]){
+				case "%j":
+				case "%d": splt+="set[2]=temp["+i+"]||1;";
+					break;
+				case "%n":
+				case "%m": splt+="set[1]=(temp["+i+"]||1)-1;";
+					break;
+				case "%y": splt+="set[0]=temp["+i+"]*1+(temp["+i+"]>50?1900:2000);";
+					break;
+				case "%g":
+				case "%G":
+				case "%h": 
+				case "%H":
+							splt+="set[3]=temp["+i+"]||0;";
+					break;
+				case "%i":
+							splt+="set[4]=temp["+i+"]||0;";
+					break;
+				case "%Y":  splt+="set[0]=temp["+i+"]||0;";
+					break;
+				case "%a":					
+				case "%A":  splt+="set[3]=set[3]%12+((temp["+i+"]||'').toLowerCase()=='am'?0:12);";
+					break;					
+				case "%s":  splt+="set[5]=temp["+i+"]||0;";
+					break;
+			}
+		}
+		var code ="set[0],set[1],set[2],set[3],set[4],set[5]";
+		if (utc) code =" Date.UTC("+code+")";
+		return new Function("date","var set=[0,0,1,0,0,0]; "+splt+" return new Date("+code+");");
+	},
+		
+	getISOWeek: function(ndate) {
+		if(!ndate) return false;
+		var nday = ndate.getDay();
+		if (nday === 0) {
+			nday = 7;
+		}
+		var first_thursday = new Date(ndate.valueOf());
+		first_thursday.setDate(ndate.getDate() + (4 - nday));
+		var year_number = first_thursday.getFullYear(); // year of the first Thursday
+		var ordinal_date = Math.floor( (first_thursday.getTime() - new Date(year_number, 0, 1).getTime()) / 86400000); //ordinal date of the first Thursday - 1 (so not really ordinal date)
+		var week_number = 1 + Math.floor( ordinal_date / 7);	
+		return week_number;
+	},
+	
+	getUTCISOWeek: function(ndate){
+   	return this.getISOWeek(ndate);
+   }
+};
+
+
+
+
+
+
+/* DHX DEPEND FROM FILE 'math.js'*/
+
+
+dhtmlx.math = {};
+dhtmlx.math._toHex=["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"];
+dhtmlx.math.toHex = function(number, length){
+	number=parseInt(number,10);
+	str = "";
+		while (number>0){
+			str=this._toHex[number%16]+str;
+			number=Math.floor(number/16);
+		}
+		while (str.length <length)
+			str = "0"+str;
+	return str;
+};
+dhtmlx.math.hexToDec = function(hex){
+   	return parseInt(hex, 16);
+};
+dhtmlx.math.toRgb = function(rgb){
+   	var r,g,b,rgbArr;
+   	if (typeof(rgb) != 'string') {
+    	r = rgb[0];
+       	g = rgb[1];
+       	b = rgb[2];
+   	} else if (rgb.indexOf('rgb')!=-1) {
+		rgbArr = rgb.substr(rgb.indexOf("(")+1,rgb.lastIndexOf(")")-rgb.indexOf("(")-1).split(",");
+	   	r = rgbArr[0];
+	   	g = rgbArr[1];
+	   	b = rgbArr[2];
+   	} else {
+       	if (rgb.substr(0, 1) == '#') {
+        	rgb = rgb.substr(1);
+       	}
+       	r = this.hexToDec(rgb.substr(0, 2));
+       	g = this.hexToDec(rgb.substr(2, 2));
+       	b = this.hexToDec(rgb.substr(4, 2));
+   	}
+   	r = (parseInt(r,10)||0);
+   	g = (parseInt(g,10)||0);
+   	b = (parseInt(b,10)||0);
+   	if (r < 0 || r > 255)
+      	r = 0;
+   	if (g < 0 || g > 255)
+      	g = 0;
+   	if (b < 0 || b > 255)
+      	b = 0;
+   	return [r,g,b];
+}
+dhtmlx.math.hsvToRgb = function(h, s, v){
+	var hi,f,p,q,t,r,g,b;
+   	hi = Math.floor((h/60))%6;
+   	f = h/60-hi;
+   	p = v*(1-s);
+   	q = v*(1-f*s);
+   	t = v*(1-(1-f)*s);
+   	r = 0;
+   	g = 0;
+   	b = 0;
+   	switch(hi) {
+    	case 0:
+        	r = v; g = t; b = p;
+         	break;
+      	case 1:
+        	r = q; g = v; b = p;
+         	break;
+      	case 2:
+        	r = p; g = v; b = t;
+        	 break;
+      	case 3:
+        	r = p; g = q; b = v;
+        	break;
+      	case 4:
+        	r = t; g = p; b = v;
+        	break;
+      	case 5:
+        	r = v; g = p; b = q;
+         	break;
+   	}
+    r = Math.floor(r*255);
+    g = Math.floor(g*255);
+    b = Math.floor(b*255);
+    return [r, g, b];
+};
+dhtmlx.math.rgbToHsv = function(r, g, b){
+   	var r0,g0,b0,min0,max0,s,h,v;
+   	r0 = r/255;
+   	g0 = g/255;
+   	b0 = b/255;
+   	var min0 = Math.min(r0, g0, b0);
+   	var max0 = Math.max(r0, g0, b0);
+   	h = 0;
+   	s = max0==0?0:(1-min0/max0);
+   	v = max0;
+   	if (max0 == min0) {
+   		h = 0;
+   	} else if (max0 == r0 && g0>=b0) {
+    	h = 60*(g0 - b0)/(max0 - min0)+0;
+   	} else if (max0 == r0 && g0 < b0) {
+    	h = 60*(g0 - b0)/(max0 - min0)+360;
+   	} else if (max0 == g0) {
+      	h = 60*(b0 - r0)/(max0-min0)+120;
+   	} else if (max0 == b0) {
+      	h = 60*(r0 - g0)/(max0 - min0)+240;
+   	}
+   	return [h, s, v];
+}
+
+
+
+
+/* DHX DEPEND FROM FILE 'ext/chart/presets.js'*/
+
+
+/*chart presents*/
+if(!dhtmlx.presets)
+    dhtmlx.presets = {};
+dhtmlx.presets.chart = {
+    "simple":{
+        item:{
+            borderColor: "#ffffff",
+            color: "#2b7100",
+            shadow: false,
+            borderWidth:2
+        },
+		line:{
+			color:"#8ecf03",
+            width:2
+		}
+    },
+    "plot":{
+        color:"#1293f8",
+        item:{
+            borderColor:"#636363",
+            borderWidth:1,
+            color: "#ffffff",
+            type:"r",
+            shadow: false
+        },
+	    line:{
+			color:"#1293f8",
+            width:2
+	    }
+    },
+    "diamond":{
+        color:"#b64040",
+        item:{
+			borderColor:"#b64040",
+			color: "#b64040",
+            type:"d",
+            radius:3,
+            shadow:true
+        },
+		line:{
+			color:"#ff9000",
+            width:2
+		}
+    },
+    "point":{
+        color:"#fe5916",
+		disableLines:true,
+        fill:false,
+        disableItems:false,
+        item:{
+            color:"#feb916",
+            borderColor:"#fe5916",
+            radius:2,
+            borderWidth:1,
+            type:"r"
+	    },
+        alpha:1
+    },
+    "line":{
+        line:{
+            color:"#3399ff",
+            width:2
+        },
+        item:{
+            color:"#ffffff",
+            borderColor:"#3399ff",
+            radius:2,
+            borderWidth:2,
+            type:"d"
+        },
+        fill:false,
+        disableItems:false,
+        disableLines:false,
+        alpha:1
+    },
+    "area":{
+        fill:"#3399ff",
+        line:{
+            color:"#3399ff",
+            width:1
+        },
+        disableItems:true,
+        alpha: 0.2,
+        disableLines:false
+    },
+    "round":{
+        item:{
+            radius:3,
+            borderColor:"#3f83ff",
+            borderWidth:1,
+            color:"#3f83ff",
+            type:"r",
+            shadow:false,
+            alpha:0.6
+        }
+    },
+    "square":{
+         item:{
+            radius:3,
+            borderColor:"#447900",
+            borderWidth:2,
+            color:"#69ba00",
+            type:"s",
+            shadow:false,
+            alpha:1
+        }
+    },
+    /*bar*/
+    "column":{
+        color:"RAINBOW",
+        gradient:false,
+        width:45,
+        radius:0,
+        alpha:1,
+        border:true
+    },
+    "stick":{
+        width:5,
+        gradient:false,
+		color:"#67b5c9",
+        radius:2,
+        alpha:1,
+        border:false
+    },
+    "alpha":{
+        color:"#b9a8f9",
+        width:70,
+        gradient:"falling",
+        radius:0,
+        alpha:0.5,
+        border:true
+    }
+};
+
+
+
+/* DHX DEPEND FROM FILE 'map.js'*/
+
+
+/*DHX:Depend dhtmlx.js*/
+	
+dhtmlx.ui.Map = function(key){
+	this.name = "Map";
+	this._id = "map_"+dhtmlx.uid();
+	this._key = key;
+	this._map = [];
+	this._areas = [];
+};
+dhtmlx.ui.Map.prototype = {
+	addRect: function(id,points,userdata) {
+		this._areas.push({ index: userdata, points: points });
+		this._createMapArea(id,"RECT",points,userdata);
+	},
+	addPoly: function(id,points,userdata) {
+		this._createMapArea(id,"POLY",points,userdata);
+	},
+	_createMapArea:function(id,shape,coords,userdata){
+		var extra_data = "";
+		if(arguments.length==4) 
+			extra_data = "userdata='"+userdata+"'";
+		this._map.push("<area "+this._key+"='"+id+"' shape='"+shape+"' coords='"+coords.join()+"' "+extra_data+"></area>");
+	},
+	addSector:function(id,alpha0,alpha1,x,y,R,ky,userdata){
+		var points = [];
+		points.push(x);
+		points.push(Math.floor(y*ky)); 
+		for(var i = alpha0; i < alpha1; i+=Math.PI/18){
+			points.push(Math.floor(x+R*Math.cos(i)));
+			points.push(Math.floor((y+R*Math.sin(i))*ky));
+		}
+		points.push(Math.floor(x+R*Math.cos(alpha1)));
+		points.push(Math.floor((y+R*Math.sin(alpha1))*ky));
+		points.push(x);
+		points.push(Math.floor(y*ky)); 
+		
+		return this.addPoly(id,points,userdata);
+	},
+	render:function(obj){
+		var d = dhtmlx.html.create("DIV");
+		d.style.cssText="position:absolute; width:100%; height:100%; top:0px; left:0px;";
+		obj.appendChild(d);
+		var src = dhtmlx._isIE?"":"src='data:image/gif;base64,R0lGODlhEgASAIAAAP///////yH5BAUUAAEALAAAAAASABIAAAIPjI+py+0Po5y02ouz3pwXADs='";
+		d.innerHTML="<map id='"+this._id+"' name='"+this._id+"'>"+this._map.join("\n")+"</map><img "+src+" class='dhx_map_img' usemap='#"+this._id+"' onmousedown='return false;'>";
+		
+		obj._htmlmap = d; //for clearing routine
+		
+		this._map = [];
+	}
+};
+
+
+/* DHX DEPEND FROM FILE 'ext/chart/chart_base.js'*/
+
+
+/*DHX:Depend map.js*/
+dhtmlx.chart = {};
+
+
+/* DHX DEPEND FROM FILE 'ext/chart/chart_scatter.js'*/
+
+
+/*DHX:Depend ext/chart/chart_base.js*/
+dhtmlx.chart.scatter = {
+
+	/**
+	*   renders a graphic
+	*   @param: ctx - canvas object
+	*   @param: data - object those need to be displayed
+	*   @param: point0  - top left point of a chart
+	*   @param: point1  - right bottom point of a chart
+	*   @param: sIndex - index of drawing chart
+    *   @param: map - map object
+	*/
+	pvt_render_scatter:function(ctx, data, point0, point1, sIndex, map){
+        if(!this._settings.xValue)
+            return dhtmlx.log("warning","Undefined propery: xValue");
+        /*max in min values*/
+        var limitsY = this._getLimits();
+        var limitsX = this._getLimits("h","xValue");
+        /*render scale*/
+        if(!sIndex){
+	        if(!this.canvases["x"])
+	            this.canvases["x"] = new dhtmlx.ui.Canvas(this._obj,"axis_x");
+	        if(!this.canvases["y"])
+	            this.canvases["y"] = new dhtmlx.ui.Canvas(this._obj,"axis_y");
+            this._drawYAxis(this.canvases["y"].getCanvas(),data,point0,point1,limitsY.min,limitsY.max);
+		    this._drawHXAxis(this.canvases["x"].getCanvas(),data,point0,point1,limitsX.min,limitsX.max);
+        }
+        limitsY = {min:this._settings.yAxis.start,max:this._settings.yAxis.end};
+        limitsX = {min:this._settings.xAxis.start,max:this._settings.xAxis.end};
+        var params = this._getScatterParams(ctx,data,point0,point1,limitsX,limitsY);
+		this._mapStart = point0;
+	    for(var i=0;i<data.length;i++){
+            this._drawScatterItem(ctx,map,point0, point1, params,limitsX,limitsY,data[i],sIndex);
+        }
+    },
+    _getScatterParams:function(ctx, data, point0, point1,limitsX,limitsY){
+        var params = {};
+		/*available space*/
+		params.totalHeight = point1.y-point0.y;
+        /*available width*/
+        params.totalWidth = point1.x-point0.x;
+		/*unit calculation (y_position = value*unit)*/
+        this._calcScatterUnit(params,limitsX.min,limitsX.max,params.totalWidth,"X");
+        this._calcScatterUnit(params,limitsY.min,limitsY.max,params.totalHeight,"Y");
+		return params;
+    },
+    _drawScatterItem:function(ctx,map,point0, point1,params,limitsX,limitsY,obj,sIndex){
+        var x0 = this._calculateScatterItemPosition(params, point1, point0, limitsX, obj, "X");
+        var y0 = this._calculateScatterItemPosition(params, point0, point1, limitsY, obj, "Y");
+        this. _drawItem(ctx,x0,y0,obj,this._settings.label.call(this,obj),sIndex,map);
+    },
+    _calculateScatterItemPosition:function(params, point0, point1, limits, obj, axis){
+		/*the real value of an object*/
+		var value = this._settings[axis=="X"?"xValue":"value"].call(this,obj);
+		/*a relative value*/
+        var valueFactor = params["valueFactor"+axis];
+		var v = (parseFloat(value||0) - limits.min)*valueFactor;
+		/*a vertical coordinate*/
+        var unit = params["unit"+axis];
+		var pos = point1[axis.toLowerCase()] - (axis=="X"?(-1):1)*Math.floor(unit*v);
+		/*the limit of the minimum value is  the minimum visible value*/
+		if(v<0)
+			pos = point1[axis.toLowerCase()];
+		/*the limit of the maximum value*/
+		if(value > limits.max)
+			pos = point0[axis.toLowerCase()];
+		/*the limit of the minimum value*/
+		if(value < limits.min)
+			pos = point1[axis.toLowerCase()];
+        return pos;
+    },
+    _calcScatterUnit:function(p,min,max,size,axis){
+        var relativeValues = this._getRelativeValue(min,max);
+        axis = (axis||"");
+		p["relValue"+axis] = relativeValues[0];
+		p["valueFactor"+axis] = relativeValues[1];
+		p["unit"+axis] = (p["relValue"+axis]?size/p["relValue"+axis]:10);
+    }
+};
+
+
+
+/* DHX DEPEND FROM FILE 'ext/chart/chart_radar.js'*/
+
+
+/*DHX:Depend ext/chart/chart_base.js*/
+dhtmlx.chart.radar = {
+	pvt_render_radar:function(ctx,data,x,y,sIndex,map){
+		this._renderRadarChart(ctx,data,x,y,sIndex,map);
+		
+	}, 
+	/**
+	*   renders a pie chart
+	*   @param: ctx - canvas object
+	*   @param: data - object those need to be displayed
+	*   @param: x - the width of the container
+	*   @param: y - the height of the container
+	*   @param: ky - value from 0 to 1 that defines an angle of inclination (0<ky<1 - 3D chart)
+	*/
+	_renderRadarChart:function(ctx,data,point0,point1,sIndex,map){
+		if(!data.length)
+			return;
+		var coord = this._getPieParameters(point0,point1);
+		/*scale radius*/
+		var radius = (this._settings.radius?this._settings.radius:coord.radius);
+    	/*scale center*/
+		var x0 = (this._settings.x?this._settings.x:coord.x);
+		var y0 = (this._settings.y?this._settings.y:coord.y);
+        /*angles for each unit*/
+		var ratioUnits = [];
+        for(var i=0;i<data.length;i++)
+           ratioUnits.push(1)
+		var ratios = this._getRatios(ratioUnits,data.length);
+		this._mapStart = point0;
+		if(!sIndex)
+            this._drawRadarAxises(ratios,x0,y0,radius,data);
+        this._drawRadarData(ctx,ratios,x0,y0,radius,data,sIndex,map);
+	},
+     _drawRadarData:function(ctx,ratios,x,y,radius,data,sIndex,map){
+        var alpha0 ,alpha1, config, i, min, max, pos0, pos1, posArr,
+	        r0, r1, relValue, startAlpha, value, value0, value1, valueFactor,
+	        unit, unitArr;
+        config = this._settings;
+		/*unit calculation (item_radius_pos = value*unit)*/
+        min = config.yAxis.start;
+        max = config.yAxis.end;
+		unitArr = this._getRelativeValue(min,max);
+        relValue = unitArr[0];
+		unit = (relValue?radius/relValue:radius/2);
+        valueFactor = unitArr[1];
+
+        startAlpha = -Math.PI/2;
+        alpha0 =  alpha1 = startAlpha;
+        posArr = [];
+	    pos1 = 0;
+        for(i=0;i<data.length;i++){
+            if(!value1){
+                value = config.value(data[i]);
+                /*a relative value*/
+                value0 = (parseFloat(value||0) - min)*valueFactor;
+            }
+            else
+                value0 = value1;
+            r0 = Math.floor(unit*value0);
+
+            value = config.value((i!=(data.length-1))?data[i+1]:data[0]);
+            value1 = (parseFloat(value||0) - min)*valueFactor;
+            r1 = Math.floor(unit*value1);
+            alpha0 = alpha1;
+            alpha1 = ((i!=(data.length-1))?(startAlpha+ratios[i]-0.0001):startAlpha);
+            pos0 = (pos1||this._getPositionByAngle(alpha0,x,y,r0));
+            pos1 = this._getPositionByAngle(alpha1,x,y,r1);
+            /*creates map area*/
+			/*areaWidth  = (config.eventRadius||(parseInt(config.item.radius.call(this,data[i]),10)+config.item.borderWidth));
+		    map.addRect(data[i].id,[pos0.x-areaWidth,pos0.y-areaWidth,pos0.x+areaWidth,pos0.y+areaWidth],sIndex);*/
+            //this._drawLine(ctx,pos0.x,pos0.y,pos1.x,pos1.y,config.line.color.call(this,data[i]),config.line.width)
+            posArr.push(pos0);
+        }
+         if(config.fill)
+             this._fillRadarChart(ctx,posArr,data);
+         if(!config.disableLines)
+            this._strokeRadarChart(ctx,posArr,data);
+         if(!config.disableItems)
+             this._drawRadarItemMarkers(ctx,posArr,data,sIndex,map);
+         posArr = null;
+    },
+    _drawRadarItemMarkers:function(ctx,points,data,sIndex,map){
+        for(var i=0;i < points.length;i++){
+            this._drawItem(ctx,points[i].x,points[i].y,data[i],this._settings.label.call(this,data),sIndex,map);
+        }
+    },
+     _fillRadarChart:function(ctx,points,data){
+        var pos0,pos1;
+        ctx.globalAlpha= this._settings.alpha.call(this,{});
+
+		ctx.beginPath();
+        for(var i=0;i < points.length;i++){
+            ctx.fillStyle = this._settings.fill.call(this,data[i]);
+            pos0 = points[i];
+            pos1 = (points[i+1]|| points[0]);
+            if(!i){
+
+                ctx.moveTo(pos0.x,pos0.y);
+            }
+            ctx.lineTo(pos1.x,pos1.y)
+        }
+         ctx.fill();
+         ctx.globalAlpha=1;
+    },
+    _strokeRadarChart:function(ctx,points,data){
+        var pos0,pos1;
+        for(var i=0;i < points.length;i++){
+            pos0 = points[i];
+            pos1 = (points[i+1]|| points[0]);
+            this._drawLine(ctx,pos0.x,pos0.y,pos1.x,pos1.y,this._settings.line.color.call(this,data[i]),this._settings.line.width)
+        }
+    },
+    _drawRadarAxises:function(ratios,x,y,radius,data){
+        var configY = this._settings.yAxis;
+        var configX = this._settings.xAxis;
+        var start = configY.start;
+        var end = configY.end;
+        var step = configY.step;
+        var scaleParam= {};
+        var config = this._configYAxis;
+        if(typeof config.step =="undefined"||typeof config.start=="undefined"||typeof config.end =="undefined"){
+            var limits = this._getLimits();
+			scaleParam = this._calculateScale(limits.min,limits.max);
+			start = scaleParam.start;
+			end = scaleParam.end;
+			step = scaleParam.step;
+			configY.end = end;
+			configY.start = start;
+		}
+        var units = [];
+        var i,j,p;
+        var c=0;
+        var stepHeight = radius*step/(end-start);
+        /*correction for small step*/
+        var power,corr;
+        if(step<1){
+			power = Math.min(this._log10(step),(start<=0?0:this._log10(start)));
+			corr = Math.pow(10,-power);
+        }
+        var angles = [];
+	    if(!this.canvases["scale"])
+	        this.canvases["scale"] =  new dhtmlx.ui.Canvas(this._obj,"radar_scale");
+	    var ctx = this.canvases["scale"].getCanvas();
+        for(i = end; i>=start; i -=step){
+			if(scaleParam.fixNum)  i = parseFloat((new Number(i)).toFixed(scaleParam.fixNum));
+            units.push(Math.floor(c*stepHeight)+ 0.5);
+            if(corr){
+				i = Math.round(i*corr)/corr;
+			}
+            var unitY = y-radius+units[units.length-1];
+
+            this.canvases["scale"].renderTextAt("middle","left",x,unitY,
+				configY.template(i.toString()),
+				"dhx_axis_item_y dhx_radar"
+			);
+            if(ratios.length<2){
+                this._drawScaleSector(ctx,"arc",x,y,radius-units[units.length-1],-Math.PI/2,3*Math.PI/2,i);
+                return;
+            }
+            var startAlpha = -Math.PI/2;/*possibly need  to moved in config*/
+            var alpha0 = startAlpha;
+            var alpha1;
+            for(j=0;j< ratios.length;j++){
+                if(i==end)
+                   angles.push(alpha0);
+                alpha1 = startAlpha+ratios[j]-0.0001;
+                this._drawScaleSector(ctx,(config.lineShape||"line"),x,y,radius-units[units.length-1],alpha0,alpha1,i,j,data[i]);
+                alpha0 = alpha1;
+            }
+            c++;
+        }
+         /*renders radius lines and labels*/
+        for(i=0;i< angles.length;i++){
+            p = this._getPositionByAngle(angles[i],x,y,radius);
+	        if(configX.lines.call(this,data[i],i))
+                this._drawLine(ctx,x,y,p.x,p.y,(configX?configX.lineColor.call(this,data[i]):"#cfcfcf"),1);
+            this._drawRadarScaleLabel(ctx,x,y,radius,angles[i],(configX?configX.template.call(this,data[i]):"&nbsp;"));
+        }
+
+    },
+    _drawScaleSector:function(ctx,shape,x,y,radius,a1,a2,i,j){
+         var pos1, pos2;
+         if(radius<0)
+            return false;
+         pos1 = this._getPositionByAngle(a1,x,y,radius);
+         pos2 = this._getPositionByAngle(a2,x,y,radius);
+         var configY = this._settings.yAxis;
+         if(configY.bg){
+             ctx.beginPath();
+             ctx.moveTo(x,y);
+             if(shape=="arc")
+                 ctx.arc(x,y,radius,a1,a2,false);
+             else{
+                 ctx.lineTo(pos1.x,pos1.y);
+                 ctx.lineTo(pos2.x,pos2.y);
+             }
+             ctx.fillStyle =  configY.bg(i,j);
+             ctx.moveTo(x,y);
+             ctx.fill();
+             ctx.closePath();
+         }
+         if(configY.lines.call(this,i)){
+             ctx.lineWidth = 1;
+             ctx.beginPath();
+              if(shape=="arc")
+                 ctx.arc(x,y,radius,a1,a2,false);
+             else{
+                 ctx.moveTo(pos1.x,pos1.y);
+                 ctx.lineTo(pos2.x,pos2.y);
+             }
+             ctx.strokeStyle = configY.lineColor.call(this,i);
+             ctx.stroke();
+         }
+    },
+    _drawRadarScaleLabel:function(ctx,x,y,r,a,text){
+         var t = this.canvases["scale"].renderText(0,0,text,"dhx_axis_radar_title",1);
+         var width = t.scrollWidth;
+         var height = t.offsetHeight;
+         var delta = 0.001;
+         var pos =  this._getPositionByAngle(a,x,y,r+5);
+         var corr_x=0,corr_y=0;
+         if(a<0||a>Math.PI){
+             corr_y = -height;
+         }
+         if(a>Math.PI/2){
+             corr_x = -width;
+         }
+         if(Math.abs(a+Math.PI/2)<delta||Math.abs(a-Math.PI/2)<delta){
+            corr_x = -width/2;
+         }
+         else if(Math.abs(a)<delta||Math.abs(a-Math.PI)<delta){
+            corr_y = -height/2;
+         }
+         t.style.top  = pos.y+corr_y+"px";
+	     t.style.left = pos.x+corr_x+"px";
+		 t.style.width = width+"px";
+		 t.style.whiteSpace = "nowrap";
+    }
+};
+
+
+
+/* DHX DEPEND FROM FILE 'ext/chart/chart_area.js'*/
+
+
+/*DHX:Depend ext/chart/chart_base.js*/
+dhtmlx.chart.area = {
+	/**
+	*   renders an area chart
+	*   @param: ctx - canvas object
+	*   @param: data - object those need to be displayed
+	*   @param: width - the width of the container
+	*   @param: height - the height of the container
+	*   @param: sIndex - index of drawing chart
+	*/
+	pvt_render_area:function(ctx, data, point0, point1, sIndex, map){
+		var align, config, i, mapRect, obj, params, path,
+			res1, res2, x0, x1, y1, x2, y2, y0;
+
+		params = this._calculateLineParams(ctx,data,point0,point1,sIndex);
+		config = this._settings;
+
+		//the size of map area
+		mapRect = (config.eventRadius||Math.floor(params.cellWidth/2));
+
+		if (data.length) {
+
+			// area points
+			path = [];
+
+			//the x position of the first item
+			x0 = (!config.offset?point0.x:point0.x+params.cellWidth*0.5);
+
+			/*
+				iterates over all data items:
+			    calculates [x,y] for area path, adds rect to chart map and renders labels
+			*/
+			for(i=0; i < data.length;i ++){
+				obj = data[i];
+
+				res2 = this._getPointY(obj,point0,point1,params);
+				x2 = x0 + params.cellWidth*i ;
+				if(res2){
+					y2 = (typeof res2 == "object"?res2.y0:res2);
+					if(i && this._settings.fixOverflow){
+						res1 = this._getPointY(data[i-1],point0,point1,params);
+						if(res1.out && res1.out == res2.out){
+							continue;
+						}
+						x1 = params.cellWidth*(i-1) - 0.5 + x0;
+						y1 = (typeof res1 == "object"?res1.y0:res1);
+						if(res1.out){
+							y0 = (res1.out == "min"?point1.y:point0.y);
+							path.push([this._calcOverflowX(x1,x2,y1,y2,y0),y0]);
+						}
+						if(res2.out){
+							y0 = (res2.out == "min"?point1.y:point0.y);
+							path.push([this._calcOverflowX(x1,x2,y1,y2,y0),y0]);
+							if(i == (data.length-1) && y0 == point0.y)
+								path.push([x2,point0.y]);
+						}
+					}
+					if(!res2.out){
+						path.push([x2,y2]);
+						//map
+						map.addRect(obj.id,[x2-mapRect-point0.x,y2-mapRect-point0.y,x2+mapRect-point0.x,y2+mapRect-point0.y],sIndex);
+					}
+
+					//labels
+					if(!config.yAxis){
+						align = (!config.offset&&(i == data.length-1)?"left":"center");
+						this.canvases[sIndex].renderTextAt(false, align, x2, y2-config.labelOffset,config.label(obj));
+					}
+				}
+
+			}
+			if(path.length){
+				path.push([x2,point1.y]);
+				path.push([path[0][0],point1.y]);
+			}
+
+
+
+			//filling area
+			ctx.globalAlpha = this._settings.alpha.call(this,data[0]);
+			ctx.fillStyle = this._settings.color.call(this,data[0]);
+			ctx.beginPath();
+			this._path(ctx,path);
+			ctx.fill();
+
+			//border
+			if(config.border){
+				ctx.lineWidth = config.borderWidth||1;
+				if(config.borderColor)
+					ctx.strokeStyle =  config.borderColor.call(this,data[0]);
+				else
+					this._setBorderStyles(ctx,ctx.fillStyle);
+
+				ctx.beginPath();
+				this._path(ctx,path);
+				ctx.stroke();
+
+			}
+			ctx.lineWidth = 1;
+			ctx.globalAlpha =1;
+
+		}
+	}
+};
+dhtmlx.chart.stackedArea ={
+	/**
+	*   renders an area chart
+	*   @param: ctx - canvas object
+	*   @param: data - object those need to be displayed
+	*   @param: width - the width of the container
+	*   @param: height - the height of the container
+	*   @param: sIndex - index of drawing chart
+	*/
+	pvt_render_stackedArea:function(ctx, data, point0, point1, sIndex, map){
+		var a0, a1, align, config, i, j, lastItem, mapRect, obj, params, path, x, y, yPos;
+
+		params = this._calculateLineParams(ctx,data,point0,point1,sIndex);
+
+		config = this._settings;
+
+		/*the value that defines the map area position*/
+		mapRect = (config.eventRadius||Math.floor(params.cellWidth/2));
+
+	
+		/*drawing all items*/
+		if (data.length) {
+
+			// area points
+			path = [];
+
+			// y item positions
+			yPos = [];
+
+			//the x position of the first item
+			x = (!config.offset?point0.x:point0.x+params.cellWidth*0.5);
+
+
+			var setOffset = function(i,y){
+				return sIndex?(data[i].$startY?y-point1.y+data[i].$startY:0):y;
+			};
+
+			var solveEquation  = function(x,p0,p1){
+				var k = (p1.y - p0.y)/(p1.x - p0.x);
+				return  k*x + p0.y - k*p0.x;
+			};
+
+			/*
+			 iterates over all data items:
+			 calculates [x,y] for area path, adds rect to chart map and renders labels
+			 */
+
+			for(i=0; i < data.length;i ++){
+				obj = data[i];
+
+				if(!i){
+					y =  setOffset(i,point1.y);
+					path.push([x,y]);
+				}
+				else{
+					x += params.cellWidth ;
+				}
+
+				y = setOffset(i,this._getPointY(obj,point0,point1,params));
+
+				yPos.push((isNaN(y)&&!i)?(data[i].$startY||point1.y):y);
+
+				if(y){
+					path.push([x,y]);
+
+					//map
+					map.addRect(obj.id,[x-mapRect-point0.x,y-mapRect-point0.y,x+mapRect-point0.x,y+mapRect-point0.y],sIndex);
+
+					//labels
+					if(!config.yAxis){
+						align = (!config.offset&&lastItem?"left":"center");
+						this.canvases[sIndex].renderTextAt(false, align, x, y-config.labelOffset,config.label(obj));
+					}
+				}
+			}
+
+			// bottom right point
+			path.push([x,setOffset(i-1,point1.y)]);
+
+			// lower border from the end to start
+            if(sIndex){
+				for(i=data.length-2; i > 0; i --){
+				    x -= params.cellWidth ;
+					y =  data[i].$startY;
+					if(y)
+						path.push([x,y]);
+				}
+			}
+
+			// go to start point
+			path.push([path[0][0],path[0][1]]);
+
+			// filling path
+			ctx.globalAlpha = this._settings.alpha.call(this,data[0]);
+			ctx.fillStyle = this._settings.color.call(this,data[0]);
+			ctx.beginPath();
+			this._path(ctx,path);
+			ctx.fill();
+
+			// set y positions of the next series
+			for(i=0; i < data.length;i ++){
+				y =  yPos[i];
+
+				if(!y){
+					if(i == data.length-1){
+						y = data[i].$startY;
+					}
+					for(j =i+1; j< data.length; j++){
+						if(yPos[j]){
+							a0 =  {x:point0.x,y:yPos[0]};
+							a1 =  {x:(point0.x+params.cellWidth*j),y:yPos[j]};
+							y = solveEquation(point0.x+params.cellWidth*i,a0,a1);
+							break;
+						}
+
+					}
+				}
+
+				data[i].$startY = y;
+			}
+
+
+		}
+	}
+};
+
+
+
+/* DHX DEPEND FROM FILE 'ext/chart/chart_spline.js'*/
+
+
+/*DHX:Depend ext/chart/chart_base.js*/
+dhtmlx.chart.spline = {
+	/**
+	*   renders a spline chart
+	*   @param: ctx - canvas object
+	*   @param: data - object those need to be displayed
+	*   @param: width - the width of the container
+	*   @param: height - the height of the container
+	*   @param: sIndex - index of drawing chart
+	*/
+	pvt_render_spline:function(ctx, data, point0, point1, sIndex, map){
+
+		var config,i,items,j,params,sparam,x,x0,x1,x2,y,y1,y2;
+		params = this._calculateLineParams(ctx,data,point0,point1,sIndex);
+		config = this._settings;
+		this._mapStart = point0;
+
+		/*array of all points*/
+		items = [];
+
+		/*drawing all items*/
+		if (data.length) {
+
+			/*getting all points*/
+			x0 = (config.offset?point0.x+params.cellWidth*0.5:point0.x);
+			for(i=0; i < data.length;i ++){
+				y = this._getPointY(data[i],point0,point1,params);
+				if(y){
+					x = ((!i)?x0:params.cellWidth*i - 0.5 + x0);
+					items.push({x:x,y:y,index:i});
+				}
+			}
+			sparam = this._getSplineParameters(items);
+
+			for(i =0; i< items.length; i++){
+				x1 = items[i].x;
+				y1 = items[i].y;
+				if(i<items.length-1){
+					x2 = items[i+1].x;
+					y2 = items[i+1].y;
+					for(j = x1; j < x2; j++){
+						var sY1 = this._getSplineYPoint(j,x1,i,sparam.a,sparam.b,sparam.c,sparam.d);
+						if(sY1<point0.y)
+							sY1=point0.y;
+						if(sY1>point1.y)
+							sY1=point1.y;
+						var sY2 = this._getSplineYPoint(j+1,x1,i,sparam.a,sparam.b,sparam.c,sparam.d);
+						if(sY2<point0.y)
+							sY2=point0.y;
+						if(sY2>point1.y)
+							sY2=point1.y;
+						this._drawLine(ctx,j,sY1,j+1,sY2,config.line.color(data[i]),config.line.width);
+
+					}
+					this._drawLine(ctx,x2-1,this._getSplineYPoint(j,x1,i,sparam.a,sparam.b,sparam.c,sparam.d),x2,y2,config.line.color(data[i]),config.line.width);
+				}
+				this._drawItem(ctx,x1,y1,data[items[i].index],config.label(data[items[i].index]), sIndex, map);
+				/*creates map area*/
+				/*radius = (parseInt(config.item.radius.call(this,data[i-1]),10)||2);
+			    areaPos = (config.eventRadius||radius+1);
+				map.addRect(data[i].id,[x1-areaPos,y1-areaPos,x1+areaPos,y1+areaPos],sIndex); */
+
+			}
+			//this._drawItemOfLineChart(ctx,x2,y2,data[i],config.label(data[i]));
+
+		}
+	},
+	/*gets spline parameter*/
+	_getSplineParameters:function(points){
+		var i,u,v,s,a,b,c,d,
+		h = [],
+	    m = [],
+		n = points.length;
+		
+		for(i =0; i<n-1;i++){
+			h[i] = points[i+1].x - points[i].x;
+			m[i] = (points[i+1].y - points[i].y)/h[i];
+		}
+		u = [];	v = [];
+		u[0] = 0;
+		u[1] = 2*(h[0] + h[1]);
+		v[0] = 0;
+		v[1] = 6*(m[1] - m[0]);
+		for(i =2; i < n-1; i++){
+			u[i] = 2*(h[i-1]+h[i]) - h[i-1]*h[i-1]/u[i-1];
+	    	v[i] = 6*(m[i]-m[i-1]) - h[i-1]*v[i-1]/u[i-1];
+		}
+		
+		s = [];
+		s[n-1] = s[0] = 0;
+		for(i = n -2; i>=1; i--)
+	   		s[i] = (v[i] - h[i]*s[i+1])/u[i];
+	
+        a = []; b = []; c = [];	d = []; 
+		
+		for(i =0; i<n-1;i++){
+			a[i] = points[i].y;
+			b[i] = - h[i]*s[i+1]/6 - h[i]*s[i]/3 + (points[i+1].y-points[i].y)/h[i];
+			c[i] = s[i]/2;
+			d[i] = (s[i+1] - s[i])/(6*h[i]);
+		}
+		return {a:a,b:b,c:c,d:d};
+	},
+	/*returns the y position of the spline point */
+	_getSplineYPoint:function(x,xi,i,a,b,c,d){
+		return a[i] + (x - xi)*(b[i] + (x-xi)*(c[i]+(x-xi)*d[i])); 
+	}
+};
+
+
+/* DHX DEPEND FROM FILE 'ext/chart/chart_barh.js'*/
+
+
+/*DHX:Depend ext/chart/chart_base.js*/
+dhtmlx.chart.barH = {
+	/**
+	*   renders a bar chart
+	*   @param: ctx - canvas object
+	*   @param: data - object those need to be displayed
+	*   @param: x - the width of the container
+	*   @param: y - the height of the container
+	*   @param: sIndex - index of drawing chart
+	*/
+	pvt_render_barH:function(ctx, data, point0, point1, sIndex, map){
+	     var barOffset, barWidth, cellWidth, color, gradient, i, limits, maxValue, minValue,
+		     innerGradient, valueFactor, relValue, radius, relativeValues,
+		     startValue, totalWidth,value,  unit, x0, y0, yax;
+
+		/*an available width for one bar*/
+		cellWidth = (point1.y-point0.y)/data.length;
+
+		limits = this._getLimits("h");
+
+		maxValue = limits.max;
+		minValue = limits.min;
+
+		totalWidth = point1.x-point0.x;
+		
+		yax = !!this._settings.yAxis;
+		
+		/*draws x and y scales*/
+		if(!sIndex)
+			this._drawHScales(ctx,data,point0, point1,minValue,maxValue,cellWidth);
+		
+		/*necessary for automatic scale*/
+		if(yax){
+		    maxValue = parseFloat(this._settings.xAxis.end);
+			minValue = parseFloat(this._settings.xAxis.start);
+		}
+		
+		/*unit calculation (bar_height = value*unit)*/
+		relativeValues = this._getRelativeValue(minValue,maxValue);
+		relValue = relativeValues[0];
+		valueFactor = relativeValues[1];
+		
+		unit = (relValue?totalWidth/relValue:10);
+		if(!yax){
+			/*defines start value for better representation of small values*/
+			startValue = 10;
+			unit = (relValue?(totalWidth-startValue)/relValue:10);
+		}
+		
+		
+		/*a real bar width */
+		barWidth = parseInt(this._settings.width,10);
+
+
+		var seriesNumber = this._series.length;
+		var seriesMargin = this._settings.seriesMargin;
+		var seriesPadding = this._settings.seriesPadding;
+
+		if(this._series&&(barWidth*seriesNumber+seriesPadding + (seriesNumber>2?seriesMargin*seriesNumber:0)>cellWidth) )
+			barWidth = cellWidth/seriesNumber-seriesPadding-(seriesNumber>2?seriesMargin:0);
+
+		/*the half of distance between bars*/
+		barOffset = (cellWidth - barWidth*seriesNumber - seriesMargin*(seriesNumber-1))/2;
+
+		if(this._settings.border){
+			barWidth = parseInt(barWidth,10);
+			barOffset = parseInt(barOffset,10);
+		}
+
+		/*the radius of rounding in the top part of each bar*/
+		radius = (typeof this._settings.radius!="undefined"?parseInt(this._settings.radius,10):Math.round(barWidth/5));
+		
+		innerGradient = false;
+		gradient = this._settings.gradient;
+	
+		if (gradient&&typeof(gradient) != "function"){
+			innerGradient = gradient;
+			gradient = false;
+		} else if (gradient){
+			gradient = ctx.createLinearGradient(point0.x,point0.y,point1.x,point0.y);
+			this._settings.gradient(gradient);
+		}
+		/*draws a black line if the horizontal scale isn't defined*/
+		if(!yax){
+			this._drawLine(ctx,point0.x-0.5,point0.y,point0.x-0.5,point1.y,"#000000",1); //hardcoded color!
+		}
+		
+		
+		
+		for(i=0; i < data.length;i ++){
+			
+			
+			value =  parseFloat(this._settings.value(data[i]||0));
+			if(value>maxValue) value = maxValue;
+			value -= minValue;
+			value *= valueFactor;
+			
+			/*start point (bottom left)*/
+			x0 = point0.x;
+			y0 = point0.y + barOffset+(seriesNumber>2?seriesMargin*sIndex:0) + parseInt(i*cellWidth,10)+barWidth*sIndex;
+
+			if((value<0&&this._settings.origin=="auto")||(this._settings.xAxis&&value===0&&!(this._settings.origin!="auto"&&this._settings.origin>minValue))){
+				this.canvases[sIndex].renderTextAt("middle", "right", x0+10,y0+barWidth/2+barOffset,this._settings.label(data[i]));
+				continue;
+			}
+			if(value<0&&this._settings.origin!="auto"&&this._settings.origin>minValue){
+				value = 0;
+			}
+			
+			/*takes start value into consideration*/
+			if(!yax) value += startValue/unit;
+			color = gradient||this._settings.color.call(this,data[i]);
+			
+			/*drawing the gradient border of a bar*/
+			if(this._settings.border){
+				this._drawBarHBorder(ctx,x0,y0,barWidth,minValue,radius,unit,value,color);
+			}
+
+			/*drawing bar body*/
+			ctx.globalAlpha = this._settings.alpha.call(this,data[i]);
+			var points = this._drawBarH(ctx,point1,x0,y0,barWidth,minValue,radius,unit,value,color,gradient,innerGradient);
+			if (innerGradient!=false){
+				this._drawBarHGradient(ctx,x0,y0,barWidth,minValue,radius,unit,value,color,innerGradient);
+
+			}
+			ctx.globalAlpha = 1;
+			
+			
+			/*sets a bar label and map area*/
+	
+			if(points[3]==y0){
+				this.canvases[sIndex].renderTextAt("middle", "left", points[0]-5,points[3]+Math.floor(barWidth/2),this._settings.label(data[i]));
+				map.addRect(data[i].id,[points[0]-point0.x,points[3]-point0.y,points[2]-point0.x,points[3]+barWidth-point0.y],sIndex);
+			
+			}else{
+				this.canvases[sIndex].renderTextAt("middle", false, points[2]+5,points[1]+Math.floor(barWidth/2),this._settings.label(data[i]));
+				map.addRect(data[i].id,[points[0]-point0.x,y0-point0.y,points[2]-point0.x,points[3]-point0.y],sIndex);
+			}
+			  
+		}
+	},
+	/**
+	*   sets points for bar and returns the position of the bottom right point
+	*   @param: ctx - canvas object
+	*   @param: x0 - the x position of start point
+	*   @param: y0 - the y position of start point
+	*   @param: barWidth - bar width 
+	*   @param: radius - the rounding radius of the top
+	*   @param: unit - the value defines the correspondence between item value and bar height
+	*   @param: value - item value
+	*   @param: offset - the offset from expected bar edge (necessary for drawing border)
+	*/
+	_setBarHPoints:function(ctx,x0,y0,barWidth,radius,unit,value,offset,skipLeft){
+		/*correction for displaing small values (when rounding radius is bigger than bar height)*/
+		var angle_corr = 0;
+		if(radius>unit*value){
+			var sinA = (radius-unit*value)/radius;
+			angle_corr = -Math.asin(sinA)+Math.PI/2;
+		}
+		/*start*/
+		ctx.moveTo(x0,y0+offset);
+		/*start of left rounding*/
+		var x1 = x0 + unit*value - radius - (radius?0:offset);
+		if(radius<unit*value)
+			ctx.lineTo(x1,y0+offset);
+   		/*left rounding*/
+		var y2 = y0 + radius;
+		if (radius&&radius>0)
+			ctx.arc(x1,y2,radius-offset,-Math.PI/2+angle_corr,0,false);
+   		/*start of right rounding*/
+		var y3 = y0 + barWidth - radius - (radius?0:offset);
+		var x3 = x1 + radius - (radius?offset:0);
+		ctx.lineTo(x3,y3);
+		/*right rounding*/
+		if (radius&&radius>0)
+			ctx.arc(x1,y3,radius-offset,0,Math.PI/2-angle_corr,false);
+   		/*bottom right point*/
+		var y5 = y0 + barWidth-offset;
+        ctx.lineTo(x0,y5);
+		/*line to the start point*/
+		if(!skipLeft){
+   			ctx.lineTo(x0,y0+offset);
+   		}
+	//	ctx.lineTo(x0,0); //IE fix!
+		return [x3,y5];
+	},
+	 _drawHScales:function(ctx,data,point0,point1,start,end,cellWidth){
+		 var x = 0;
+		 if(this._settings.xAxis){
+			 if(!this.canvases["x"])
+			    this.canvases["x"] =  new dhtmlx.ui.Canvas(this._obj);
+			 x = this._drawHXAxis(this.canvases["x"].getCanvas(),data,point0,point1,start,end);
+		 }
+		 if (this._settings.yAxis){
+			 if(!this.canvases["y"])
+			    this.canvases["y"] =  new dhtmlx.ui.Canvas(this._obj);
+		    this._drawHYAxis(this.canvases["y"].getCanvas(),data,point0,point1,cellWidth,x);
+		 }
+	},
+	_drawHYAxis:function(ctx,data,point0,point1,cellWidth,yAxisX){
+		if (!this._settings.yAxis) return;
+		var unitPos;
+		var x0 = parseInt((yAxisX?yAxisX:point0.x),10)-0.5;
+		var y0 = point1.y+0.5;
+		var y1 = point0.y;
+		this._drawLine(ctx,x0,y0,x0,y1,this._settings.yAxis.color,1);
+
+
+
+		for(var i=0; i < data.length;i ++){
+
+			/*scale labels*/
+			var right = ((this._settings.origin!="auto")&&(this._settings.view=="barH")&&(parseFloat(this._settings.value(data[i]))<this._settings.origin));
+			unitPos = y1+cellWidth/2+i*cellWidth;
+			this.canvases["y"].renderTextAt("middle",(right?false:"left"),(right?x0+5:x0-5),unitPos,
+				this._settings.yAxis.template(data[i]),
+				"dhx_axis_item_y",(right?0:x0-10)
+			);
+			if(this._settings.yAxis.lines.call(this,data[i]))
+				this._drawLine(ctx,point0.x,unitPos,point1.x,unitPos,this._settings.yAxis.lineColor.call(this,data[i]),1);
+		}
+		this._drawLine(ctx,point0.x+0.5,y1+0.5,point1.x,y1+0.5,this._settings.yAxis.lineColor.call(this,{}),1);
+		this._setYAxisTitle(point0,point1);
+	},
+	_drawHXAxis:function(ctx,data,point0,point1,start,end){
+		var step;
+		var scaleParam= {};
+		var axis = this._settings.xAxis;
+		if (!axis) return;
+		
+		var y0 = point1.y+0.5;
+		var x0 = point0.x-0.5;
+		var x1 = point1.x-0.5;
+		var yAxisStart = point0.x;
+		this._drawLine(ctx,x0,y0,x1,y0,axis.color,1);
+		
+		if(axis.step)
+		     step = parseFloat(axis.step);
+		
+		if(typeof this._configXAxis.step =="undefined"||typeof this._configXAxis.start=="undefined"||typeof this._configXAxis.end =="undefined"){
+			scaleParam = this._calculateScale(start,end);
+			start = scaleParam.start;
+			end = scaleParam.end;
+			step = scaleParam.step;
+			this._settings.xAxis.end = end;
+			this._settings.xAxis.start = start;
+			this._settings.xAxis.step = step;
+		}
+		
+		if(step===0) return;
+		var stepHeight = (x1-x0)*step/(end-start);
+		var c = 0;
+		for(var i = start; i<=end; i += step){
+			if(scaleParam.fixNum)  i = parseFloat((new Number(i)).toFixed(scaleParam.fixNum));
+			var xi = Math.floor(x0+c*stepHeight)+ 0.5;/*canvas line fix*/
+			if(!(i==start&&this._settings.origin=="auto") &&axis.lines.call(this,i))
+				this._drawLine(ctx,xi,y0,xi,point0.y,this._settings.xAxis.lineColor.call(this,i),1);
+			if(i == this._settings.origin) yAxisStart = xi+1;
+			var label = i;
+			if(step<1){
+				var power = Math.min(this._log10(step),(start<=0?0:this._log10(start)));
+				var corr = Math.pow(10,-power);
+				label = Math.round(i*corr)/corr;
+			}
+			this.canvases["x"].renderTextAt(false, true,xi,y0+2,axis.template(label.toString()),"dhx_axis_item_x");
+			c++;
+		}
+		this.canvases["x"].renderTextAt(true, false, x0,point1.y+this._settings.padding.bottom-3,
+			this._settings.xAxis.title,
+			"dhx_axis_title_x",
+			point1.x - point0.x
+		);
+		/*the right border in lines in scale are enabled*/
+		if (!axis.lines.call(this,{})){
+			this._drawLine(ctx,x0,point0.y-0.5,x1,point0.y-0.5,this._settings.xAxis.color,0.2);
+		}
+		return yAxisStart;
+	},
+	_correctBarHParams:function(ctx,x,y,value,unit,barWidth,minValue){
+		var yax = this._settings.yAxis;
+		var axisStart = x;
+		if(!!yax&&this._settings.origin!="auto" && (this._settings.origin>minValue)){
+			x += (this._settings.origin-minValue)*unit;
+			axisStart = x;
+			value = value-(this._settings.origin-minValue);
+			if(value < 0){
+				value *= (-1);
+			 	ctx.translate(x,y+barWidth);
+				ctx.rotate(Math.PI);
+				x = 0.5;
+				y = 0;
+			}
+			x += 0.5;
+		}
+		
+		return {value:value,x0:x,y0:y,start:axisStart}
+	},
+	_drawBarH:function(ctx,point1,x0,y0,barWidth,minValue,radius,unit,value,color,gradient,inner_gradient){
+		var points;
+		ctx.save();
+		var p = this._correctBarHParams(ctx,x0,y0,value,unit,barWidth,minValue);	
+		ctx.fillStyle = color;
+		ctx.beginPath();
+		if(unit*p.value>0){
+			points = this._setBarHPoints(ctx,p.x0,p.y0,barWidth,radius,unit,p.value,(this._settings.border?1:0));
+			if (gradient&&!inner_gradient) ctx.lineTo(point1.x,p.y0+(this._settings.border?1:0)); //fix gradient sphreading
+		}
+		else
+			points = [p.x0,p.y0+1];
+
+   		ctx.fill();
+		ctx.restore();
+		var y1 = p.y0;
+		var y2 = (p.y0!=y0?y0:points[1]);
+		var x1 = (p.y0!=y0?(p.start-points[0]):p.start);
+		var x2 = (p.y0!=y0?p.start:points[0]);
+		
+		return [x1,y1,x2,y2];
+	},
+	_drawBarHBorder:function(ctx,x0,y0,barWidth,minValue,radius,unit,value,color){
+		ctx.save();
+		var p = this._correctBarHParams(ctx,x0,y0,value,unit,barWidth,minValue);	
+		
+		ctx.beginPath();
+		this._setBorderStyles(ctx,color);
+		ctx.globalAlpha =0.9;
+		if(unit*p.value>0)
+			this._setBarHPoints(ctx,p.x0,p.y0,barWidth,radius,unit,p.value,ctx.lineWidth/2,1);
+		
+		ctx.stroke();	
+	    ctx.restore();
+	},
+	_drawBarHGradient:function(ctx,x0,y0,barWidth,minValue,radius,unit,value,color,inner_gradient){
+		ctx.save();
+		//y0 -= (dhx.env.isIE?0:0.5);
+		var p = this._correctBarHParams(ctx,x0,y0,value,unit,barWidth,minValue);	
+		var gradParam = this._setBarGradient(ctx,p.x0,p.y0+barWidth,p.x0+unit*p.value,p.y0,inner_gradient,color,"x");
+		ctx.fillStyle = gradParam.gradient;
+		ctx.beginPath();
+		if(unit*p.value>0)
+			this._setBarHPoints(ctx,p.x0,p.y0+gradParam.offset,barWidth-gradParam.offset*2,radius,unit,p.value,gradParam.offset);
+		ctx.fill();
+		ctx.globalAlpha = 1;
+	    ctx.restore();
+	}
+};
+
+
+
+/* DHX DEPEND FROM FILE 'ext/chart/chart_stackedbarh.js'*/
+
+
+/*DHX:Depend ext/chart/chart_base.js*/
+/*DHX:Depend ext/chart/chart_barh.js*/
+
+dhtmlx.assert(dhtmlx.chart.barH);
+dhtmlx.chart.stackedBarH = {
+/**
+	*   renders a bar chart
+	*   @param: ctx - canvas object
+	*   @param: data - object those need to be displayed
+	*   @param: x - the width of the container
+	*   @param: y - the height of the container
+	*   @param: sIndex - index of drawing chart
+	*   @param: map - map object
+	*/
+	pvt_render_stackedBarH:function(ctx, data, point0, point1, sIndex, map){
+	   var maxValue,minValue;
+		/*necessary if maxValue - minValue < 0*/
+		var valueFactor;
+		/*maxValue - minValue*/
+		var relValue;
+		
+		var total_width = point1.x-point0.x;
+		
+		var yax = !!this._settings.yAxis;
+		
+		var limits = this._getStackedLimits(data);
+		maxValue = limits.max;
+		minValue = limits.min;
+		
+		/*an available width for one bar*/
+		var cellWidth = Math.floor((point1.y-point0.y)/data.length);
+	
+		/*draws x and y scales*/
+		if(!sIndex)
+			this._drawHScales(ctx,data,point0, point1,minValue,maxValue,cellWidth);
+		
+		/*necessary for automatic scale*/
+		if(yax){
+		    maxValue = parseFloat(this._settings.xAxis.end);
+			minValue = parseFloat(this._settings.xAxis.start);      
+		}
+		
+		/*unit calculation (bar_height = value*unit)*/
+		var relativeValues = this._getRelativeValue(minValue,maxValue);
+		relValue = relativeValues[0];
+		valueFactor = relativeValues[1];
+		
+		var unit = (relValue?total_width/relValue:10);
+		if(!yax){
+			/*defines start value for better representation of small values*/
+			var startValue = 10;
+			unit = (relValue?(total_width-startValue)/relValue:10);
+		}
+		
+		/*a real bar width */
+		var barWidth = parseInt(this._settings.width,10);
+		if((barWidth+4)>cellWidth) barWidth = cellWidth-4;
+		/*the half of distance between bars*/
+		var barOffset = (cellWidth - barWidth)/2;
+		/*the radius of rounding in the top part of each bar*/
+		var radius = 0;
+
+		var inner_gradient = false;
+		var gradient = this._settings.gradient;
+		if (gradient){
+			inner_gradient = true;
+		}
+		/*draws a black line if the horizontal scale isn't defined*/
+		if(!yax){
+			this._drawLine(ctx,point0.x-0.5,point0.y,point0.x-0.5,point1.y,"#000000",1); //hardcoded color!
+		}
+
+		var seriesNumber = 0;
+		var seriesIndex = 0;
+		for(i=0; i<this._series.length; i++ ){
+			if(i == sIndex){
+				seriesIndex  = seriesNumber;
+			}
+			if(this._series[i].view == "stackedBarH")
+				seriesNumber++;
+		}
+
+		for(var i=0; i < data.length;i ++){
+			
+			if(!seriesIndex)
+			   data[i].$startX = point0.x;
+			
+			var value =  parseFloat(this._settings.value(data[i]||0));
+			if(value>maxValue) value = maxValue;
+			value -= minValue;
+			value *= valueFactor;
+			
+			/*start point (bottom left)*/
+			var x0 = point0.x;
+			var y0 = point0.y+ barOffset + i*cellWidth;
+			
+			if(!seriesIndex)
+                data[i].$startX = x0;
+			else
+			    x0 = data[i].$startX;
+			
+			if(value<0||(this._settings.yAxis&&value===0)){
+				this.canvases["y"].renderTextAt("middle", true, x0+10,y0+barWidth/2,this._settings.label(data[i]));
+				continue;
+			}
+			
+			/*takes start value into consideration*/
+			if(!yax) value += startValue/unit;
+			var color = this._settings.color.call(this,data[i]);
+			
+			
+			/*drawing bar body*/
+			ctx.globalAlpha = this._settings.alpha.call(this,data[i]);
+			ctx.fillStyle = this._settings.color.call(this,data[i]);
+			ctx.beginPath();
+			var points = this._setBarHPoints(ctx,x0,y0,barWidth,radius,unit,value,(this._settings.border?1:0));
+			if (gradient&&!inner_gradient) ctx.lineTo(point0.x+total_width,y0+(this._settings.border?1:0)); //fix gradient sphreading
+   			ctx.fill();
+			
+			if (inner_gradient!=false){
+				var gradParam = this._setBarGradient(ctx,x0,y0+barWidth,x0,y0,inner_gradient,color,"x");
+				ctx.fillStyle = gradParam.gradient;
+				ctx.beginPath();
+				points = this._setBarHPoints(ctx,x0,y0, barWidth,radius,unit,value,0);
+				ctx.fill();
+			}
+			/*drawing the gradient border of a bar*/
+			if(this._settings.border){
+				this._drawBarHBorder(ctx,x0,y0,barWidth,minValue,radius,unit,value,color);
+			}
+			
+			ctx.globalAlpha = 1;
+			
+			/*sets a bar label*/
+			this.canvases[sIndex].renderTextAt("middle",true,data[i].$startX+(points[0]-data[i].$startX)/2-1, y0+(points[1]-y0)/2, this._settings.label(data[i]));
+			/*defines a map area for a bar*/
+			map.addRect(data[i].id,[data[i].$startX-point0.x,y0-point0.y,points[0]-point0.x,points[1]-point0.y],sIndex);
+			/*the start position for the next series*/
+			data[i].$startX = points[0];
+		}
+	}
+};
+
+
+/* DHX DEPEND FROM FILE 'ext/chart/chart_stackedbar.js'*/
+
+
+/*DHX:Depend ext/chart/chart_base.js*/
+dhtmlx.chart.stackedBar = {
+	/**
+	*   renders a bar chart
+	*   @param: ctx - canvas object
+	*   @param: data - object those need to be displayed
+	*   @param: x - the width of the container
+	*   @param: y - the height of the container
+	*   @param: sIndex - index of drawing chart
+	*/
+	pvt_render_stackedBar:function(ctx, data, point0, point1, sIndex, map){
+		var maxValue,minValue, xAxisY, x0, y0;
+		/*necessary if maxValue - minValue < 0*/
+		var valueFactor;
+		/*maxValue - minValue*/
+		var relValue;
+		var config = this._settings;
+		var total_height = point1.y-point0.y;
+
+		var yax = !!config.yAxis;
+		var xax = !!config.xAxis;
+
+		var limits = this._getStackedLimits(data);
+
+		var origin = (config.origin === 0);
+
+		maxValue = limits.max;
+		minValue = limits.min;
+		if(!data.length)
+			return;
+		/*an available width for one bar*/
+		var cellWidth = (point1.x-point0.x)/data.length;
+
+		/*draws x and y scales*/
+		if(!sIndex){
+			xAxisY = this._drawScales(data,point0, point1,minValue,maxValue,cellWidth);
+		}
+
+		/*necessary for automatic scale*/
+		if(yax){
+			maxValue = parseFloat(config.yAxis.end);
+			minValue = parseFloat(config.yAxis.start);
+		}
+
+		/*unit calculation (bar_height = value*unit)*/
+		var relativeValues = this._getRelativeValue(minValue,maxValue);
+		relValue = relativeValues[0];
+		valueFactor = relativeValues[1];
+
+		var unit = (relValue?total_height/relValue:10);
+
+		/*a real bar width */
+		var barWidth = parseInt(config.width,10);
+		if(barWidth+4 > cellWidth) barWidth = cellWidth-4;
+		/*the half of distance between bars*/
+		var barOffset = Math.floor((cellWidth - barWidth)/2);
+
+
+		var inner_gradient = (config.gradient?config.gradient:false);
+
+		/*draws a black line if the horizontal scale isn't defined*/
+		if(!xax){
+			//scaleY = y-bottomPadding;
+			this._drawLine(ctx,point0.x,point1.y+0.5,point1.x,point1.y+0.5,"#000000",1); //hardcoded color!
+		}
+
+		for(var i=0; i < data.length;i ++){
+			var value =  parseFloat(config.value(data[i]||0));
+
+			if(this._logScaleCalc)
+				value = this._log10(value);
+
+			/*start point (bottom left)*/
+			x0 = point0.x + barOffset + i*cellWidth;
+			
+			var negValue = origin&&value<0;
+			if(!sIndex){
+				y0 = xAxisY-1;
+				data[i].$startY = y0;
+				if(origin){
+					if(negValue)
+						y0 = xAxisY+1;
+					data[i].$startYN = xAxisY+1;
+				}
+			}
+			else{
+				y0 = negValue?data[i].$startYN:data[i].$startY;
+			}
+
+			if(!value)
+				continue;
+
+			/*adjusts the first tab to the scale*/
+			if(!sIndex && !origin)
+				value -= minValue;
+
+			value *= valueFactor;
+
+			/*the max height limit*/
+			if(y0 < (point0.y+1)) continue;
+
+			if(config.yAxis&&value===0){
+				this.canvases["y"].renderTextAt(true, true, x0+Math.floor(barWidth/2),y0,this._settings.label(data[i]));
+				continue;
+			}
+
+			var color = this._settings.color.call(this,data[i]);
+			var firstSector =  Math.abs(y0-(origin?(point1.y+minValue*unit):point1.y))<3;
+
+			/*drawing bar body*/
+			ctx.globalAlpha = config.alpha.call(this,data[i]);
+			ctx.fillStyle = ctx.strokeStyle = config.color.call(this,data[i]);
+			ctx.beginPath();
+
+			var y1 = y0 - unit*value + (firstSector?(negValue?-1:1):0);
+
+			var points = this._setStakedBarPoints(ctx,x0-(config.border?0.5:0),y0,barWidth+(config.border?0.5:0),y1, 0,point0.y);
+			ctx.fill();
+			ctx.stroke();
+
+			/*gradient*/
+			if (inner_gradient){
+				ctx.save();
+				var gradParam = this._setBarGradient(ctx,x0,y0,x0+barWidth,points[1],inner_gradient,color,"y");
+				ctx.fillStyle = gradParam.gradient;
+				ctx.beginPath();
+				points = this._setStakedBarPoints(ctx,x0+gradParam.offset,y0,barWidth-gradParam.offset*2,y1,(config.border?1:0),point0.y);
+				ctx.fill();
+				ctx.restore();
+			}
+			/*drawing the gradient border of a bar*/
+			if(config.border){
+				ctx.save();
+				if(typeof config.border == "string")
+					ctx.strokeStyle = config.border;
+				else
+					this._setBorderStyles(ctx,color);
+				ctx.beginPath();
+
+				this._setStakedBarPoints(ctx,x0-0.5,parseInt(y0,10)+0.5,barWidth+1,parseInt(y1,10)+0.5,0,point0.y, firstSector);
+				ctx.stroke();
+				ctx.restore();
+			}
+			ctx.globalAlpha = 1;
+
+			/*sets a bar label*/
+			this.canvases[sIndex].renderTextAt(false, true, x0+Math.floor(barWidth/2),(points[1]+(y0-points[1])/2)-7,this._settings.label(data[i]));
+			/*defines a map area for a bar*/
+			map.addRect(data[i].id,[x0-point0.x,points[1]-point0.y,points[0]-point0.x,data[i][negValue?"$startYN":"$startY"]-point0.y],sIndex);
+
+			/*the start position for the next series*/
+
+			data[i][negValue?"$startYN":"$startY"] = points[1];
+
+		}
+	},
+	/**
+	 *   sets points for bar and returns the position of the bottom right point
+	 *   @param: ctx - canvas object
+	 *   @param: x0 - the x position of start point
+	 *   @param: y0 - the y position of start point
+	 *   @param: barWidth - bar width
+	 *   @param: radius - the rounding radius of the top
+	 *   @param: unit - the value defines the correspondence between item value and bar height
+	 *   @param: value - item value
+	 *   @param: offset - the offset from expected bar edge (necessary for drawing border)
+	 *   @param: minY - the minimum y position for the bars ()
+	 */
+	_setStakedBarPoints:function(ctx,x0,y0,barWidth,y1,offset,minY,skipBottom){
+		/*start*/
+		ctx.moveTo(x0,y0);
+
+		/*maximum height limit*/
+		if(y1<minY)
+			y1 = minY;
+		ctx.lineTo(x0,y1);
+		var x3 = x0 + barWidth;
+		var y3 = y1;
+		ctx.lineTo(x3,y3);
+		/*right rounding*/
+		/*bottom right point*/
+		var x5 = x0 + barWidth;
+		ctx.lineTo(x5,y0);
+		/*line to the start point*/
+		if(!skipBottom){
+			ctx.lineTo(x0,y0);
+		}
+		//	ctx.lineTo(x0,0); //IE fix!
+		return [x5,y3];
+	}
+};
+
+
+
+/* DHX DEPEND FROM FILE 'ext/chart/chart_line.js'*/
+
+
+/*DHX:Depend ext/chart/chart_base.js*/
+dhtmlx.chart.line = {
+
+	/**
+	*   renders a graphic
+	*   @param: ctx - canvas object
+	*   @param: data - object those need to be displayed
+	*   @param: width - the width of the container
+	*   @param: height - the height of the container
+	*   @param: sIndex - index of drawing chart
+	*/
+	pvt_render_line:function(ctx, data, point0, point1, sIndex, map){
+
+		var config,i,items,params,x0,x1,x2,y1,y2,y0,res1,res2;
+	    params = this._calculateLineParams(ctx,data,point0,point1,sIndex);
+		config = this._settings;
+		if (data.length) {
+			x0 = (config.offset?point0.x+params.cellWidth*0.5:point0.x);
+			//finds items with data (excludes scale units)
+			items= [];
+			for(i=0; i < data.length;i++){
+				res2 = this._getPointY(data[i],point0,point1,params);
+				if(res2){
+					x2 = ((!i)?x0:params.cellWidth*i - 0.5 + x0);
+					y2 = (typeof res2 == "object"?res2.y0:res2);
+					if(i && this._settings.fixOverflow){
+						res1 = this._getPointY(data[i-1],point0,point1,params);
+						if(res1.out && res1.out == res2.out){
+							continue;
+						}
+						x1 = params.cellWidth*(i-1) - 0.5 + x0;
+						y1 = (typeof res1 == "object"?res1.y0:res1);
+
+						if(res1.out){
+							y0 = (res1.out == "min"?point1.y:point0.y);
+							items.push({x:this._calcOverflowX(x1,x2,y1,y2,y0),y:y0});
+						}
+						if(res2.out){
+							y0 = (res2.out == "min"?point1.y:point0.y);
+							items.push({x:this._calcOverflowX(x1,x2,y1,y2,y0),y:y0});
+						}
+
+					}
+					if(!res2.out)
+						items.push({x:x2, y: res2, index: i});
+				}
+			}
+
+
+			this._mapStart = point0;
+			for(i = 1; i <= items.length; i++){
+				//line start position
+				x1 = items[i-1].x;
+				y1 = items[i-1].y;
+				if(i<items.length){
+					//line end position
+					x2 = items[i].x;
+					y2 = items[i].y;
+					//line
+
+					this._drawLine(ctx,x1,y1,x2,y2,config.line.color.call(this,data[i-1]),config.line.width);
+					//line shadow
+					if(config.line&&config.line.shadow){
+						ctx.globalAlpha = 0.3;
+
+						this._drawLine(ctx,x1+2,y1+config.line.width+8,x2+2,y2+config.line.width+8,"#eeeeee",config.line.width+3);
+						ctx.globalAlpha = 1;
+					}
+				}
+				//item
+				if(typeof items[i-1].index != "undefined")
+					this._drawItem(ctx,x1,y1,data[items[i-1].index],config.label(data[items[i-1].index]), sIndex, map, point0);
+			}
+
+		}
+	},
+	_calcOverflowX: function(x1,x2,y1,y2,y){
+		return  x1 + ( y - y1 )*( x2 - x1 )/( y2 - y1 );
+	},
+	/**
+	*   draws an item and its label
+	*   @param: ctx - canvas object
+	*   @param: x0 - the x position of a circle
+	*   @param: y0 - the y position of a circle
+	*   @param: obj - data object 
+	*   @param: label - (boolean) defines wherether label needs being drawn 
+	*/
+	_drawItem:function(ctx,x0,y0,obj,label,sIndex,map){
+		var config = this._settings.item;
+
+		var R = parseInt(config.radius.call(this,obj),10)||0;
+		var mapStart = this._mapStart;
+		if(R){
+			ctx.save();
+			if(config.shadow){
+				ctx.lineWidth = 1;
+				ctx.strokeStyle = "#bdbdbd";
+				ctx.fillStyle = "#bdbdbd";
+				var alphas = [0.1,0.2,0.3];
+				for(var i=(alphas.length-1);i>=0;i--){
+					ctx.globalAlpha = alphas[i];
+					ctx.strokeStyle = "#d0d0d0";
+					ctx.beginPath();
+					this._strokeChartItem(ctx,x0,y0+2*R/3,R+i+1,config.type);
+					ctx.stroke();
+				}
+				ctx.beginPath();
+				ctx.globalAlpha = 0.3;
+				ctx.fillStyle = "#bdbdbd";
+				this._strokeChartItem(ctx,x0,y0+2*R/3,R+1,config.type);
+				ctx.fill();
+			}
+			ctx.restore();
+			
+			if(config.type == "image" && config.src){
+				this._drawImage(ctx,x0-R,y0-R,config.src,R*2, R*2);
+			}
+			else{
+				ctx.lineWidth = config.borderWidth;
+				ctx.fillStyle = config.color.call(this,obj);
+				ctx.strokeStyle = config.borderColor.call(this,obj);
+				ctx.globalAlpha = config.alpha.call(this,obj);
+				ctx.beginPath();
+				this._strokeChartItem(ctx,x0,y0,R+1,config.type);
+				ctx.fill();
+				ctx.stroke();
+				ctx.globalAlpha = 1;
+			}
+		}
+		/*item label*/
+		if(label)
+			this.canvases[sIndex].renderTextAt(false, true, x0,y0-R-this._settings.labelOffset,this._settings.label.call(this,obj));
+
+		var areaPos = (this._settings.eventRadius||R+1);
+		map.addRect(obj.id,[x0-areaPos-mapStart.x,y0-areaPos-mapStart.y,x0+areaPos-mapStart.x,y0+areaPos-mapStart.y],sIndex);
+	},
+	_drawImage: function(ctx,x,y,src, width, height){
+		var image = document.createElement("img");
+		image.style.display = "none";
+		image.style.width = width+"px";
+		image.style.height = height+"px";
+		document.body.appendChild(image);
+		image.src = src;
+		var callback = function() {
+			ctx.drawImage(image, x,y);
+		};
+		if(image.complete) { //check if image was already loaded by the browser
+			callback(image);
+		}else {
+			image.onload = callback;
+		}
+	},
+    _strokeChartItem:function(ctx,x0,y0,R,type){
+	    var p=[];
+	    x0 = parseInt(x0,10);
+	    y0 = parseInt(y0,10);
+        if(type && (type=="square" || type=="s")){
+		    R *= Math.sqrt(2)/2;
+	        p = [
+		        [x0-R-ctx.lineWidth/2,y0-R],
+		        [x0+R,y0-R],
+		        [x0+R,y0+R],
+		        [x0-R,y0+R],
+		        [x0-R,y0-R]
+	        ];
+		}
+        else if(type && (type=="diamond" || type=="d")){
+		    var corr = (ctx.lineWidth>1?ctx.lineWidth*Math.sqrt(2)/4:0);
+	        p = [
+		        [x0,y0-R],
+		        [x0+R,y0],
+		        [x0,y0+R],
+		        [x0-R,y0],
+		        [x0+corr,y0-R-corr]
+	        ];
+        }
+        else if(type && (type=="triangle" || type=="t")){
+	        p = [
+		        [x0,y0-R],
+		        [x0+Math.sqrt(3)*R/2,y0+R/2],
+		        [x0-Math.sqrt(3)*R/2,y0+R/2],
+		        [x0,y0-R]
+	        ];
+        }
+		else
+            p = [
+	            [x0,y0,R,0,Math.PI*2,true]
+            ];
+	    this._path(ctx,p);
+    },
+	/**
+	*   gets the vertical position of the item
+	*   @param: data - data object
+	*   @param: y0 - the y position of chart start
+	*   @param: y1 - the y position of chart end
+	*   @param: params - the object with elements: minValue, maxValue, unit, valueFactor (the value multiple of 10) 
+	*/
+	_getPointY: function(data,point0,point1,params){
+		var minValue = params.minValue;
+		var maxValue = params.maxValue;
+		var unit = params.unit;
+		var valueFactor = params.valueFactor;
+		/*the real value of an object*/
+		var value = this._settings.value(data);
+		/*a relative value*/
+		var v = (parseFloat(value||0) - minValue)*valueFactor;
+		if(!this._settings.yAxis)
+			v += params.startValue/unit;
+		/*a vertical coordinate*/
+		var y = point1.y - unit*v;
+
+		/*the limit of the max and min values*/
+		if(this._settings.fixOverflow && ( this._settings.view == "line" || this._settings.view == "area")){
+			if(value > maxValue)
+				y = {y: point0.y, y0:  y, out: "max"};
+			else if(v<0 || value < minValue)
+				y = {y: point1.y, y0:  y, out: "min"};
+		}
+		else{
+			if(value > maxValue)
+				y =  point0.y;
+			if(v<0 || value < minValue)
+				y =  point1.y;
+		}
+		return y;
+	},
+	_calculateLineParams: function(ctx,data,point0,point1,sIndex){
+		var params = {};
+		
+		/*maxValue - minValue*/
+		var relValue;
+		
+		/*available height*/
+		params.totalHeight = point1.y-point0.y;
+		
+		/*a space available for a single item*/
+		//params.cellWidth = Math.round((point1.x-point0.x)/((!this._settings.offset&&this._settings.yAxis)?(data.length-1):data.length)); 
+		params.cellWidth = (point1.x-point0.x)/((!this._settings.offset)?(data.length-1):data.length);
+		
+		/*scales*/
+		var yax = !!this._settings.yAxis;
+		
+		var limits = (this._settings.view.indexOf("stacked")!=-1?this._getStackedLimits(data):this._getLimits());
+		params.maxValue = limits.max;
+		params.minValue = limits.min;
+		
+		/*draws x and y scales*/
+		if(!sIndex)
+			this._drawScales(data, point0, point1,params.minValue,params.maxValue,params.cellWidth);
+		
+		/*necessary for automatic scale*/
+		if(yax){
+		    params.maxValue = parseFloat(this._settings.yAxis.end);
+			params.minValue = parseFloat(this._settings.yAxis.start);      
+		}
+		
+		/*unit calculation (y_position = value*unit)*/
+		var relativeValues = this._getRelativeValue(params.minValue,params.maxValue);
+		relValue = relativeValues[0];
+		params.valueFactor = relativeValues[1];
+		params.unit = (relValue?params.totalHeight/relValue:10);
+		
+		params.startValue = 0;
+		if(!yax){
+			/*defines start value for better representation of small values*/
+			params.startValue = 10;
+			if(params.unit!=params.totalHeight)
+				params.unit = (relValue?(params.totalHeight - params.startValue)/relValue:10);
+		}
+		return params;
+	}
+};
+
+
+
+/* DHX DEPEND FROM FILE 'ext/chart/chart_bar.js'*/
+
+
+/*DHX:Depend ext/chart/chart_base.js*/
+dhtmlx.chart.bar = {
+	/**
+	*   renders a bar chart
+	*   @param: ctx - canvas object
+	*   @param: data - object those need to be displayed
+	*   @param: x - the width of the container
+	*   @param: y - the height of the container
+	*   @param: sIndex - index of drawing chart
+	*/
+	pvt_render_bar:function(ctx, data, point0, point1, sIndex, map){
+	    var barWidth, cellWidth,
+		    i,
+		    limits, maxValue, minValue,
+		    relValue, valueFactor, relativeValues,
+		    startValue, unit,
+		    xax, yax,
+		    totalHeight = point1.y-point0.y;
+
+
+		
+
+		
+		yax = !!this._settings.yAxis;
+		xax = !!this._settings.xAxis;
+		
+		limits = this._getLimits();
+		maxValue = limits.max;
+		minValue = limits.min;
+		
+		/*an available width for one bar*/
+		cellWidth = (point1.x-point0.x)/data.length;
+		
+		/*draws x and y scales*/
+		if(!sIndex&&!(this._settings.origin!="auto"&&!yax)){
+			this._drawScales(data,point0, point1,minValue,maxValue,cellWidth);
+		}
+		
+		/*necessary for automatic scale*/
+		if(yax){
+		    maxValue = parseFloat(this._settings.yAxis.end);
+			minValue = parseFloat(this._settings.yAxis.start);      
+		}
+		
+		/*unit calculation (bar_height = value*unit)*/
+		relativeValues = this._getRelativeValue(minValue,maxValue);
+		relValue = relativeValues[0];
+		valueFactor = relativeValues[1];
+		
+		unit = (relValue?totalHeight/relValue:relValue);
+
+		if(!yax&&!(this._settings.origin!="auto"&&xax)){
+			/*defines start value for better representation of small values*/
+			startValue = 10;
+			unit = (relValue?(totalHeight-startValue)/relValue:startValue);
+		}
+		/*if yAxis isn't set, but with custom origin */
+		if(!sIndex&&(this._settings.origin!="auto"&&!yax)&&this._settings.origin>minValue){
+			this._drawXAxis(ctx,data,point0,point1,cellWidth,point1.y-unit*(this._settings.origin-minValue));
+		}
+		
+		/*a real bar width */
+		barWidth = parseInt(this._settings.width,10);
+		var seriesNumber = 0;
+		var seriesIndex = 0;
+		for(i=0; i<this._series.length; i++ ){
+			if(i == sIndex){
+				seriesIndex  = seriesNumber;
+			}
+			if(this._series[i].view == "bar")
+				seriesNumber++;
+		}
+
+		var seriesMargin = this._settings.seriesMargin;
+		var seriesPadding = this._settings.seriesPadding;
+
+		if(this._series&&(barWidth*seriesNumber+seriesPadding + (seriesNumber>2?seriesMargin*seriesNumber:0)>cellWidth) )
+			barWidth = cellWidth/seriesNumber-seriesPadding-(seriesNumber>2?seriesMargin:0);
+
+		/*the half of distance between bars*/
+		var barOffset = (cellWidth - barWidth*seriesNumber - seriesMargin*(seriesNumber-1))/2 ;
+
+		if(this._settings.border){
+			barWidth = parseInt(barWidth,10);
+			barOffset = parseInt(barOffset,10);
+		}
+
+		/*the radius of rounding in the top part of each bar*/
+		var radius = (typeof this._settings.radius!="undefined"?parseInt(this._settings.radius,10):Math.round(barWidth/5));
+
+		var inner_gradient = false;
+		var gradient = this._settings.gradient;
+		
+		if(gradient && typeof(gradient) != "function"){
+			inner_gradient = gradient;
+			gradient = false;
+		} else if (gradient){
+			gradient = ctx.createLinearGradient(0,point1.y,0,point0.y);
+			this._settings.gradient(gradient);
+		}
+		/*draws a black line if the horizontal scale isn't defined*/
+		if(!xax){
+			this._drawLine(ctx,point0.x,point1.y+0.5,point1.x,point1.y+0.5,"#000000",1); //hardcoded color!
+		}
+		
+		for(i=0; i < data.length;i ++){
+
+			var value =  parseFloat(this._settings.value(data[i])||0);
+			if(isNaN(value))
+				continue;
+			if(value>maxValue) value = maxValue;
+			value -= minValue;
+			value *= valueFactor;
+			
+			/*start point (bottom left)*/
+			var x0 = point0.x + barOffset+(seriesNumber>2?seriesMargin*seriesIndex:0) + i*cellWidth + barWidth*seriesIndex;
+			var y0 = point1.y;
+		
+			if(value<0||(this._settings.yAxis&&value===0&&!(this._settings.origin!="auto"&&this._settings.origin>minValue))){
+				this.canvases[sIndex].renderTextAt(true, true, x0+Math.floor(barWidth/2),y0,this._settings.label(data[i]));
+				continue;
+			}
+			
+			/*takes start value into consideration*/
+			if(!yax&&!(this._settings.origin!="auto"&&xax)) value += startValue/unit;
+			
+			var color = gradient||this._settings.color.call(this,data[i]);
+	
+			
+			/*drawing bar body*/
+			ctx.globalAlpha = this._settings.alpha.call(this,data[i]);
+			var points = this._drawBar(ctx,point0,x0,y0,barWidth,minValue,radius,unit,value,color,gradient,inner_gradient);
+			if (inner_gradient){
+				this._drawBarGradient(ctx,x0,y0,barWidth,minValue,radius,unit,value,color,inner_gradient);
+			}
+			/*drawing the gradient border of a bar*/
+			if(this._settings.border)
+				this._drawBarBorder(ctx,x0,y0,barWidth,minValue,radius,unit,value,color);
+			
+			ctx.globalAlpha = 1;
+			
+			/*sets a bar label*/
+			if(points[0]!=x0)
+				this.canvases[sIndex].renderTextAt(false, true, x0+Math.floor(barWidth/2),points[1],this._settings.label(data[i]));
+			else
+				this.canvases[sIndex].renderTextAt(true, true, x0+Math.floor(barWidth/2),points[3],this._settings.label(data[i]));
+			/*defines a map area for a bar*/
+			map.addRect(data[i].id,[x0-point0.x,points[3]-point0.y,points[2]-point0.x,points[1]-point0.y],sIndex);
+			//this._addMapRect(map,data[i].id,[{x:x0,y:points[3]},{x:points[2],y:points[1]}],point0,sIndex);
+		}
+	},
+	_correctBarParams:function(ctx,x,y,value,unit,barWidth,minValue){
+		var xax = this._settings.xAxis;
+		var axisStart = y;
+		if(!!xax&&this._settings.origin!="auto" && (this._settings.origin>minValue)){
+			y -= (this._settings.origin-minValue)*unit;
+			axisStart = y;
+			value = value-(this._settings.origin-minValue);
+			if(value < 0){
+				value *= (-1);
+			 	ctx.translate(x+barWidth,y);
+				ctx.rotate(Math.PI);
+				x = 0;
+				y = 0;
+			}
+			y -= 0.5;
+		}
+		
+		return {value:value,x0:x,y0:y,start:axisStart}
+	},
+	_drawBar:function(ctx,point0,x0,y0,barWidth,minValue,radius,unit,value,color,gradient,inner_gradient){
+		var points;
+		ctx.save();
+		ctx.fillStyle = color;
+		var p = this._correctBarParams(ctx,x0,y0,value,unit,barWidth,minValue);
+		if( unit*p.value > 0)
+			points = this._setBarPoints(ctx,p.x0,p.y0,barWidth,radius,unit,p.value,(this._settings.border?1:0));
+		else
+			points = [p.x0,p.y0];
+		if (gradient&&!inner_gradient) ctx.lineTo(p.x0+(this._settings.border?1:0),point0.y); //fix gradient sphreading
+
+   		ctx.fill();
+
+	    ctx.restore();
+		var x1 = p.x0;
+		var x2 = (p.x0!=x0?x0+points[0]:points[0]);
+		var y1 = (p.x0!=x0?(p.start-points[1]-p.y0):p.y0);
+		var y2 = (p.x0!=x0?p.start-p.y0:points[1]);
+
+		return [x1,y1,x2,y2];
+	},
+
+	_drawBarBorder:function(ctx,x0,y0,barWidth,minValue,radius,unit,value,color){
+	    var p;
+		ctx.save();
+		p = this._correctBarParams(ctx,x0,y0,value,unit,barWidth,minValue);
+		this._setBorderStyles(ctx,color);
+		if( unit*p.value > 0)
+			this._setBarPoints(ctx,p.x0,p.y0,barWidth,radius,unit,p.value,ctx.lineWidth/2,1);
+		ctx.stroke();
+		/*ctx.fillStyle = color;
+		this._setBarPoints(ctx,p.x0,p.y0,barWidth,radius,unit,p.value,0);
+		ctx.lineTo(p.x0,0);
+		ctx.fill()
+	   
+				
+		ctx.fillStyle = "#000000";
+		ctx.globalAlpha = 0.37;
+		
+		this._setBarPoints(ctx,p.x0,p.y0,barWidth,radius,unit,p.value,0);
+		ctx.fill()
+		*/
+	    ctx.restore();
+	},
+	_drawBarGradient:function(ctx,x0,y0,barWidth,minValue,radius,unit,value,color,inner_gradient){
+		ctx.save();
+		//y0 -= (dhtmlx._isIE?0:0.5);
+		var p = this._correctBarParams(ctx,x0,y0,value,unit,barWidth,minValue);
+		var gradParam = this._setBarGradient(ctx,p.x0,p.y0,p.x0+barWidth,p.y0-unit*p.value+2,inner_gradient,color,"y");
+		var borderOffset = this._settings.border?1:0;
+		ctx.fillStyle = gradParam.gradient;
+		if( unit*p.value > 0)
+			this._setBarPoints(ctx,p.x0+gradParam.offset,p.y0,barWidth-gradParam.offset*2,radius,unit,p.value,gradParam.offset+borderOffset);
+		ctx.fill();
+	    ctx.restore();
+	},
+	/**
+	*   sets points for bar and returns the position of the bottom right point
+	*   @param: ctx - canvas object
+	*   @param: x0 - the x position of start point
+	*   @param: y0 - the y position of start point
+	*   @param: barWidth - bar width 
+	*   @param: radius - the rounding radius of the top
+	*   @param: unit - the value defines the correspondence between item value and bar height
+	*   @param: value - item value
+	*   @param: offset - the offset from expected bar edge (necessary for drawing border)
+	*/
+	_setBarPoints:function(ctx,x0,y0,barWidth,radius,unit,value,offset,skipBottom){
+		/*correction for displaing small values (when rounding radius is bigger than bar height)*/
+		ctx.beginPath();
+		//y0 = 0.5;
+		var angle_corr = 0;
+		if(radius>unit*value){
+			var cosA = (radius-unit*value)/radius;
+			if(cosA<=1&&cosA>=-1)
+				angle_corr = -Math.acos(cosA)+Math.PI/2;
+		}
+		/*start*/
+		ctx.moveTo(x0+offset,y0);
+		/*start of left rounding*/
+		var y1 = y0 - Math.floor(unit*value) + radius + (radius?0:offset);
+		if(radius<unit*value)
+			ctx.lineTo(x0+offset,y1);
+   		/*left rounding*/
+		var x2 = x0 + radius;
+		if (radius&&radius>0)
+			ctx.arc(x2,y1,radius-offset,-Math.PI+angle_corr,-Math.PI/2,false);
+   		/*start of right rounding*/
+		var x3 = x0 + barWidth - radius - offset;
+		var y3 = y1 - radius + (radius?offset:0);
+		ctx.lineTo(x3,y3);
+		/*right rounding*/
+		if (radius&&radius>0)
+			ctx.arc(x3,y1,radius-offset,-Math.PI/2,0-angle_corr,false);
+   		/*bottom right point*/
+		var x5 = x0 + barWidth-offset;
+        ctx.lineTo(x5,y0);
+		/*line to the start point*/
+		if(!skipBottom){
+   			ctx.lineTo(x0+offset,y0);
+		}
+   	//	ctx.lineTo(x0,0); //IE fix!
+		return [x5,y3];
+	}
+};
+
+
+/* DHX DEPEND FROM FILE 'ext/chart/chart_pie.js'*/
+
+
+/*DHX:Depend ext/chart/chart_base.js*/
+/*DHX:Depend ext/chart/chart_base.js*/
+dhtmlx.chart.pie = {
+	pvt_render_pie:function(ctx,data,x,y,sIndex,map){
+		this._renderPie(ctx,data,x,y,1,map,sIndex);
+
+	},
+	/**
+	 *   renders a pie chart
+	 *   @param: ctx - canvas object
+	 *   @param: data - object those need to be displayed
+	 *   @param: x - the width of the container
+	 *   @param: y - the height of the container
+	 *   @param: ky - value from 0 to 1 that defines an angle of inclination (0<ky<1 - 3D chart)
+	 */
+	_renderPie:function(ctx,data,point0,point1,ky,map,sIndex){
+		if(!data.length)
+			return;
+		var coord = this._getPieParameters(point0,point1);
+		/*pie radius*/
+		var radius = (this._settings.radius?this._settings.radius:coord.radius);
+		if(radius<0)
+			return;
+
+		/*real values*/
+		var values = this._getValues(data);
+
+		var totalValue = this._getTotalValue(values);
+
+		/*weighed values (the ratio of object value to total value)*/
+		var ratios = this._getRatios(values,totalValue);
+
+		/*pie center*/
+		var x0 = (this._settings.x?this._settings.x:coord.x);
+		var y0 = (this._settings.y?this._settings.y:coord.y);
+		/*adds shadow to the 2D pie*/
+		if(ky==1&&this._settings.shadow)
+			this._addShadow(ctx,x0,y0,radius);
+
+		/*changes vertical position of the center according to 3Dpie cant*/
+		y0 = y0/ky;
+		/*the angle defines the 1st edge of the sector*/
+		var alpha0 = -Math.PI/2;
+		var alpha1;
+		var angles = [];
+		/*changes Canvas vertical scale*/
+		ctx.scale(1,ky);
+		/*adds radial gradient to a pie*/
+		if (this._settings.gradient){
+			var x1 = (ky!=1?x0+radius/3:x0);
+			var y1 = (ky!=1?y0+radius/3:y0);
+			this._showRadialGradient(ctx,x0,y0,radius,x1,y1);
+		}
+
+		if(this._settings.labelLines)
+			this._labelMargins = this._getLabelMargins(ratios,radius);
+
+
+		for(var i = 0; i < data.length;i++){
+			if (!values[i]) continue;
+			/*drawing sector*/
+			//ctx.lineWidth = 2;
+			ctx.strokeStyle = (data.length==1?this._settings.color.call(this,data[i]):this._settings.lineColor.call(this,data[i]));
+			ctx.beginPath();
+			ctx.moveTo(x0,y0);
+			angles.push(alpha0);
+			/*the angle defines the 2nd edge of the sector*/
+			alpha1 = -Math.PI/2+ratios[i]-0.0001;
+			ctx.arc(x0,y0,radius,alpha0,alpha1,false);
+			ctx.lineTo(x0,y0);
+
+			var color = this._settings.color.call(this,data[i]);
+			ctx.fillStyle = color;
+			ctx.fill();
+
+			/*text that needs being displayed inside the sector*/
+			if(this._settings.pieInnerText)
+				this._drawSectorLabel(x0,y0,5*radius/6,alpha0,alpha1,ky,this._settings.pieInnerText(data[i],totalValue),true);
+			/*label outside the sector*/
+
+			if(this._settings.label){
+				this._drawSectorLabel(x0,y0,radius,alpha0,alpha1,ky,this._settings.label(data[i]),0,(this._labelMargins?this._labelMargins[i]:{}),ctx);
+			}
+
+			/*drawing lower part for 3D pie*/
+			if(ky!=1){
+				this._createLowerSector(ctx,x0,y0,alpha0,alpha1,radius,true);
+				ctx.fillStyle = "#000000";
+				ctx.globalAlpha = 0.2;
+				this._createLowerSector(ctx,x0,y0,alpha0,alpha1,radius,false);
+				ctx.globalAlpha = 1;
+				ctx.fillStyle = color;
+			}
+			/*creats map area (needed for events)*/
+			map.addSector(data[i].id,alpha0,alpha1,x0-point0.x,y0-point0.y/ky,radius,ky,sIndex);
+
+			alpha0 = alpha1;
+		}
+		/*renders radius lines and labels*/
+		ctx.globalAlpha = 0.8;
+		var p;
+		if(angles.length>1)
+			for(i=0;i< angles.length;i++){
+				p = this._getPositionByAngle(angles[i],x0,y0,radius);
+				this._drawLine(ctx,x0,y0,p.x,p.y,this._settings.lineColor.call(this,data[i]),2);
+			}
+
+		if(ky==1){
+			ctx.lineWidth = 2;
+			ctx.strokeStyle = "#ffffff";
+			ctx.beginPath();
+			ctx.arc(x0,y0,radius+1,0,2*Math.PI,false);
+			ctx.stroke();
+		}
+		ctx.globalAlpha =1;
+
+		ctx.scale(1,1/ky);
+	},
+	_getLabelMargins: function(ratios,R){
+		var alpha1, alpha2, i, j,
+			margins = [],
+			r = [];
+		var dists = {1:[0]};
+
+
+		for(i = 1; i < ratios.length; i++ ){
+			alpha1 = -Math.PI/2  + (i>1?(ratios[i-1]- (ratios[i-1]-ratios[i-2])/2):ratios[i-1]/2);
+			alpha2 = -Math.PI/2 + ratios[i]- (ratios[i]-ratios[i-1])/2;
+			var cos2 = Math.cos(alpha2);
+			var sin2 = Math.sin(alpha2);
+			var cos1 = Math.cos(alpha1);
+			var sin1 = Math.sin(alpha1);
+			var dist = Math.round((R+8)*Math.abs(Math.sin(alpha2)-Math.sin(alpha1)));
+
+			var quarter2 = (cos2<0?(sin2<0?4:3) :(sin2<0?1:2));
+			var quarter1 = (cos1<0?(sin1<0?4:3) :(sin1<0?1:2));
+			if(!dists[quarter2])
+				dists[quarter2] = [];
+			dists[quarter2].push(quarter1==quarter2?dist:0);
+		}
+		var distIncrease = [];
+		var c = 0;
+
+		for(var q in dists){
+			var start = 0;
+			var end = dists[q].length;
+			var inc = 0;
+			var incX = 0;
+			if(q == 1 || q == 3){
+				j = q-1;
+				var len = 0;
+				while(j>0){
+					if(dists[j])
+						len += dists[j].length;
+					j--;
+				}
+				distIncrease[len+ dists[q].length-1] = {y:0,x:0};
+
+				var j = dists[q].length-2;
+
+				while(j>=0){
+					if((inc||j) && dists[q][j+1]-inc<18){
+						inc += 18 -dists[q][j+1];
+					}
+					else{
+						inc = 0;
+					}
+
+					distIncrease[len+j] = {y:inc*(q == 1?-1:1)};
+					j --;
+				}
+				for(var k=distIncrease.length-dists[q].length; k < distIncrease.length; k++){
+					if(distIncrease[k]["y"]!=0){
+						incX += 6;
+						distIncrease[k]["x"] = incX;
+
+					}
+					else{
+						distIncrease[k]["x"] = 0;
+						incX = 0;
+					}
+				}
+			}
+			else{
+				var j = 1;
+				distIncrease.push({y:0,x:0});
+				while(j<dists[q].length){
+					if(dists[q][j]-inc<18){
+						inc += 18 - dists[q][j];
+					}
+					else{
+						inc = 0;
+					}
+					distIncrease.push({y:inc*(q == 4?-1:1)});
+					j ++;
+				}
+				for(var k=distIncrease.length-1; k >=  distIncrease.length-dists[q].length; k--){
+					if(distIncrease[k]["y"]!=0){
+						incX += 8;
+						distIncrease[k]["x"] = incX;
+
+					}
+					else{
+						incX = 0;
+						distIncrease[k]["x"] = 0;
+					}
+
+				}
+			}
+		}
+
+		return distIncrease;
+	},
+	/**
+	 *   returns list of values
+	 *   @param: data array
+	 */
+	_getValues:function(data){
+		var v = [];
+		for(var i = 0; i < data.length;i++)
+			v.push(parseFloat(this._settings.value(data[i])||0));
+		return v;
+	},
+	/**
+	 *   returns total value
+	 *   @param: the array of values
+	 */
+	_getTotalValue:function(values){
+		var t=0;
+		for(var i = 0; i < values.length;i++)
+			t += values[i];
+		return  t;
+	},
+	/**
+	 *   gets angles for all values
+	 *   @param: the array of values
+	 *   @param: total value (optional)
+	 */
+	_getRatios:function(values,totalValue){
+		var value;
+		var ratios = [];
+		var prevSum = 0;
+		totalValue = totalValue||this._getTotalValue(values);
+		for(var i = 0; i < values.length;i++){
+			value = values[i];
+
+			ratios[i] = Math.PI*2*(totalValue?((value+prevSum)/totalValue):(1/values.length));
+			prevSum += value;
+		}
+		return ratios;
+	},
+	/**
+	 *   returns calculated pie parameters: center position and radius
+	 *   @param: x - the width of a container
+	 *   @param: y - the height of a container
+	 */
+	_getPieParameters:function(point0,point1){
+		/*var offsetX = 0;
+		 var offsetY = 0;
+		 if(this._settings.legend &&this._settings.legend.layout!="x")
+		 offsetX = this._settings.legend.width*(this._settings.legend.align=="right"?-1:1);
+		 var x0 = (x + offsetX)/2;
+		 if(this._settings.legend &&this._settings.legend.layout=="x")
+		 offsetY = this._settings.legend.height*(this._settings.legend.valign=="bottom"?-1:1);
+		 var y0 = (y+offsetY)/2;*/
+		var width = point1.x-point0.x;
+		var height = point1.y-point0.y;
+		var x0 = point0.x+width/2;
+		var y0 = point0.y+height/2;
+		var radius = Math.min(width/2,height/2);
+		return {"x":x0,"y":y0,"radius":radius};
+	},
+	/**
+	 *   creates lower part of sector in 3Dpie
+	 *   @param: ctx - canvas object
+	 *   @param: x0 - the horizontal position of the pie center
+	 *   @param: y0 - the vertical position of the pie center
+	 *   @param: a0 - the angle that defines the first edge of a sector
+	 *   @param: a1 - the angle that defines the second edge of a sector
+	 *   @param: R - pie radius
+	 *   @param: line (boolean) - if the sector needs a border
+	 */
+	_createLowerSector:function(ctx,x0,y0,a1,a2,R,line){
+		ctx.lineWidth = 1;
+		/*checks if the lower sector needs being displayed*/
+		if(!((a1<=0 && a2>=0)||(a1>=0 && a2<=Math.PI)||(Math.abs(a1-Math.PI)>0.003&&a1<=Math.PI && a2>=Math.PI))) return;
+
+		if(a1<=0 && a2>=0){
+			a1 = 0;
+			line = false;
+			this._drawSectorLine(ctx,x0,y0,R,a1,a2);
+		}
+		if(a1<=Math.PI && a2>=Math.PI){
+			a2 = Math.PI;
+			line = false;
+			this._drawSectorLine(ctx,x0,y0,R,a1,a2);
+		}
+		/*the height of 3D pie*/
+		var offset = (this._settings.height||Math.floor(R/4))/this._settings.cant;
+		ctx.beginPath();
+		ctx.arc(x0,y0,R,a1,a2,false);
+		ctx.lineTo(x0+R*Math.cos(a2),y0+R*Math.sin(a2)+offset);
+		ctx.arc(x0,y0+offset,R,a2,a1,true);
+		ctx.lineTo(x0+R*Math.cos(a1),y0+R*Math.sin(a1));
+		ctx.fill();
+		if(line)
+			ctx.stroke();
+	},
+	/**
+	 *   draws a serctor arc
+	 */
+	_drawSectorLine:function(ctx,x0,y0,R,a1,a2){
+		ctx.beginPath();
+		ctx.arc(x0,y0,R,a1,a2,false);
+		ctx.stroke();
+	},
+	/**
+	 *   adds a shadow to pie
+	 *   @param: ctx - canvas object
+	 *   @param: x - the horizontal position of the pie center
+	 *   @param: y - the vertical position of the pie center
+	 *   @param: R - pie radius
+	 */
+	_addShadow:function(ctx,x,y,R){
+		ctx.globalAlpha = 0.5;
+		var shadows = ["#c4c4c4","#c6c6c6","#cacaca","#dcdcdc","#dddddd","#e0e0e0","#eeeeee","#f5f5f5","#f8f8f8"];
+		for(var i = shadows.length-1;i>-1;i--){
+			ctx.beginPath();
+			ctx.fillStyle = shadows[i];
+			ctx.arc(x+1,y+1,R+i,0,Math.PI*2,true);
+			ctx.fill();
+		}
+		ctx.globalAlpha = 1
+	},
+	/**
+	 *   returns a gray gradient
+	 *   @param: gradient - gradient object
+	 */
+	_getGrayGradient:function(gradient){
+		gradient.addColorStop(0.0,"#ffffff");
+		gradient.addColorStop(0.7,"#7a7a7a");
+		gradient.addColorStop(1.0,"#000000");
+		return gradient;
+	},
+	/**
+	 *   adds gray radial gradient
+	 *   @param: ctx - canvas object
+	 *   @param: x - the horizontal position of the pie center
+	 *   @param: y - the vertical position of the pie center
+	 *   @param: radius - pie radius
+	 *   @param: x0 - the horizontal position of a gradient center
+	 *   @param: y0 - the vertical position of a gradient center
+	 */
+	_showRadialGradient:function(ctx,x,y,radius,x0,y0){
+		//ctx.globalAlpha = 0.3;
+		ctx.beginPath();
+		var gradient;
+		if(typeof this._settings.gradient!= "function"){
+			gradient = ctx.createRadialGradient(x0,y0,radius/4,x,y,radius);
+			gradient = this._getGrayGradient(gradient);
+		}
+		else gradient = this._settings.gradient(gradient);
+		ctx.fillStyle = gradient;
+		ctx.arc(x,y,radius,0,Math.PI*2,true);
+		ctx.fill();
+		//ctx.globalAlpha = 1;
+		ctx.globalAlpha = 0.7;
+	},
+	/**
+	 *   returns the calculates pie parameters: center position and radius
+	 *   @param: ctx - canvas object
+	 *   @param: x0 - the horizontal position of the pie center
+	 *   @param: y0 - the vertical position of the pie center
+	 *   @param: R - pie radius
+	 *   @param: alpha1 - the angle that defines the 1st edge of a sector
+	 *   @param: alpha2 - the angle that defines the 2nd edge of a sector
+	 *   @param: ky - the value that defines an angle of inclination
+	 *   @param: text - label text
+	 *   @param: in_width (boolean) - if label needs being displayed inside a pie
+	 */
+	_drawSectorLabel:function(x0,y0,R,alpha1,alpha2,ky,text,in_width, margin,ctx){
+		var t = this.canvases[0].renderText(0,0,text,0,1);
+		if (!t) return;
+		//get existing width of text
+		var labelWidth = t.scrollWidth;
+		t.style.width = labelWidth+"px";	//adjust text label to fit all text
+		if (labelWidth>x0) labelWidth = x0;	//the text can't be greater than half of view
+
+		//calculate expected correction based on default font metrics
+		var width = (alpha2-alpha1<0.2?4:8);
+		if (in_width) width = labelWidth/1.8;
+		var alpha = alpha1+(alpha2-alpha1)/2;
+
+		//position and its correction
+		var radius = R;
+		R = (in_width?5*R/6:R+this._settings.labelOffset);
+		R = R-(width-8)/2;
+		var corr_x = - width;
+		var corr_y = -8;
+		var align = "right";
+
+		//for items in left upper and lower sector
+		if(alpha>=Math.PI/2 && alpha<Math.PI || alpha<=3*Math.PI/2 && alpha>=Math.PI){
+			corr_x = -labelWidth-corr_x;/*correction for label width*/
+			align = "left";
+		}
+
+		//calculate position of text
+		//basically get point at center of pie sector
+		var offset = 0;
+
+		if(!in_width&&ky<1&&(alpha>0&&alpha<Math.PI))
+			offset = (this._settings.height||Math.floor(R/4))/ky;
+
+
+		var y = (y0+Math.floor(R+offset)*Math.sin(alpha))*ky+corr_y;
+		var x = x0+Math.floor(R+width/2)*Math.cos(alpha)+corr_x;
+
+
+
+
+		//if pie sector starts in left of right part pie, related text
+		//must be placed to the left of to the right of pie as well
+		var left_end = (alpha2 < Math.PI/2+0.01);
+		var left_start = (alpha1 < Math.PI/2);
+
+		if (left_start && left_end){
+			x = Math.max(x,x0+3);	//right part of pie
+			/*if(alpha2-alpha1<0.2)
+			 x = x0;*/
+		}
+
+		else if (!left_start && !left_end){
+
+			x = Math.min(x,x0-labelWidth);	//left part of pie
+		}else if (!in_width&&!this._settings.labelLines&&(alpha>=Math.PI/2 && alpha<Math.PI || alpha<=3*Math.PI/2 && alpha>=Math.PI)){
+
+			x += labelWidth/3;
+		}
+
+
+		if(this._settings.labelLines && !in_width){
+			var r1 = Math.abs((Math.abs(margin||0) +Math.abs(radius*Math.sin(alpha)))/Math.sin(alpha));
+
+			if(margin.y)
+				y += margin.y;
+			if(align=="left"){
+				x -= margin.x;
+			}
+			else
+				x +=margin.x;
+
+			ctx.beginPath();
+			ctx.strokeStyle = "#555";
+			var x1 = x0+radius*Math.cos(alpha);
+			var y1 = y0+radius*Math.sin(alpha);
+			ctx.moveTo(x1,y1);
+
+			var x2= x-(align=="left"?corr_x-8:2);
+			var y2 = y;
+
+			if(align=="left" && x2>x1){
+				x2 = x1-Math.abs(y2-y1+16)/Math.tan(alpha-Math.PI);
+				y2 = y2+16;
+				if(alpha<Math.PI)
+					y2 -= 8;
+			}
+			else
+				y2 += 8;
+			ctx.lineTo(x2,y2);
+
+			ctx.lineTo(x2 + (align=="left"?-5:5),y2);
+			ctx.stroke();
+
+			y = y2 - 8;
+			x = x2 + corr_x + (align=="left"?-15:15);
+		}
+
+
+
+		//we need to set position of text manually, based on above calculations
+		t.style.top  = y+"px";
+		t.style.left = x + "px";
+		t.style.width = labelWidth+"px";
+		t.style.textAlign = align;
+		t.style.whiteSpace = "nowrap";
+	}
+};
+
+dhtmlx.chart.pie3D = {
+	pvt_render_pie3D:function(ctx,data,x,y,sIndex,map){
+		this._renderPie(ctx,data,x,y,this._settings.cant,map);
+	}
+};
+dhtmlx.chart.donut = {
+	pvt_render_donut:function(ctx,data,point0,point1,sIndex,map){
+		if(!data.length)
+			return;
+		this._renderPie(ctx,data,point0,point1,1,map);
+		var config = this._settings;
+		var coord = this._getPieParameters(point0,point1);
+		var pieRadius = (config.radius?config.radius:coord.radius);
+		var innerRadius = ((config.innerRadius&&(config.innerRadius<pieRadius))?config.innerRadius:pieRadius/3);
+		var x0 = (config.x?config.x:coord.x);
+		var y0 = (config.y?config.y:coord.y);
+		ctx.fillStyle = "#ffffff";
+		ctx.beginPath();
+		ctx.arc(x0,y0,innerRadius,0,Math.PI*2,true);
+		ctx.fill();
+	}
+};
+
+
+
+/* DHX DEPEND FROM FILE 'compatibility_grid.js'*/
+
+
+/*
+	Compatibility hack for loading data from the grid.
+	Provides new type of datasource - dhtmlxgrid
+	
+*/
+
+/*DHX:Depend load.js*/
+
+dhtmlx.DataDriver.dhtmlxgrid={
+	_grid_getter:"_get_cell_value",
+	toObject:function(data){
+		this._grid = data;
+		return data;
+	},
+	getRecords:function(data){
+		return data.rowsBuffer;
+	},
+	getDetails:function(data){
+		var result = {};
+		for (var i=0; i < this._grid.getColumnsNum(); i++)
+			result["data"+i]=this._grid[this._grid_getter](data,i);
+      
+		return result;
+	},
+	getInfo:function(data){
+		return { 
+			_size:0,
+			_from:0
+		};
+	}
+};
+
+
+/* DHX DEPEND FROM FILE 'canvas.js'*/
+
+
+/*DHX:Depend thirdparty/excanvas*/
+/*DHX:Depend dhtmlx.js*/
+
+dhtmlx.ui.Canvas = function(container,name,style) {
+	this._canvas_labels = [];
+	this._canvas_name =  name;
+	this._obj = container;
+	var width = container.offsetWidth*(window.devicePixelRatio||1);
+	var height = container.offsetHeight*(window.devicePixelRatio||1);
+	var style = style||"";
+	style += ";width:"+container.offsetWidth+"px;height:"+container.offsetHeight+"px;";
+	this._prepareCanvas(name, style ,width, height);
+};
+dhtmlx.ui.Canvas.prototype = {
+	_prepareCanvas:function (name,style,width,height){
+		//canvas has the same size as master object
+		this._canvas = dhtmlx.html.create("canvas",{ width:width, height:height, canvas_id:name, style:(style||"") });
+		this._obj.appendChild(this._canvas);
+		//use excanvas in IE
+		if (!this._canvas.getContext){
+			if (dhtmlx._isIE){
+				dhtmlx.require("thirdparty/excanvas/excanvas.js");	//sync loading
+				G_vmlCanvasManager.init_(document);
+				G_vmlCanvasManager.initElement(this._canvas);
+			} else	//some other not supported browser
+				dhtmlx.error("Canvas is not supported in the current browser");
+		}
+		return this._canvas;
+	}, 
+	getCanvas:function(context){
+		var ctx = (this._canvas||this._prepareCanvas()).getContext(context||"2d");
+		if(!this._dhtmlxDevicePixelRatio){
+			this._dhtmlxDevicePixelRatio = true;
+			ctx.scale(window.devicePixelRatio||1, window.devicePixelRatio||1);
+		}
+		return ctx;
+	},
+	_resizeCanvas:function(){
+		if (this._canvas){
+			var w = this._canvas.parentNode.offsetWidth;
+			var h = this._canvas.parentNode.offsetHeight;
+			this._canvas.setAttribute("width", w*(window.devicePixelRatio||1));
+			this._canvas.setAttribute("height", h*(window.devicePixelRatio||1));
+			this._canvas.style.width = w+"px";
+			this._canvas.style.height = h+"px";
+			this._dhtmlxDevicePixelRatio = false;
+		}
+	},
+	renderText:function(x,y,text,css,w){
+		if (!text) return; //ignore empty text
+		
+		var t = dhtmlx.html.create("DIV",{
+			"class":"dhx_canvas_text"+(css?(" "+css):""),
+			"style":"left:"+x+"px; top:"+y+"px;"
+		},text);
+		this._obj.appendChild(t);
+		this._canvas_labels.push(t); //destructor?
+		if (w)
+			t.style.width = w+"px";
+		return t;
+	},
+	renderTextAt:function(valign,align, x,y,t,c,w){
+		var text=this.renderText.call(this,x,y,t,c,w);
+		if (text){
+			if (valign){
+				if(valign == "middle")
+					text.style.top = parseInt(y-text.offsetHeight/2,10) + "px";
+				else
+					text.style.top = y-text.offsetHeight + "px";
+			}
+			if (align){
+			    if(align == "left")
+					text.style.left = x-text.offsetWidth + "px";
+				else
+					text.style.left = parseInt(x-text.offsetWidth/2,10) + "px";
+			}
+		}
+		return text;
+	},
+	clearCanvas:function(skipMap){
+		var areas=[], i;
+
+		for(i=0; i < this._canvas_labels.length;i++)
+			this._obj.removeChild(this._canvas_labels[i]);
+		this._canvas_labels = [];
+
+		if (!skipMap&&this._obj._htmlmap){
+
+			//areas that correspond this canvas layer
+		    areas = this._getMapAreas();
+
+			//removes areas of this canvas
+			while(areas.length){
+                areas[0].parentNode.removeChild(areas[0]);
+				areas.splice(0,1);
+			}
+			areas = null;
+
+			//removes _htmlmap object if all its child nodes are removed
+			if(!this._obj._htmlmap.getElementsByTagName("AREA").length){
+				this._obj._htmlmap.parentNode.removeChild(this._obj._htmlmap);
+				this._obj._htmlmap = null;
+			}
+
+		}
+		//FF breaks, when we are using clear canvas and call clearRect without parameters	
+		this.getCanvas().clearRect(0,0,this._canvas.width, this._canvas.height);
+	},
+	toggleCanvas:function(){
+		this._toggleCanvas(this._canvas.style.display=="none")
+
+	},
+	showCanvas:function(){
+		this._toggleCanvas(true);
+	},
+	hideCanvas:function(){
+		this._toggleCanvas(false);
+	},
+	_toggleCanvas:function(show){
+		var areas, i;
+
+		for(i=0; i < this._canvas_labels.length;i++)
+			this._canvas_labels[i].style.display = (show?"":"none");
+
+		if (this._obj._htmlmap){
+			areas = this._getMapAreas();
+			for( i = 0; i < areas.length; i++){
+				if(show)
+					areas[i].removeAttribute("disabled");
+				else
+					areas[i].setAttribute("disabled","true");
+			}
+		}
+		//FF breaks, when we are using clear canvas and call clearRect without parameters
+		this._canvas.style.display = (show?"":"none");
+	},
+	_getMapAreas:function(){
+		var res = [], areas, i;
+
+		areas = this._obj._htmlmap.getElementsByTagName("AREA");
+
+		for(i = 0; i < areas.length; i++){
+			if(areas[i].getAttribute("userdata") == this._canvas_name){
+				res.push(areas[i]);
+			}
+		}
+
+		return res;
+	}
+};
+
+/* DHX INITIAL FILE 'C:\http\legacy/dhtmlxCore/sources//chart.js'*/
+
+
+/*DHX:Depend chart.css*/
+/*DHX:Depend canvas.js*/
+/*DHX:Depend load.js*/
+
+/*DHX:Depend compatibility_grid.js*/
+/*DHX:Depend compatibility_layout.js*/
+
+/*DHX:Depend config.js*/
+/*DHX:Depend destructor.js*/
+/*DHX:Depend mouse.js*/
+/*DHX:Depend key.js*/
+/*DHX:Depend group.js*/
+/*DHX:Depend autotooltip.js*/
+
+/*DHX:Depend ext/chart/chart_base.js*/
+/*DHX:Depend ext/chart/chart_pie.js*/		//+pie3d
+/*DHX:Depend ext/chart/chart_bar.js*/	
+/*DHX:Depend ext/chart/chart_line.js*/
+/*DHX:Depend ext/chart/chart_barh.js*/	
+/*DHX:Depend ext/chart/chart_stackedbar.js*/	
+/*DHX:Depend ext/chart/chart_stackedbarh.js*/
+/*DHX:Depend ext/chart/chart_spline.js*/	
+/*DHX:Depend ext/chart/chart_area.js*/	 	//+stackedArea
+/*DHX:Depend ext/chart/chart_radar.js*/	 	
+/*DHX:Depend ext/chart/chart_scatter.js*/
+/*DHX:Depend ext/chart/presets.js*/
+/*DHX:Depend math.js*/
+/*DHX:Depend destructor.js*/
+/*DHX:Depend dhtmlx.js*/
+/*DHX:Depend date.js*/
+
+dhtmlXChart = function(container){
+	this.name = "Chart";	
+	
+	if (dhtmlx.assert_enabled()) this._assert();
+	
+	dhtmlx.extend(this, dhtmlx.Settings);
+	
+	this._parseContainer(container,"dhx_chart");
+	
+	dhtmlx.extend(this, dhtmlx.AtomDataLoader);
+	dhtmlx.extend(this, dhtmlx.DataLoader);
+	this.data.provideApi(this,true);
+	
+	dhtmlx.extend(this, dhtmlx.EventSystem);
+	dhtmlx.extend(this, dhtmlx.MouseEvents);
+	dhtmlx.destructors.push(this);
+	//dhtmlx.extend(this, dhtmlx.Destruction);
+	//dhtmlx.extend(this, dhtmlx.Canvas);
+	dhtmlx.extend(this, dhtmlx.Group);
+	dhtmlx.extend(this, dhtmlx.AutoTooltip);
+	
+	for (var key in dhtmlx.chart)
+		dhtmlx.extend(this, dhtmlx.chart[key]);
+
+
+    if(container.preset){
+        this.definePreset(container);
+    }
+	this._parseSettings(container,this.defaults);
+	this._series = [this._settings];
+	this.data.attachEvent("onStoreUpdated",dhtmlx.bind(function(){
+		this.render();  
+	},this));
+	this.attachEvent("onLocateData", this._switchSerie);
+};
+dhtmlXChart.prototype={
+	_id:"dhx_area_id",
+	on_click: {
+		dhx_chart_legend_item: function(e,id,obj){
+			var series = obj.getAttribute("series_id");
+			if(this.callEvent("onLegendClick",[e,series,obj])){
+				var config = this._settings;
+				var values = config.legend.values;
+				var toggle = (values&&(typeof values[series].toggle != "undefined"))?values[series].toggle:config.legend.toggle;
+			    if((typeof series != "undefined")&&this._series.length>1){
+				    // hide action
+				    if(toggle){
+					    if(obj.className.indexOf("hidden")!=-1){
+						    this.showSeries(series);
+					    }
+					    else{
+						    this.hideSeries(series);
+					    }
+				    }
+			    }
+			}
+		}
+	},
+	on_dblclick:{
+	},
+	on_mouse_move:{
+	},
+	destructor: function(){
+		dhtmlx.Destruction.destructor.apply(this, arguments);
+		if(this.canvases){
+			for(var i in this.canvases){
+				this.canvases[i]._obj = null;
+				this.canvases[i] = null;
+			}
+			this.canvases = null;
+		}
+		if(this.legendObj){
+			this.legendObj.innerHTML = "";
+			this.legendObj = null;
+		}
+		if (this.config.tooltip) {
+			this.config.tooltip._obj = null;
+			this.config.tooltip._dataobj = null;
+		}
+	},
+	bind:function(){
+		dhtmlx.BaseBind.legacyBind.apply(this, arguments);
+	},
+	sync:function(){
+		dhtmlx.BaseBind.legacySync.apply(this, arguments);
+	},
+	resize:function(){
+		for(var c in this.canvases){
+			this.canvases[c]._resizeCanvas();
+		}
+		this.render();	
+	},
+	view_setter:function( val){
+		if (!dhtmlx.chart[val])
+			dhtmlx.error("Chart type extension is not loaded: "+val);
+		//if you will need to add more such settings - move them ( and this one ) in a separate methods
+		
+		if (typeof this._settings.offset == "undefined"){
+			this._settings.offset = !(val == "area" || val == "stackedArea");
+		}
+        if(val=="radar"&&!this._settings.yAxis)
+		    this.define("yAxis",{});
+        if(val=="scatter"){
+            if(!this._settings.yAxis)
+                this.define("yAxis",{});
+            if(!this._settings.xAxis)
+                this.define("xAxis",{});
+        }
+
+		return val;
+	},
+	clearCanvas:function(){
+		if(this.canvases&&typeof this.canvases == "object")
+			for(var c in this.canvases){
+				this.canvases[c].clearCanvas();
+			}
+	},
+	render:function(){
+		var bounds, i, data, map, temp;
+
+		if (!this.callEvent("onBeforeRender",[this.data]))
+			return;
+		
+		if(this.canvases&&typeof this.canvases == "object"){
+			for(i in this.canvases){
+				this.canvases[i].clearCanvas();
+			}
+		}
+		else
+			this.canvases = {};
+
+		if(this._settings.legend){
+			if(!this.canvases["legend"])
+				this.canvases["legend"] =  new dhtmlx.ui.Canvas(this._obj,"legend");
+			this._drawLegend(
+				this.data.getRange(),
+				this._obj.offsetWidth
+			);
+		}
+		bounds = this._getChartBounds(this._obj.offsetWidth,this._obj.offsetHeight);
+		this._map = map = new dhtmlx.ui.Map(this._id);
+		temp = this._settings;
+		data = this._getChartData();
+		
+		for(i=0; i < this._series.length;i++){
+		 	this._settings = this._series[i];
+			if(!this.canvases[i]){
+				this.canvases[i] = new dhtmlx.ui.Canvas(this._obj,i,"z-index:"+(2+i));
+			}
+			this["pvt_render_"+this._settings.view](
+				this.canvases[i].getCanvas(),
+				data,
+				bounds.start,
+				bounds.end,
+				i,
+				map
+			);
+		}
+
+		map.render(this._obj);
+		this._obj.lastChild.style.zIndex = 1000;
+		this._applyBounds(this._obj.lastChild,bounds);
+		this.callEvent("onAfterRender",[]);
+		this._settings = temp;
+	},
+	_applyBounds: function(elem,bounds){
+		var style = {};
+		style.left = bounds.start.x;
+		style.top = bounds.start.y;
+		style.width = bounds.end.x-bounds.start.x;
+		style.height = bounds.end.y - bounds.start.y;
+		for(var prop in style){
+			elem.style[prop] = style[prop]+"px";
+		}
+	},
+	_getChartData: function(){
+		var  axis, axisConfig ,config, data, i, newData, start, units, value, valuesHash;
+		data = this.data.getRange();
+		axis = (this._settings.view.toLowerCase().indexOf("barh")!=-1?"yAxis":"xAxis");
+		axisConfig = this._settings[axis];
+		if(axisConfig&&axisConfig.units&&(typeof axisConfig.units == "object")){
+			config = axisConfig.units;
+			units = [];
+			if(typeof config.start != "undefined"&&typeof config.end != "undefined" && typeof config.next != "undefined"){
+				start = config.start;
+				while(start<=config.end){
+					units.push(start);
+					start = config.next.call(this,start);
+				}
+			}
+			else if(Object.prototype.toString.call(config) === '[object Array]'){
+				units = config;
+			}
+			newData = [];
+			if(units.length){
+				value = axisConfig.value;
+				valuesHash = {};
+				for(i=0;i < data.length;i++){
+					valuesHash[value(data[i])] = i;
+				}
+				for(i=0;i< units.length;i++){
+					if(typeof valuesHash[units[i]]!= "undefined"){
+						data[valuesHash[units[i]]].$unit = units[i];
+						newData.push(data[valuesHash[units[i]]]);
+					}
+					else{
+						newData.push({$unit:units[i]});
+					}
+				}
+			}
+			return newData;
+		}
+		return data;
+	},
+	value_setter:dhtmlx.Template.obj_setter,
+    xValue_setter:dhtmlx.Template.obj_setter,
+    yValue_setter:function(config){
+        this.define("value",config);
+    },
+	alpha_setter:dhtmlx.Template.obj_setter,	
+	label_setter:dhtmlx.Template.obj_setter,
+	lineColor_setter:dhtmlx.Template.obj_setter,
+	borderColor_setter:dhtmlx.Template.obj_setter,
+	pieInnerText_setter:dhtmlx.Template.obj_setter,
+	gradient_setter:function(config){
+		if((typeof(config)!="function")&&config&&(config === true))
+			config = "light";
+		return config;
+	},
+	colormap:{
+		"RAINBOW":function(obj){
+            var pos = Math.floor(this.indexById(obj.id)/this.dataCount()*1536);
+			if (pos==1536) pos-=1;
+			return this._rainbow[Math.floor(pos/256)](pos%256);
+		}
+	},
+	color_setter:function(value){
+		return this.colormap[value]||dhtmlx.Template.obj_setter( value);
+	},
+    fill_setter:function(value){
+        return ((!value||value==0)?false:dhtmlx.Template.obj_setter( value));
+    },
+    definePreset:function(obj){
+        this.define("preset",obj.preset);
+        delete obj.preset;
+    },
+	preset_setter:function(value){
+        var a, b, preset;
+        this.defaults = dhtmlx.extend({},this.defaults);
+        if(typeof dhtmlx.presets.chart[value]=="object"){
+
+            preset =  dhtmlx.presets.chart[value];
+            for(a in preset){
+
+                if(typeof preset[a]=="object"){
+                    if(!this.defaults[a]||typeof this.defaults[a]!="object"){
+                         this.defaults[a] = dhtmlx.extend({},preset[a]);
+                    }
+                    else{
+                        this.defaults[a] = dhtmlx.extend({},this.defaults[a]);
+                        for(b in preset[a]){
+                            this.defaults[a][b] = preset[a][b];
+                        }
+                    }
+                }else{
+                     this.defaults[a] = preset[a];
+                }
+            }
+            return value;
+        }
+		return false;
+	},
+	legend_setter:function( config){
+		if(!config){
+			if(this.legendObj){
+				this.legendObj.innerHTML = "";
+				this.legendObj = null;
+			}
+			return false;
+		}
+		if(typeof(config)!="object")	//allow to use template string instead of object
+			config={template:config};
+			
+		this._mergeSettings(config,{
+			width:150,
+			height:18,
+			layout:"y",
+			align:"left",
+			valign:"bottom",
+			template:"",
+			toggle:(this._settings.view.toLowerCase().indexOf("stacked")!=-1?"":"hide"),
+			marker:{
+				type:"square",
+				width:15,
+				height:15,
+                radius:3
+			},
+            margin: 4,
+            padding: 3
+		});
+		
+		config.template = dhtmlx.Template.setter(config.template);
+		return config;
+	},
+    defaults:{
+        color:"RAINBOW",
+		alpha:"1",
+		label:false,
+		value:"{obj.value}",
+		padding:{},
+		view:"pie",
+		lineColor:"#ffffff",
+		cant:0.5,
+		width: 30,
+		labelWidth:100,
+		line:{
+            width:2,
+			color:"#1293f8"
+        },
+	    seriesMargin: 1,
+	    seriesPadding: 4,
+		item:{
+			radius:3,
+			borderColor:"#636363",
+            borderWidth:1,
+            color: "#ffffff",
+            alpha:1,
+            type:"r",
+            shadow:false
+		},
+		shadow:true,
+		gradient:false,
+		border:true,
+		labelOffset: 20,
+		origin:"auto"
+    },
+	item_setter:function( config){
+		if(typeof(config)!="object")
+			config={color:config, borderColor:config};
+        this._mergeSettings(config,dhtmlx.extend({},this.defaults.item));
+		var settings = ["alpha","borderColor","color","radius"];
+		for(var i=0; i< settings.length; i++)
+			config[settings[i]] = dhtmlx.Template.setter(config[settings[i]]);
+		/*config.alpha = dhtmlx.Template.setter(config.alpha);
+        config.borderColor = dhtmlx.Template.setter(config.borderColor);
+		config.color = dhtmlx.Template.setter(config.color);
+        config.radius = dhtmlx.Template.setter(config.radius);*/
+		return config;
+	},
+	line_setter:function( config){
+		if(typeof(config)!="object")
+			config={color:config};
+	    dhtmlx.extend(this.defaults.line,config);
+        config = dhtmlx.extend({},this.defaults.line);
+		config.color = dhtmlx.Template.setter(config.color);
+		return config;
+	},
+	padding_setter:function( config){	
+		if(typeof(config)!="object")
+			config={left:config, right:config, top:config, bottom:config};
+		this._mergeSettings(config,{
+			left:50,
+			right:20,
+			top:35,
+			bottom:40
+		});
+		return config;
+	},
+	xAxis_setter:function( config){
+		if(!config) return false;
+		if(typeof(config)!="object")
+			config={ template:config };
+		if(!config.value)
+			config.value = config.template;
+		this._mergeSettings(config,{
+			title:"",
+			color:"#000000",
+			lineColor:"#cfcfcf",
+			template:"{obj}",
+			value:"{obj}",
+			lines:true
+		});
+		var templates = ["lineColor","template","lines","value"];
+        this._converToTemplate(templates,config);
+		this._configXAxis = dhtmlx.extend({},config);
+		return config;
+	},
+    yAxis_setter:function( config){
+		if(!config) return false;
+	    this._mergeSettings(config,{
+			title:"",
+			color:"#000000",
+			lineColor:"#cfcfcf",
+			template:"{obj}",
+			lines:true,
+            bg:"#ffffff"
+		});
+		var templates = ["lineColor","template","lines","bg"];
+        this._converToTemplate(templates,config);
+		this._configYAxis = dhtmlx.extend({},config);
+		return config;
+	},
+    _converToTemplate:function(arr,config){
+        for(var i=0;i< arr.length;i++){
+            config[arr[i]] = dhtmlx.Template.setter(config[arr[i]]);
+        }
+    },
+    _drawScales:function(data,point0,point1,start,end,cellWidth){
+	    var y = 0;
+	    if(this._settings.yAxis){
+		    if(! this.canvases["y"])
+		        this.canvases["y"] =  new dhtmlx.ui.Canvas(this._obj,"axis_y");
+		    y = this._drawYAxis(this.canvases["y"].getCanvas(),data,point0,point1,start,end);
+	    }
+	    if (this._settings.xAxis){
+		    if(! this.canvases["x"])
+			    this.canvases["x"] =  new dhtmlx.ui.Canvas(this._obj,"axis_x");
+		    this._drawXAxis(this.canvases["x"].getCanvas(),data,point0,point1,cellWidth,y);
+	    }
+		return y;
+	},
+	_drawXAxis:function(ctx,data,point0,point1,cellWidth,y){
+		var x0 = point0.x-0.5;
+		var y0 = parseInt((y?y:point1.y),10)+0.5;
+		var x1 = point1.x;
+		var unitPos;
+		var center = true;
+		var labelY = (this._settings.origin ===0 && this._settings.view=="stackedBar")?point1.y+0.5:y0;
+
+		for(var i=0; i < data.length; i++){
+
+			if(this._settings.offset === true)
+				unitPos = x0+cellWidth/2+i*cellWidth;
+			else{
+				unitPos = (i==data.length-1)?point1.x:x0+i*cellWidth;
+				center = !!i;
+			}
+			unitPos = Math.ceil(unitPos)-0.5;
+			/*scale labels*/
+			var top = ((this._settings.origin!="auto")&&(this._settings.view=="bar")&&(parseFloat(this._settings.value(data[i]))<this._settings.origin));
+			this._drawXAxisLabel(unitPos,labelY,data[i],center,top);
+			/*draws a vertical line for the horizontal scale*/
+
+			if((this._settings.offset||i)&&this._settings.xAxis.lines.call(this,data[i]))
+		    	this._drawXAxisLine(ctx,unitPos,point1.y,point0.y,data[i]);
+		}
+		
+		this.canvases["x"].renderTextAt(true, false, x0,point1.y+this._settings.padding.bottom-3,
+			this._settings.xAxis.title,
+			"dhx_axis_title_x",
+			point1.x - point0.x
+		);
+		this._drawLine(ctx,x0,y0,x1,y0,this._settings.xAxis.color,1);
+		/*the right border in lines in scale are enabled*/
+		if (!this._settings.xAxis.lines.call(this,{}) || !this._settings.offset) return;
+		this._drawLine(ctx,x1+0.5,point1.y,x1+0.5,point0.y+0.5,this._settings.xAxis.color,0.2);
+	},
+	_drawYAxis:function(ctx,data,point0,point1,start,end){
+		var step;
+		var scaleParam= {};
+		if (!this._settings.yAxis) return;
+		
+		var x0 = point0.x - 0.5;
+		var y0 = point1.y;
+		var y1 = point0.y;
+		var lineX = point1.y;
+		
+		//this._drawLine(ctx,x0,y0,x0,y1,this._settings.yAxis.color,1);
+		
+		if(this._settings.yAxis.step)
+		     step = parseFloat(this._settings.yAxis.step);
+
+		if(typeof this._configYAxis.step =="undefined"||typeof this._configYAxis.start=="undefined"||typeof this._configYAxis.end =="undefined"){
+			scaleParam = this._calculateScale(start,end);
+			start = scaleParam.start;
+			end = scaleParam.end;
+			step = scaleParam.step;
+			
+			this._settings.yAxis.end = end;
+			this._settings.yAxis.start = start;
+		}
+		this._setYAxisTitle(point0,point1);
+		/*if(step===0) return;
+		if(end==start){
+			return y0;
+		}
+		var stepHeight = (y0-y1)*step/(end-start);*/
+		if(step===0){
+			end = start;
+			step = 1;
+		}
+		var stepHeight = (end==start?y0-y1:(y0-y1)*step/(end-start));
+		var c = 0;
+		for(var i = start; i<=end; i += step){
+			if(scaleParam.fixNum)  i = parseFloat((new Number(i)).toFixed(scaleParam.fixNum));
+			var yi = Math.floor(y0-c*stepHeight)+ 0.5;/*canvas line fix*/
+			if(!(i==start&&this._settings.origin=="auto") &&this._settings.yAxis.lines.call(this,i))
+				this._drawLine(ctx,x0,yi,point1.x,yi,this._settings.yAxis.lineColor.call(this,i),1);
+			if(i == this._settings.origin) lineX = yi;
+			/*correction for JS float calculation*/
+			var label = i;
+			if(step<1){
+				var power = Math.min(this._log10(step),(start<=0?0:this._log10(start)));
+				power = -this._settings.yAxis.decimalDigits || power;
+				var corr = Math.pow(10,-power);
+				label = Math.round(i*corr)/corr;
+				i = label;
+			}
+			this.canvases["y"].renderText(0,yi-5,
+				this._settings.yAxis.template(label.toString()),
+				"dhx_axis_item_y",
+				point0.x-5
+			);	
+			c++;
+		}
+		this._drawLine(ctx,x0,y0+1,x0,y1,this._settings.yAxis.color,1);
+		return lineX;
+	},
+	_setYAxisTitle:function(point0,point1){
+        var className = "dhx_axis_title_y"+(dhtmlx._isIE&&dhtmlx._isIE !=9?" dhx_ie_filter":"");
+		var text=this.canvases["y"].renderTextAt("middle",false,0,parseInt((point1.y-point0.y)/2+point0.y,10),this._settings.yAxis.title,className);
+        if (text)
+			text.style.left = (dhtmlx.env.transform?(text.offsetHeight-text.offsetWidth)/2:0)+"px";
+		/*var ctx = this.canvases["y"].getCanvas();
+		var metric = ctx.measureText(this._settings.yAxis.title);
+		var tx = 5 + (metric.width/2);
+		var ty = 5 +point0.y+ (point1.y-point0.y)/2+metric.width/2;
+		ctx.font = "bold 12pt sans-serif";
+		ctx.save();
+		ctx.translate(tx,ty);
+		ctx.rotate(Math.PI/2*3);
+		//ctx.translate(-tx,-ty);
+
+		ctx.fillText(this._settings.yAxis.title, 0,0)
+		ctx.restore();*/
+
+	},
+	_calculateScale:function(nmin,nmax){
+	    if(this._settings.origin!="auto"&&this._settings.origin<nmin)
+			nmin = this._settings.origin;
+		var step,start,end;
+	   	step = ((nmax-nmin)/8)||1;
+		var power = Math.floor(this._log10(step));
+		var calculStep = Math.pow(10,power);
+		var stepVal = step/calculStep;
+		stepVal = (stepVal>5?10:5);
+		step = parseInt(stepVal,10)*calculStep;
+		
+		if(step>Math.abs(nmin))
+			start = (nmin<0?-step:0);
+		else{
+			var absNmin = Math.abs(nmin);
+			var powerStart = Math.floor(this._log10(absNmin));
+			var nminVal = absNmin/Math.pow(10,powerStart);
+			start = Math.ceil(nminVal*10)/10*Math.pow(10,powerStart)-step;
+			if(absNmin>1&&step>0.1){
+				start = Math.ceil(start);
+			}
+			while(nmin<0?start<=nmin:start>=nmin)
+				start -= step;
+			if(nmin<0) start =-start-2*step;
+			
+		}
+	     end = start;
+		while(end<nmax){
+			end += step;
+			end = parseFloat((new Number(end)).toFixed(Math.abs(power)));
+		}
+		return { start:start,end:end,step:step,fixNum:Math.abs(power) };
+	},
+	_getLimits:function(orientation,value){
+		var maxValue,minValue;
+		var axis = ((arguments.length && orientation=="h")?this._configXAxis:this._configYAxis);
+		value = value||"value";
+		if(axis&&(typeof axis.end!="undefined")&&(typeof axis.start!="undefined")&&axis.step){
+		    maxValue = parseFloat(axis.end);
+			minValue = parseFloat(axis.start);      
+		}
+		else{
+			maxValue = this.max(this._series[0][value]);
+			minValue = (axis&&(typeof axis.start!="undefined"))?parseFloat(axis.start):this.min(this._series[0][value]);
+			if(this._series.length>1)
+			for(var i=1; i < this._series.length;i++){
+				var maxI = this.max(this._series[i][value]);
+				var minI = this.min(this._series[i][value]);
+				if (maxI > maxValue) maxValue = maxI;
+		    	if (minI < minValue) minValue = minI;
+			}
+		}
+		return {max:maxValue,min:minValue};
+	},
+	_log10:function(n){
+        var method_name="log";
+        return Math.floor((Math[method_name](n)/Math.LN10));
+    },
+	_drawXAxisLabel:function(x,y,obj,center,top){
+		if (!this._settings.xAxis) return;
+		var elem = this.canvases["x"].renderTextAt(top, center, x,y-(top?2:0),this._settings.xAxis.template(obj));
+		if (elem)
+			elem.className += " dhx_axis_item_x";
+	},
+	_drawXAxisLine:function(ctx,x,y1,y2,obj){
+		if (!this._settings.xAxis||!this._settings.xAxis.lines) return;
+		this._drawLine(ctx,x,y1,x,y2,this._settings.xAxis.lineColor.call(this,obj),1);
+	},
+	_drawLine:function(ctx,x1,y1,x2,y2,color,width){
+		ctx.strokeStyle = color;
+		ctx.lineWidth = width;
+		ctx.beginPath();
+		ctx.moveTo(x1,y1);
+		ctx.lineTo(x2,y2);
+		ctx.stroke();
+        ctx.lineWidth = 1;
+	},
+	_getRelativeValue:function(minValue,maxValue){
+	    var relValue, origRelValue;
+		var valueFactor = 1;
+		if(maxValue != minValue){
+			relValue = maxValue - minValue;
+			/*if(Math.abs(relValue) < 1){
+			    while(Math.abs(relValue)<1){
+				    valueFactor *= 10;
+				    relValue = origRelValue* valueFactor;
+				}
+			}
+			*/
+		}
+		else relValue = minValue;
+		return [relValue,valueFactor];
+	},
+	_rainbow : [
+		function(pos){ return "#FF"+dhtmlx.math.toHex(pos/2,2)+"00";},
+		function(pos){ return "#FF"+dhtmlx.math.toHex(pos/2+128,2)+"00";},
+		function(pos){ return "#"+dhtmlx.math.toHex(255-pos,2)+"FF00";},
+		function(pos){ return "#00FF"+dhtmlx.math.toHex(pos,2);},
+		function(pos){ return "#00"+dhtmlx.math.toHex(255-pos,2)+"FF";},
+		function(pos){ return "#"+dhtmlx.math.toHex(pos,2)+"00FF";}		
+	],
+	clearSeries:function(){
+		this._series = [];
+	},
+	/**
+	*   adds series to the chart (value and color properties)
+	*   @param: obj - obj with configuration properties
+	*/
+	addSeries:function(obj){
+		var temp = this._settings;
+		this._settings = dhtmlx.extend({},temp);
+		this._parseSettings(obj,{});
+	    this._series.push(this._settings);
+		this._settings = temp;
+    },
+    /*switch global settings to serit in question*/
+    _switchSerie:function(id, tag, e){
+        var tip;
+    	this._active_serie = (this._series.length==1?tag.getAttribute("userdata"):this._getActiveSeries(e));
+
+    	if (!this._series[this._active_serie]) return;
+    	for (var i=0; i < this._series.length; i++) {
+    		tip = this._series[i].tooltip;
+    		if (tip)
+    			tip.disable();
+		}
+	    if(!tag.getAttribute("disabled")){
+		    tip = this._series[this._active_serie].tooltip;
+		    if (tip)
+			    tip.enable();
+	    }
+    },
+	_getActiveSeries: function(e){
+		var a, areas, i, offset, pos, selection,  x, y;
+
+		areas = this._map._areas;
+		offset = dhtmlx.html.offset(this._obj._htmlmap);
+		pos = dhtmlx.html.pos(e);
+		x = pos.x - offset.x;
+		y = pos.y - offset.y;
+
+		for( i = 0; i < areas.length; i++){
+			a = areas[i].points;
+			if(x <= a[2] && x >= a[0] && y <= a[3] && y >= a[1]){
+				if(selection){
+					if(areas[i].index > selection.index)
+						selection = areas[i];
+				}
+				else
+					selection = areas[i];
+			}
+		}
+
+		return selection?selection.index:0;
+	},
+	hideSeries:function(series){
+		this.canvases[series].hideCanvas();
+		if(this._settings.legend.values&&this._settings.legend.values[series])
+			this._settings.legend.values[series].$hidden = true;
+		this._drawLegend();
+	},
+	showSeries:function(series){
+		this.canvases[series].showCanvas();
+		if(this._settings.legend.values&&this._settings.legend.values[series])
+			delete this._settings.legend.values[series].$hidden;
+		this._drawLegend();
+
+	},
+	_changeColorSV:function(color,s,v){
+		var hsv,rgb;
+		rgb = dhtmlx.math.toRgb(color);
+		hsv = dhtmlx.math.rgbToHsv(rgb[0],rgb[1],rgb[2]);
+		hsv[1] *= s;
+		hsv[2] *= v;
+		return "rgb("+dhtmlx.math.hsvToRgb(hsv[0],hsv[1],hsv[2])+")";
+
+	},
+	_setBorderStyles:function(ctx,color){
+		var hsv,rgb;
+		rgb = dhtmlx.math.toRgb(color);
+		hsv = dhtmlx.math.rgbToHsv(rgb[0],rgb[1],rgb[2]);
+		hsv[2] /= 2;
+		color = "rgb("+dhtmlx.math.hsvToRgb(hsv[0],hsv[1],hsv[2])+")";
+		ctx.strokeStyle = color;
+		if(ctx.globalAlpha==1)
+			ctx.globalAlpha = 0.9;
+	},
+	/**
+	*   renders legend block
+	*   @param: ctx - canvas object
+	*   @param: data - object those need to be displayed
+	*   @param: width - the width of the container
+	*   @param: height - the height of the container
+	*/
+	_drawLegend:function(data,width){
+        var i, legend, legendContainer, legendHeight, legendItems, legendWidth, style, x=0, y= 0, ctx, itemColor, disabled, item;
+
+		data = data||[];
+		width = width||this._obj.offsetWidth;
+		ctx = this.canvases["legend"].getCanvas();
+		/*legend config*/
+		legend = this._settings.legend;
+        
+		style = (this._settings.legend.layout!="x"?"width:"+legend.width+"px":"");
+		/*creation of legend container*/
+		if(this.legendObj){
+			this.legendObj.innerHTML = "";
+			this.legendObj.parentNode.removeChild(this.legendObj);
+		}
+
+		this.canvases["legend"].clearCanvas(true);
+		legendContainer = dhtmlx.html.create("DIV",{
+			"class":"dhx_chart_legend",
+			"style":"left:"+x+"px; top:"+y+"px;"+style
+		},"");
+        if(legend.padding){
+            legendContainer.style.padding =  legend.padding+"px";
+        }
+		this.legendObj = legendContainer;
+		this._obj.appendChild(legendContainer);
+		/*rendering legend text items*/
+		legendItems = [];
+		if(!legend.values)
+			for(i = 0; i < data.length; i++){
+				legendItems.push(this._drawLegendText(legendContainer,legend.template(data[i])));
+			}
+		else
+			for(i = 0; i < legend.values.length; i++){
+				legendItems.push(this._drawLegendText(legendContainer,legend.values[i].text,(typeof legend.values[i].id!="undefined"?typeof legend.values[i].id:i),legend.values[i].$hidden));
+			}
+	   	legendWidth = legendContainer.offsetWidth;
+	    legendHeight = legendContainer.offsetHeight;
+		/*this._settings.legend.width = legendWidth;
+		this._settings.legend.height = legendHeight;*/
+
+		/*setting legend position*/
+		if(legendWidth<this._obj.offsetWidth){
+			if(legend.layout == "x"&&legend.align == "center"){
+			    x = (this._obj.offsetWidth-legendWidth)/2;
+            }
+			if(legend.align == "right"){
+				x = this._obj.offsetWidth-legendWidth;
+			}
+            if(legend.margin&&legend.align != "center"){
+                x += (legend.align == "left"?1:-1)*legend.margin;
+            }
+
+
+        }
+		if(legendHeight<this._obj.offsetHeight){
+			if(legend.valign == "middle"&&legend.align != "center"&&legend.layout != "x")
+				y = (this._obj.offsetHeight-legendHeight)/2;
+			else if(legend.valign == "bottom")
+				y = this._obj.offsetHeight-legendHeight;
+            if(legend.margin&&legend.valign != "middle"){
+                y += (legend.valign == "top"?1:-1)*legend.margin;
+            }
+		}
+		legendContainer.style.left = x+"px";
+		legendContainer.style.top = y+"px";
+
+		/*drawing colorful markers*/
+		ctx.save();
+
+		for(i = 0; i < legendItems.length; i++){
+			item = legendItems[i];
+			if(legend.values&&legend.values[i].$hidden){
+				disabled = true;
+				itemColor = (legend.values[i].disableColor?legend.values[i].disableColor:"#d9d9d9");
+			}
+			else{
+				disabled = false;
+				itemColor = (legend.values?legend.values[i].color:this._settings.color.call(this,data[i]));
+			}
+			var offset = (legend.marker.position == "right"?item.offsetWidth - legend.marker.width:0);
+			this._drawLegendMarker(ctx,item.offsetLeft + x + offset,item.offsetTop+y,itemColor,item.offsetHeight,disabled,i);
+		}
+		ctx.restore();
+		legendItems = null;
+	},
+	/**
+	*   appends legend item to legend block
+	*   @param: ctx - canvas object
+	*   @param: obj - data object that needs being represented
+	*/
+	_drawLegendText:function(cont,value,series,disabled){
+		var style = "";
+		var legend = this._settings.legend;
+		if(legend.layout=="x")
+			style = "float:left;";
+		/*the text of the legend item*/
+		var pos = legend.marker.position;
+		var text = dhtmlx.html.create("DIV",{
+			"style":style+"padding-"+(pos&&pos=="right"?"right":"left")+":"+(10+legend.marker.width)+"px",
+			"class":"dhx_chart_legend_item"+(disabled?" hidden":"")
+		},value);
+		if(arguments.length>2)
+			text.setAttribute("series_id",series);
+		cont.appendChild(text);
+		return text;
+	},
+	/**
+	*   draw legend colorful marder
+	*   @param: ctx - canvas object
+	*   @param: x - the horizontal position of the marker
+	*   @param: y - the vertical position of the marker
+	*   @param: color - marker color
+	*   @param: height - item height
+	*   @param: disabled - disabled staet
+	*   @param: i - index of legend item
+	*/
+	_drawLegendMarker:function(ctx,x,y,color,height,disabled,i){
+		var p = [];
+		var marker = this._settings.legend.marker;
+		var values = this._settings.legend.values;
+		var type = (values&&values[i].markerType?values[i].markerType:marker.type);
+
+		if(color){
+			ctx.fillStyle = color;
+			ctx.strokeStyle = this._getDarkenColor(color,0.75);
+		}
+        ctx.beginPath();
+		if(type=="round"||!marker.radius){
+            ctx.lineWidth = marker.height;
+		    ctx.lineCap = type;
+		    /*start of marker*/
+		    x += ctx.lineWidth/2+5;
+		    y += height/2;
+		    ctx.moveTo(x,y);
+		    var x1 = x + marker.width-marker.height +1;
+		    ctx.lineTo(x1,y);
+
+        }else if(type=="item"){
+			/*copy of line*/
+			if(this._settings.line&&this._settings.view != "scatter" && !this._settings.disableLines){
+				ctx.beginPath();
+				ctx.lineWidth = this._series[i].line.width;
+				ctx.strokeStyle = disabled?color:this._series[i].line.color.call(this,{});
+				var x0 = x + 5;
+				var y0 = y + height/2;
+				ctx.moveTo(x0,y0);
+				var x1 = x0 + marker.width;
+				ctx.lineTo(x1,y0);
+				ctx.stroke();
+			}
+			/*item copy*/
+
+
+			var config = this._series[i].item;
+			var radius = parseInt(config.radius.call(this,{}),10)||0;
+			if(radius){
+				if(config.type == "image" && config.src){
+					this._drawImage(ctx,x+5,y+marker.height/2-5,config.src,radius*2, radius*2);
+					return;
+				}
+				else{
+					ctx.beginPath();
+					if(disabled){
+						ctx.lineWidth = config.borderWidth;
+						ctx.strokeStyle = color;
+						ctx.fillStyle = color;
+					}
+					else{
+						ctx.lineWidth = config.borderWidth;
+						ctx.fillStyle = config.color.call(this,{});
+						ctx.strokeStyle = config.borderColor.call(this,{});
+						ctx.globalAlpha = config.alpha.call(this,{});
+					}
+					ctx.beginPath();
+					x += marker.width/2+5;
+					y += height/2;
+					this._strokeChartItem(ctx,x,y,radius+1,config.type);
+					ctx.fill();
+					ctx.stroke();
+				}
+
+			}
+			ctx.globalAlpha = 1;
+		}else{
+            ctx.lineWidth = 1;
+            x += 5;
+            y += parseInt(height/2-marker.height/2,10);
+
+			p = [
+				[x+marker.radius,y+marker.radius,marker.radius,Math.PI,3*Math.PI/2,false],
+				[x+marker.width-marker.radius,y],
+				[x+marker.width-marker.radius,y+marker.radius,marker.radius,-Math.PI/2,0,false],
+				[x+marker.width,y+marker.height-marker.radius],
+				[x+marker.width-marker.radius,y+marker.height-marker.radius,marker.radius,0,Math.PI/2,false],
+				[x+marker.radius,y+marker.height],
+				[x+marker.radius,y+marker.height-marker.radius,marker.radius,Math.PI/2,Math.PI,false],
+				[x,y+marker.radius]
+			];
+            this._path(ctx,p);
+        }
+
+		ctx.stroke();
+        ctx.fill();
+
+	},
+	_getDarkenColor:function(color,darken){
+		var hsv,rgb;
+		rgb = dhtmlx.math.toRgb(color);
+		hsv = dhtmlx.math.rgbToHsv(rgb[0],rgb[1],rgb[2]);
+		hsv[2] = hsv[2]*darken;
+		return "rgb("+dhtmlx.math.hsvToRgb(hsv[0],hsv[1],hsv[2])+")";
+	},
+	/**
+	*   gets the points those represent chart left top and right bottom bounds
+	*   @param: width - the width of the chart container
+	*   @param: height - the height of the chart container
+	*/
+	_getChartBounds:function(width,height){
+		var chartX0, chartY0, chartX1, chartY1;
+		
+		chartX0 = this._settings.padding.left;
+		chartY0 = this._settings.padding.top;
+		chartX1 = width - this._settings.padding.right;
+		chartY1 = height - this._settings.padding.bottom;	
+		
+		if(this._settings.legend){
+			var legend = this._settings.legend;
+			/*legend size*/
+			var legendWidth = this._settings.legend.width;
+			var legendHeight = this._settings.legend.height;
+		
+			/*if legend is horizontal*/
+			if(legend.layout == "x"){
+				if(legend.valign == "center"){
+					if(legend.align == "right")
+						chartX1 -= legendWidth;
+					else if(legend.align == "left")
+				 		chartX0 += legendWidth;
+			 	}
+			 	else if(legend.valign == "bottom"){
+			    	chartY1 -= legendHeight;
+			 	}
+			 	else{
+			    	chartY0 += legendHeight;
+			 	}
+			}
+			/*vertical scale*/
+			else{
+				if(legend.align == "right")
+					chartX1 -= legendWidth;
+			 	else if(legend.align == "left")
+					chartX0 += legendWidth;
+			}
+		}
+		return {start:{x:chartX0,y:chartY0},end:{x:chartX1,y:chartY1}};
+	},
+	/**
+	*   gets the maximum and minimum values for the stacked chart
+	*   @param: data - data set
+	*/
+	_getStackedLimits:function(data){
+		var i, j, maxValue, minValue, value;
+		if(this._settings.yAxis&&(typeof this._settings.yAxis.end!="undefined")&&(typeof this._settings.yAxis.start!="undefined")&&this._settings.yAxis.step){
+		    maxValue = parseFloat(this._settings.yAxis.end);
+			minValue = parseFloat(this._settings.yAxis.start);
+		}
+		else{
+			for(i=0; i < data.length; i++){
+				data[i].$sum = 0 ;
+				data[i].$min = Infinity;
+				for(j =0; j < this._series.length;j++){
+					value = parseFloat(this._series[j].value(data[i])||0);
+					if(isNaN(value)) continue;
+					if(this._series[j].view.toLowerCase().indexOf("stacked")!=-1)
+						data[i].$sum += value;
+					if(value < data[i].$min) data[i].$min = value;
+				}
+			}
+			maxValue = -Infinity;
+			minValue = Infinity;
+			for(i=0; i < data.length; i++){
+				if (data[i].$sum > maxValue) maxValue = data[i].$sum ;
+				if (data[i].$min < minValue) minValue = data[i].$min ;
+			}
+			if(minValue>0) minValue =0;
+		}
+		return {max: maxValue, min: minValue};
+	},
+	/*adds colors to the gradient object*/
+	_setBarGradient:function(ctx,x1,y1,x2,y2,type,color,axis){
+		var gradient, offset, rgb, hsv, color0, stops;
+		if(type == "light"){
+			if(axis == "x")
+				gradient = ctx.createLinearGradient(x1,y1,x2,y1);
+			else
+				gradient = ctx.createLinearGradient(x1,y1,x1,y2);
+			stops = [[0,"#FFFFFF"],[0.9,color],[1,color]];
+			offset = 2;
+		}
+		else if(type == "falling"||type == "rising"){
+			if(axis == "x")
+				gradient = ctx.createLinearGradient(x1,y1,x2,y1);
+			else
+				gradient = ctx.createLinearGradient(x1,y1,x1,y2);
+			rgb = dhtmlx.math.toRgb(color);
+			hsv = dhtmlx.math.rgbToHsv(rgb[0],rgb[1],rgb[2]);
+			hsv[1] *= 1/2;
+			color0 = "rgb("+dhtmlx.math.hsvToRgb(hsv[0],hsv[1],hsv[2])+")";
+			if(type == "falling"){
+				stops = [[0,color0],[0.7,color],[1,color]];
+			}
+			else if(type == "rising"){
+				stops = [[0,color],[0.3,color],[1,color0]];
+			}
+			offset = 0;
+		}
+		else{
+			ctx.globalAlpha = 0.37;
+			offset = 0;
+			if(axis == "x")
+				gradient = ctx.createLinearGradient(x1,y2,x1,y1);
+			else
+				gradient = ctx.createLinearGradient(x1,y1,x2,y1);
+			stops = [[0,"#9d9d9d"],[0.3,"#e8e8e8"],[0.45,"#ffffff"],[0.55,"#ffffff"],[0.7,"#e8e8e8"],[1,"#9d9d9d"]];
+		}
+		this._gradient(gradient,stops);
+		return {gradient:gradient,offset:offset};
+	},
+    /**
+	*   returns the x and y position
+    *   @param: a - angle
+    *   @param: x - start x position
+    *   @param: y - start y position
+	*   @param: r - destination to the point
+	*/
+     _getPositionByAngle:function(a,x,y,r){
+         a *= (-1);
+         x = x+Math.cos(a)*r;
+         y = y-Math.sin(a)*r;
+         return {x:x,y:y};
+    },
+	_gradient:function(gradient,stops){
+		for(var i=0; i< stops.length; i++){
+			gradient.addColorStop(stops[i][0],stops[i][1]);
+		}
+	},
+	_path: function(ctx,points){
+		var i, method;
+		for(i = 0; i< points.length; i++){
+			method = (i?"lineTo":"moveTo");
+			if(points[i].length>2)
+				method = "arc";
+			ctx[method].apply(ctx,points[i]);
+		}
+	},
+	_circle: function(ctx,x,y,r){
+		ctx.arc(x,y,r,Math.PI*2,true);
+	},
+	_addMapRect:function(map,id,points,bounds,sIndex){
+		map.addRect(id,[points[0].x-bounds.x,points[0].y-bounds.y,points[1].x-bounds.x,points[1].y-bounds.y],sIndex);
+	}
+};
+
+dhtmlx.compat("layout");
+
+if (typeof(window.dhtmlXCellObject) != "undefined") {
+	
+	dhtmlXCellObject.prototype.attachChart = function(conf) {
+		
+		this.callEvent("_onBeforeContentAttach",["chart"]);
+		
+		var obj = document.createElement("DIV");
+		obj.id = "dhxChartObj_"+window.dhx4.newId();
+		obj.style.width = "100%";
+		obj.style.height = "100%";
+		document.body.appendChild(obj);
+		this._attachObject(obj);
+		
+		conf.container = obj.id;
+		
+		this.dataType = "chart";
+		this.dataObj = new dhtmlXChart(conf);
+		
+		if (!this.dataObj.setSizes) {
+			this.dataObj.setSizes = function() {
+				if (this.resize) this.resize(); else this.render();
+			};
+		}
+		
+		return this.dataObj;
+	};
+	
+}
+
