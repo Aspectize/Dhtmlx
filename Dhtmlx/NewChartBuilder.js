@@ -1,5 +1,8 @@
 ﻿/// <reference path="S:\Delivery\Aspectize.core\AspectizeIntellisenseLibrary.js" />
 
+
+
+
 Global.NewChartBuilder = {
 
     aasService: 'NewChartBuilder',
@@ -7,7 +10,7 @@ Global.NewChartBuilder = {
 
     initCSS: false,
 
-    tips:{},
+    tips: {},
 
     Build: function (controlInfo) {
 
@@ -16,6 +19,20 @@ Global.NewChartBuilder = {
             var style = document.createElement('style');
             style.innerHTML = ".hidden.dhx_chart_legend_item { display: block !important; visibility: visible !important; }";
             document.body.appendChild(style);
+        }
+
+        function dhtmlxProtectedCall(context, method /*, other arguments */) {
+
+            var args = []; for (var n = 2; n < arguments.length; n++) args.push(arguments[n]);
+
+            try {
+
+                method.apply(context, args);
+
+            } catch (x) {
+
+                //reportException(x, false, false, method, args);
+            }
         }
 
         function buildChartAxisInfo(axis, name, type) {
@@ -299,7 +316,7 @@ Global.NewChartBuilder = {
                                 tip.parentNode.removeChild(tip);
                             }
                         }
-                        
+
                     }
                 }
                 //Bug DHTMLX
@@ -327,22 +344,21 @@ Global.NewChartBuilder = {
 
                 if (cp.data.length > 0) {
 
-                    Aspectize.ProtectedCall(chart, chart.parse, scaleData(scale, cp), 'json');
+                    dhtmlxProtectedCall(chart, chart.parse, scaleData(scale, cp), 'json');
 
-                } else Aspectize.ProtectedCall(chart, chart.refresh);
+                } else dhtmlxProtectedCall(chart, chart.refresh);
 
                 cp.dxChart = chart;
                 cp.data = savedData;
 
             } else {
-
                 var dxc = cp.dxChart;
 
                 if (cp.data.length > 0) {
 
-                    Aspectize.ProtectedCall(dxc, dxc.parse, scaleData(scale, cp), 'json');
+                    dhtmlxProtectedCall(dxc, dxc.parse, scaleData(scale, cp), 'json');
 
-                } else Aspectize.ProtectedCall(dxc, dxc.refresh);
+                } else dhtmlxProtectedCall(dxc, dxc.refresh);
             }
 
             cp.MustRebuildChart = false;
@@ -422,7 +438,7 @@ Global.NewChartBuilder = {
                 SetAxisProperty: function (axis, property, value) {
 
                     if (property !== 'Value') {
-                        
+
                         var a = this.AllAxis[axis];
 
                         if (a && (a.Display || property === 'Display') && (property in a) && (a[property] !== value)) {

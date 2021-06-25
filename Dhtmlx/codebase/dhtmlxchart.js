@@ -5672,7 +5672,17 @@ dhtmlx.ui.Canvas = function(container,name,style) {
 };
 dhtmlx.ui.Canvas.prototype = {
 	_prepareCanvas:function (name,style,width,height){
-		//canvas has the same size as master object
+	    //canvas has the same size as master object
+        
+	    //if (this._canvas && this._canvas !== null) {
+	    //    this._canvas.width = 0;
+	    //    this._canvas.height = 0;
+
+	    //    this._canvas.remove();
+	    //    delete this._canvas;
+	    //    this._canvas = null;
+	    //}
+
 		this._canvas = dhtmlx.html.create("canvas",{ width:width, height:height, canvas_id:name, style:(style||"") });
 		this._obj.appendChild(this._canvas);
 		//use excanvas in IE
@@ -5686,13 +5696,38 @@ dhtmlx.ui.Canvas.prototype = {
 		}
 		return this._canvas;
 	}, 
-	getCanvas:function(context){
-		var ctx = (this._canvas||this._prepareCanvas()).getContext(context||"2d");
-		if(!this._dhtmlxDevicePixelRatio){
-			this._dhtmlxDevicePixelRatio = true;
-			ctx.scale(window.devicePixelRatio||1, window.devicePixelRatio||1);
-		}
-		return ctx;
+	getCanvas: function (context) {
+	    try {
+
+	        //var ctx = (this._canvas || this._prepareCanvas()).getContext(context || "2d");
+
+	        var cnv = (this._canvas || this._prepareCanvas());
+
+	        var ctx = cnv.getContext(context || "2d");
+
+	        if (!ctx) {
+	            if (this._canvas && this._canvas !== null) {
+	                this._canvas.width = 0;
+	                this._canvas.height = 0;
+
+	                this._canvas.remove();
+	                delete this._canvas;
+	                this._canvas = null;
+	            }
+	            cnv = this._prepareCanvas();
+	        
+	            ctx = cnv.getContext(context || "2d");
+	        }
+
+	        if (!this._dhtmlxDevicePixelRatio) {
+	            this._dhtmlxDevicePixelRatio = true;
+	            ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+	        }
+	        return ctx;
+	    }
+	    catch (x) {
+
+	    }
 	},
 	_resizeCanvas:function(){
 		if (this._canvas){
@@ -5763,7 +5798,7 @@ dhtmlx.ui.Canvas.prototype = {
 
 		}
 		//FF breaks, when we are using clear canvas and call clearRect without parameters	
-		this.getCanvas().clearRect(0,0,this._canvas.width, this._canvas.height);
+		this.getCanvas().clearRect(0, 0, this._canvas.width, this._canvas.height);
 	},
 	toggleCanvas:function(){
 		this._toggleCanvas(this._canvas.style.display=="none")
